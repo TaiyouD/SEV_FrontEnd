@@ -1,0 +1,41 @@
+name: AWS DEPLOY TO STAGING
+
+#turn off deploy to AWS
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - dev
+
+jobs:
+  aws-deploy:
+    runs-on: ubuntu-latest
+    env:
+      VUE_APP_CLIENT_ID: ${{secrets.VUE_APP_CLIENT_ID}}
+      VUE_APP_API_URL: ${{secrets.VUE_APP_API_URL}}
+      VUE_APP_CLIENT_URL: ${{secrets.VUE_APP_CLIENT_URL}}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: dev
+      - uses: actions/setup-node@v1
+      - run: |
+          touch .env
+          echo VUE_APP_CLIENT_ID="$VUE_APP_CLIENT_ID" >> .env
+          echo VUE_APP_API_URL="$VUE_APP_API_URL" >> .env
+          echo VUE_APP_CLIENT_URL=tutorial.eaglesoftwareteam.com >> .env
+          echo VUE_APP_SITE_URL=tutorial.eaglesoftwareteam.com >> .env
+
+      - run: npm install
+      - run: npm run build
+      - run: npm run bundle
+
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2.1.1
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: "-rltgoDzvO --delete"
+          SOURCE: "dist/"
+          REMOTE_HOST: "tutorial.eaglesoftwareteam.com"
+          REMOTE_USER: ubuntu
+          TARGET: "/var/www/html/tutorial-frontend-vue2"
