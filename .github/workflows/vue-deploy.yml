@@ -23,8 +23,8 @@ jobs:
           touch .env
           echo VUE_APP_CLIENT_ID="$VUE_APP_CLIENT_ID" >> .env
           echo VUE_APP_API_URL="$VUE_APP_API_URL" >> .env
-          echo VUE_APP_CLIENT_URL=tutorial.eaglesoftwareteam.com >> .env
-          echo VUE_APP_SITE_URL=tutorial.eaglesoftwareteam.com >> .env
+          echo VUE_APP_CLIENT_URL=perform.eaglesoftwareteam.com >> .env
+          echo VUE_APP_SITE_URL=perform.eaglesoftwareteam.com >> .env
 
       - run: npm install
       - run: npm run build
@@ -36,6 +36,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
           ARGS: "-rltgoDzvO --delete"
           SOURCE: "dist/"
-          REMOTE_HOST: "tutorial.eaglesoftwareteam.com"
+          REMOTE_HOST: "perform.eaglesoftwareteam.com"
           REMOTE_USER: ubuntu
-          TARGET: "/var/www/html/tutorial-frontend-vue2"
+          TARGET: "/var/www/html/performance/t4"
