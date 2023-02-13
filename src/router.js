@@ -3,6 +3,13 @@ import Router from "vue-router";
 
 import Login from "./views/Login.vue";
 
+import Homepage from "./views/Homepage.vue";
+import SignupEvent from "./views/SignupEvent.vue";
+import MissingInfo from "./views/MissingInfo.vue";
+import EventUpcomingList from "./views/EventUpcomingList.vue";
+import EventPastList from "./views/EventPastList.vue";
+import EventEdit from "./views/EventEdit.vue";
+import Repertoire from "./views/Repertoire.vue";
 import TutorialsList from "./views/TutorialsList.vue";
 import EditTutorial from "./views/EditTutorial.vue";
 import AddTutorial from "./views/AddTutorial.vue";
@@ -23,6 +30,44 @@ const router = new Router({
       path: "/",
       name: "login",
       component: Login,
+    },
+    {
+      path: "/home",
+      name: "home",
+      component: Homepage,
+    },
+    {
+      path: "/signupevents",
+      name: "signupevents",
+      component: SignupEvent,
+    },
+    {
+      path: "/missinginfo",
+      name: "missinginfo",
+      component: MissingInfo,
+      props: true,
+    },
+    {
+      path: "/eventupcoming",
+      name: "eventupcoming",
+      component: EventUpcomingList,
+    },
+    {
+      path: "/eventpast",
+      name: "eventpast",
+      component: EventPastList,
+      props: true,
+    },
+    {
+      path: "/eventedit",
+      name: "eventedit",
+      component: EventEdit,
+    },
+    {
+      path: "/repertoire",
+      name: "repertoire",
+      component: Repertoire,
+      props: true,
     },
     {
       path: "/tutorials",

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-app-bar app>
-      <router-link :to="{ name: 'tutorials' }">
+    <v-app-bar app absolute id="navbar-maroon">
+      <router-link :to="{ name: 'home' }">
         <v-img
           class="mx-2"
-          src="../assets/oc-logo-white.png"
+          src="../assets/oc-logo.png"
           max-height="50"
           max-width="50"
           contain
@@ -14,10 +14,37 @@
         <div>{{ this.title }}</div>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-items v-if="user != null">
-        <v-btn exact :to="{ name: 'tutorials' }" text> List </v-btn>
-        <v-btn exact :to="{ name: 'add' }" text> Add Tutorial </v-btn>
+
+      <v-toolbar-items v-if="user == null" >
+      <v-menu offset-y :close-on-click="true" >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+            Sign Up
+          </v-btn>
+        </template>
+        <v-list>
+          <!-- <v-list-item v-for="index in 4" :key="index">
+            <v-list-item-title>Item {{ index }}</v-list-item-title>
+          </v-list-item> -->
+          <v-list-item exact :to="{ name: 'signupevents' }" text>Event Sign Up</v-list-item>
+          <v-divider></v-divider>
+          <v-list-item exact :to="{ name: 'missinginfo' }" text>Missing Info</v-list-item>
+        </v-list>
+      </v-menu>
+      <v-menu offset-y :close-on-click="true" >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+            My Events
+          </v-btn>
+        </template>
+        <v-list>
+            <v-list-item exact :to="{ name: 'eventupcoming' }" text>My Upcoming Events</v-list-item>
+            <v-divider></v-divider>
+            <v-list-item exact :to="{ name: 'eventpast' }" text>My Past Events</v-list-item>
+        </v-list>
+      </v-menu>
       </v-toolbar-items>
+
       <v-menu bottom min-width="200px" rounded offset-y v-if="user != null">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon x-large v-on="on" v-bind="attrs">
@@ -43,9 +70,53 @@
             </div>
           </v-list-item-content>
         </v-card>
+        
       </v-menu>
+     
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" id="navbar-maroon"></v-app-bar-nav-icon>
+
     </v-app-bar>
+    
+    <v-navigation-drawer app v-model="drawer" temporary right>
+      <v-list-item>
+        <v-list-item-content>
+          <!-- <v-list-item-title class="text-h6"></v-list-item-title> -->
+          <v-list-item-subtitle>My Info</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list dense nav>
+        <v-list-item v-for="item in navitems1" :key="item.title" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-subtitle>Resources</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      
+      <v-list dense nav>
+        <v-list-item v-for="item in navitems2" :key="item.title" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
   </div>
+  
 </template>
 
 <script>
@@ -55,8 +126,18 @@ import AuthServices from "@/services/authServices";
 export default {
   name: "App",
   data: () => ({
+    drawer: false,
+    navitems1: [
+      { title: 'My Repertoire', icon: 'mdi-view-dashboard', href:''},
+      
+    ],
+    navitems2: [
+
+      { title: 'Account', icon: 'mdi-account-box' },
+      { title: 'Settings', icon: 'mdi-cog' },
+    ],
     user: {},
-    title: "Tutorials",
+    title: "Music Department",
     initials: "",
     name: "",
   }),
