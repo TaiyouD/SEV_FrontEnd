@@ -1,14 +1,25 @@
 <template>
+  
     <div>
-        <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
-        <v-container>
-          <div>
+      <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
+      <v-container>
+      <v-toolbar>
+          <v-toolbar-title>Hello!</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-title>{{this.message}}</v-toolbar-title>
+      </v-toolbar>
+       <!-- <br /><br /> -->
+      </v-container>
+    <v-container>
+    <div class="border d-flex align-items-start" >
     <v-row justify="space-around">
-      <v-icon @click="model--">mdi-minus</v-icon>
+      <!-- <v-icon @click="model--">mdi-minus</v-icon>
       {{ model }}
-      <v-icon @click="model++">mdi-plus</v-icon>
+      <v-icon @click="model++">mdi-plus</v-icon> -->
+      <v-spacer></v-spacer>
+    <v-spacer></v-spacer>
     </v-row>
-    <v-carousel v-model="model">
+    <v-carousel v-model="model" height="400">
       <v-carousel-item
         v-for="(color, i) in colors"
         :key="color"
@@ -28,18 +39,12 @@
         </v-sheet>
       </v-carousel-item>
     </v-carousel>
-  </div>
-        </v-container>
+       </div>
+      </v-container>
         <v-container>
-        <v-toolbar>
-          <v-toolbar-title>Hello!</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-title>{{this.message}}</v-toolbar-title>
-        </v-toolbar>
-        <br /><br />
 
         <v-card>
-          <v-card-title>
+          <!-- <v-card-title>
             Tutorials
             <v-spacer></v-spacer>
             <v-text-field
@@ -72,7 +77,7 @@
                 </v-icon>
               </div>
             </template>
-          </v-data-table>
+          </v-data-table> -->
         </v-card>
       </v-container>
     </div>
@@ -92,7 +97,7 @@
         currentIndex: -1,
         title: "",
         user: {},
-        message: "Search, Edit or Delete Tutorials",
+        message: "Music Department",
         headers: [
           { text: "Title", value: "title" },
           { text: "Description", value: "description" },
