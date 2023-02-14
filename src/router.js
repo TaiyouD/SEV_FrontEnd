@@ -9,7 +9,12 @@ import MissingInfo from "./views/MissingInfo.vue";
 import EventUpcomingList from "./views/EventUpcomingList.vue";
 import EventPastList from "./views/EventPastList.vue";
 import EventEdit from "./views/EventEdit.vue";
+import EventEvaluation from "./views/EventEvaluation.vue";
 import Repertoire from "./views/Repertoire.vue";
+import ProfileStudent from "./views/ProfileStudent.vue";
+import ProfileFaculty from "./views/ProfileFaculty.vue";
+import ProfileAdmin from "./views/ProfileAdmin.vue";
+
 import TutorialsList from "./views/TutorialsList.vue";
 import EditTutorial from "./views/EditTutorial.vue";
 import AddTutorial from "./views/AddTutorial.vue";
@@ -64,9 +69,32 @@ const router = new Router({
       component: EventEdit,
     },
     {
+      path: "/eventevaluation",
+      name: "eventevaluation",
+      component: EventEvaluation,
+    },
+    {
       path: "/repertoire",
       name: "repertoire",
       component: Repertoire,
+      props: true,
+    },
+    {
+      path: "/profilestudent",
+      name: "profilestudent",
+      component: ProfileStudent,
+      props: true,
+    },
+    {
+      path: "/profilefaculty",
+      name: "profilefaculty",
+      component: ProfileFaculty,
+      props: true,
+    },
+    {
+      path: "/profileadmin",
+      name: "profileadmin",
+      component: ProfileAdmin,
       props: true,
     },
     {
