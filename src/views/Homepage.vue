@@ -1,13 +1,43 @@
 <template>
     <div>
         <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
-      <v-container>
+        <v-container>
+          <div>
+    <v-row justify="space-around">
+      <v-icon @click="model--">mdi-minus</v-icon>
+      {{ model }}
+      <v-icon @click="model++">mdi-plus</v-icon>
+    </v-row>
+    <v-carousel v-model="model">
+      <v-carousel-item
+        v-for="(color, i) in colors"
+        :key="color"
+      >
+        <v-sheet
+          :color="color"
+          height="100%"
+          tile
+        >
+          <v-row
+            class="fill-height"
+            align="center"
+            justify="center"
+          >
+            <div class="display-3">Slide {{ i + 1 }}</div>
+          </v-row>
+        </v-sheet>
+      </v-carousel-item>
+    </v-carousel>
+  </div>
+        </v-container>
+        <v-container>
         <v-toolbar>
           <v-toolbar-title>Hello!</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-title>{{this.message}}</v-toolbar-title>
         </v-toolbar>
         <br /><br />
+
         <v-card>
           <v-card-title>
             Tutorials
@@ -68,6 +98,14 @@
           { text: "Description", value: "description" },
           { text: "Actions", value: "actions", sortable: false },
         ],
+        colors: [
+          'primary',
+          'secondary',
+          'yellow darken-2',
+          'red',
+          'orange',
+        ],
+        model: 0,
       };
     },
     mounted() {

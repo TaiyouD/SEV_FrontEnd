@@ -43,6 +43,45 @@
             <v-list-item exact :to="{ name: 'eventpast' }" text>My Past Events</v-list-item>
         </v-list>
       </v-menu>
+      <v-menu offset-y :close-on-click="true" >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+            Student Events
+          </v-btn>
+        </template>
+        <v-list>
+            <v-list-item exact :to="{ name: 'eventevaluation' }" text>Event Evalution</v-list-item>
+            <v-divider></v-divider>
+        </v-list>
+      </v-menu>
+      <v-menu offset-y :close-on-click="true" >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+            Maintain Roles
+          </v-btn>
+        </template>
+        <v-list>
+            <v-list-item exact :to="{ name: 'eventevaluation' }" text>Place Holder</v-list-item>
+            <v-divider></v-divider>
+            <v-list-item exact :to="{ name: 'eventevaluation' }" text>Place Holder</v-list-item>
+        </v-list>
+      </v-menu>
+      <v-menu offset-y :close-on-click="true" >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+            Events
+          </v-btn>
+        </template>
+        <v-list>
+            <v-list-item exact :to="{ name: 'eventevaluation' }" text> Create Event</v-list-item>
+            <v-divider></v-divider>
+            <v-list-item exact :to="{ name: 'eventevaluation' }" text>View Events</v-list-item>
+            <v-divider></v-divider>
+            <v-list-item exact :to="{ name: 'eventevaluation' }" text>Place Holder</v-list-item>
+            <v-divider></v-divider>
+            <v-list-item exact :to="{ name: 'eventevaluation' }" text>Place Holder</v-list-item>
+        </v-list>
+      </v-menu>
       </v-toolbar-items>
 
       <v-menu bottom min-width="200px" rounded offset-y v-if="user != null">
@@ -86,7 +125,7 @@
       </v-list-item>
 
       <v-list dense nav>
-        <v-list-item v-for="item in navitems1" :key="item.title" link>
+        <v-list-item v-for="item in navitems1" :key="item.title" link @click="$router.push({ path: item.route})">
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -128,12 +167,10 @@ export default {
   data: () => ({
     drawer: false,
     navitems1: [
-      { title: 'My Repertoire', icon: 'mdi-view-dashboard', href:''},
-      
+      { title: 'Profile', icon: 'mdi-account-box', route:'/profilestudent'},
+      { title: 'My Repertoire', icon: 'mdi-view-dashboard', route:'/repertoire'},
     ],
     navitems2: [
-
-      { title: 'Account', icon: 'mdi-account-box' },
       { title: 'Settings', icon: 'mdi-cog' },
     ],
     user: {},
