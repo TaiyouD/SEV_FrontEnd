@@ -1,5 +1,5 @@
 <template>
-    <div v-if="user == null">
+    <div v-if="user != null">
       <div class=" align-center flex-column">
         <v-img src="../assets/piano-2.jpg" max-height="150" />
         <div class="my-8"></div>
@@ -7,21 +7,37 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-avatar id = "dark_grey"  size = 150 class="mt-2 mb-2">
-                <span class="accent--text font-weight-bold text-h3"> CJ</span>
+                <span class="accent--text font-weight-bold text-h3"> {{ initials }}</span>
               </v-avatar>
               <div class="my-8"></div>
     
-              <h3 class="text-h4">Carl Jackson</h3>
-              <p class="text-subtitle-1 mt-1">
-                c.jackson@gmail.com
+              <h3 class="text-h4">{{ name}}</h3>
+            <p class="text-subtitle-1 mt-1">
+                {{user.email}}
               </p> 
               <div v-if="user != null && user.facultyType != null">
               <p class="text-subtitle-1 mt-1">
                 Faculty Type: {{ user.facultyType }}
               </p>
-              <p class="text-subtitle-1 mt-1">
-                Bio: {{ user.facultyBio }}
-              </p>
+              <div v-if="isActive != false">
+                <!-- placeholder={{ user.facultyBio }} -->
+                    <v-container fluid>
+                    <v-textarea
+                    clearable
+                    
+                    clear-icon="mdi-close-circle"
+                    label="Bio"
+                    v-model="message"
+                    
+                    ></v-textarea>
+                </v-container>
+                </div>
+                <div v-else>
+                <p class="text-subtitle-1 mt-1">
+                Bio: 
+                <!-- {{ user.facultyBio }} -->
+                </p>
+                </div>
               </div>
               <div v-else>
                 <p class="text-subtitle-1 mt-1">
