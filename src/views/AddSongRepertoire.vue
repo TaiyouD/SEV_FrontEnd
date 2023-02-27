@@ -1,5 +1,6 @@
 <template>
   <div>
+    <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
         <v-toolbar-title>Add Song</v-toolbar-title>
@@ -15,19 +16,42 @@
           label="Title"
           required
         ></v-text-field>
-        <v-text-field
-          v-model="lesson.description"
-          id="description"
-          :counter="50"
-          label="Description"
-          required
-        ></v-text-field>
+        <v-select 
+        :items="selected"
+        item-title="Composer"
+        item-value=""
+        label="Select Composer"
+        @change="selectButton"
+        v-model="selected"
+        return-object
+        single-line
+        filled
+    ></v-select>
+    <router-link to="/addcomposer" tag="v-btn">
+      <v-btn color="success" class="mr-4">
+          Missing Composers?
+      </v-btn>
+      </router-link>
+      <br><br>
+      <div class="container">
+        <form @submit.prevent="handleSubmit">
+            <div class="form-group form-check">
+                <input type="checkbox" v-model="user.accept" id="accept" class="form-check-input">
+                <label class="form-check-label" for="accept">Accept terms and conditions</label>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+        
+    </div>
+
 
         <v-btn
           :disabled="!valid"
           color="success"
           class="mr-4"
-          @click="saveLesson()"
+          @click="saveSong()"
         >
           Save
         </v-btn>
@@ -41,39 +65,37 @@
 <script>
 import LessonServices from "../services/lessonServices";
 export default {
-  name: "add-lesson",
-  props: ["tutorialId"],
+  name: "add-song",
+  props: ["composerId"],
   data() {
     return {
       valid: true,
-      lesson: {
+      song: {
         id: null,
         title: "",
-        description: "",
-        published: false,
+        selected: []
       },
       message: "Enter data and click save",
     };
   },
   methods: {
-    saveLesson() {
+    saveSong() {
       var data = {
-        title: this.lesson.title,
-        description: this.lesson.description,
-        tutorialId: this.tutorialId,
+        title: this.song.title,
+        composerId: this.composerId
       };
-      LessonServices.createLesson(this.tutorialId, data)
+      LessonServices.createSong(this.composerId, data)
         .then((response) => {
-          this.lesson.id = response.data.id;
+          this.song.id = response.data.id;
 
-          this.$router.push({ name: "view", params: { id: this.tutorialId } });
+          this.$router.push({ name: "view", params: { id: this.composerId } });
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
     },
     cancel() {
-      this.$router.push({ name: "view", params: { id: this.tutorialId } });
+      this.$router.push({ name: "view", params: { id: this.composerId } });
     },
   },
 };
