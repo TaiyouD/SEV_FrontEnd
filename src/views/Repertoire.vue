@@ -8,14 +8,13 @@
         </v-toolbar>
         <br />
         <h3>Voice/Instrument: {{ instrumentId }} 
-        <dropdown
-          title="Select a Voice/Instrument"
-          text="Click to filter"
-          :items-drop="[
-            {text: 'Item 1'},
-            {text: 'Item 2'}
-          ]">
-        </dropdown>
+        <v-select class="dropdown"
+          :items="items"
+          filled 
+          label="Select Voice/Instrument"
+          ></v-select>
+
+
         </h3> <!--make it select a drop down box-->
         <h4>Instructor: {{ accompanistId }}</h4>
         <br /><br />
@@ -78,7 +77,8 @@
           { text: "Song Title", value: "song_title" },
           { text: "Composer", value: "composer" },
           { text: "Date Added", value: "date_added"}
-        ]
+        ],
+        items:['Instrument 1', 'Instrument 2', 'Instrument 3']
       };
     },
     mounted() {
@@ -132,4 +132,11 @@
     },
   };
   </script>
+
+  <style>
+
+  .dropdown {
+    width:38%;
+  }
+</style>
   
