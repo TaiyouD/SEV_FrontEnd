@@ -9,6 +9,7 @@
         </v-toolbar>
         <br />
         <h3>Voice/Instrument: {{ instrumentId }} 
+
         <v-select class="dropdown"
           :items="items"
           filled 
@@ -56,6 +57,11 @@
           </v-data-table>
         </v-card>
       </v-container>
+    <router-link to="/addsong" tag="v-btn">
+      <v-btn color="success" class="mr-4" style="text-align: center; margin-left: 20px;">
+          Add Song
+      </v-btn>
+      </router-link>
     </div>
   </template>
   
