@@ -2,7 +2,7 @@
     <div>
       <v-container>
         <v-toolbar>
-          <v-toolbar-title>New Composer</v-toolbar-title>
+          <v-toolbar-title>New Accompanist</v-toolbar-title>
           <!-- <v-spacer></v-spacer>
           <v-toolbar-title>{{this.message}}</v-toolbar-title> -->
         </v-toolbar>
@@ -12,37 +12,19 @@
         <br />
         <v-form ref="form" v-model="valid" lazy validation>
           <v-text-field
-            v-model="composer.firstName"
+            v-model="accompanist.firstName"
             id="firstName"
             :counter="50"
             label="First Name"
           ></v-text-field>
           <v-text-field
-            v-model="composer.lastName"
+            v-model="accompanist.lastName"
             id="lastName"
             :counter="50"
             label="Last Name"
             required
             ></v-text-field>
-            <v-text-field
-            v-model="composer.nationality"
-            id="nationality"
-            :counter="30"
-            label="Nationality"
-            ></v-text-field>
-            <v-text-field
-            v-model="composer.birthday"
-            id="birthday"
-            :counter="10"
-            label="Birth Year"
-            ></v-text-field>
-            <v-text-field
-            v-model="composer.deathDate"
-            id="deathDate"
-            :counter="10"
-            label="Death Year"
-            ></v-text-field>
-  
+              
           <v-btn
             :disabled="!valid"
             color="success"
@@ -62,7 +44,7 @@
 import ComposerServices from "../services/composerServices";
 
 export default {
-  name: "addcomposer",
+  name: "addaccompanist",
   data() {
     return {
       valid: false,
@@ -74,7 +56,7 @@ export default {
         birthday:"",
         deathDate:""
       },
-      message: "Enter data and click save. Leave it blank if you do not know an information. Last name is required.",
+      message: "Enter data and click save.",
     };
   },
 
@@ -82,24 +64,21 @@ export default {
     saveComposer() {
         //check if composer last name exists
       var data = {
-        firstName: this.composer.firstName,
-        lastName: this.composer.lastName,
-        nationality: this.composer.nationality,
-        birthday: this.composer.birthday,
-        deathDate: this.composer.deathDate
+        firstName: this.accompanist.firstName,
+        lastName: this.accompanist.lastName
       };
       ComposerServices.create(data)
         .then((response) => {
           this.composer.id = response.data.id;
           console.log("add " + response.data);
-          this.$router.push({ name: "composer" });
+          this.$router.push({ name: "accompanist" });
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
     },
     cancel() {
-      this.$router.push({ name: "composer" });
+      this.$router.push({ name: "accompanist" });
     },
   },
 };
