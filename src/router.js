@@ -6,6 +6,7 @@ import Login from "./views/Login.vue";
 import Homepage from "./views/Homepage.vue";
 import SignupEvent from "./views/SignupEvent.vue";
 import AddComposer from "./views/AddComposer.vue";
+import AddSongRepertoire from "./views/AddSongRepertoire.vue";
 import EventUpcomingList from "./views/EventUpcomingList.vue";
 import EventPastList from "./views/EventPastList.vue";
 import EventEdit from "./views/EventEdit.vue";
@@ -45,6 +46,12 @@ const router = new Router({
       path: "/signupevents",
       name: "signupevents",
       component: SignupEvent,
+    },
+    {
+      path: "/addsong",
+      name: "addsong",
+      component: AddSongRepertoire,
+      //props: true
     },
     {
       path: "/addcomposer",
