@@ -1,6 +1,6 @@
 <template>
   
-    <div>
+  <div >
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
       <v-toolbar>
@@ -11,6 +11,7 @@
        <!-- <br /><br /> -->
       </v-container>
     <v-container>
+    
     <div class="border d-flex align-items-start" >
     <v-row justify="space-around">
       <!-- <v-icon @click="model--">mdi-minus</v-icon>
@@ -19,28 +20,9 @@
       <v-spacer></v-spacer>
     <v-spacer></v-spacer>
     </v-row>
-    <v-carousel v-model="model" height="400">
-      <v-carousel-item
-        v-for="(color, i) in colors"
-        :key="color"
-      >
-        <v-sheet
-          :color="color"
-          height="100%"
-          tile
-        >
-          <v-row
-            class="fill-height"
-            align="center"
-            justify="center"
-          >
-            <div class="display-3">Slide {{ i + 1 }}</div>
-          </v-row>
-        </v-sheet>
-      </v-carousel-item>
-    </v-carousel>
        </div>
       </v-container>
+      
         <v-container>
 
         <v-card>
@@ -80,7 +62,94 @@
           </v-data-table> -->
         </v-card>
       </v-container>
+
+      <v-card
+    class="mx-auto"
+    max-width="1600"
+  >
+    <!-- <v-system-bar
+      color="indigo darken-2"
+      dark
+    >
+      <v-spacer></v-spacer>
+
+      <v-icon icon="mdi-window-minimize"></v-icon>
+
+      <v-icon icon="mdi-window-maximize"></v-icon>
+
+      <v-icon icon="mdi-close"></v-icon>
+    </v-system-bar>
+
+    <v-toolbar
+      color="indigo"
+      dark
+    >
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+      <v-toolbar-title>Discover</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-btn icon="mdi-magnify"></v-btn>
+    </v-toolbar> -->
+    
+    <v-container fluid  >
+      <v-row dense>
+        <v-col >
+        <v-carousel v-model="model" height="400">
+          <v-carousel-item
+            v-for="slide in slides"
+          :key="slide.title"
+          >
+            <v-img
+              :src="slide.src"
+              height="400px"
+         
+            >
+              <v-row
+                class="fill-height"
+                align="center"
+                justify="center"
+              >
+                <div class="display-3"> {{ slide.title }}</div>
+              </v-row>
+            </v-img>
+          </v-carousel-item>
+        </v-carousel>
+        </v-col>
+        <v-col
+          class= "text-white"
+          v-for="card in cards"
+          :key="card.title"
+          :cols="card.flex">
+          <v-card>
+            <v-img
+              :src="card.src"
+              class="align-end text-white"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="400px"
+              cover
+              
+            >
+              <v-card-title class="text-white" v-text="card.title"></v-card-title>
+            </v-img>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn size="small" color="surface-variant" variant="text" icon="mdi-heart"></v-btn>
+
+              <v-btn size="small" color="surface-variant" variant="text" icon="mdi-bookmark"></v-btn>
+
+              <v-btn size="small" color="surface-variant" variant="text" icon="mdi-share-variant"></v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-card>
     </div>
+    
   </template>
   
   <script>
@@ -103,12 +172,22 @@
           { text: "Description", value: "description" },
           { text: "Actions", value: "actions", sortable: false },
         ],
-        colors: [
-          'primary',
-          'secondary',
-          'yellow darken-2',
-          'red',
-          'orange',
+        slides: [
+          {title: "picture 1", src: "../assets/music-notes-bg1.jpg"},
+          {title: "picture 2", src: "../assets/music-notes-bg2.jpg"},
+          {title: "picture 3", src: "../assets/church-window-1.jpg"},
+          {title: "picture 4", src: "../assets/piano-1.jpg"},
+          {title: "picture 5", src: "../assets/piano-2.jpg"},
+          // 'primary',
+          // 'secondary',
+          // 'yellow darken-2',
+          // 'red',
+          // 'orange',
+        ],
+        cards: [
+        // { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
+        { title: 'Music gives life to the campus of Oklahoma Christian! Our entire campus, no matter what your major, is invited to join choir, band, orchestra and musical performances.', src: '', flex: 6 },
+        { title: 'Develop your voice, advance your craft and invest your talent in musical pursuits alongside professors who value individuality and take the time to pour into students one-on-one.', src: "../assets/piano-2.jpg", flex: 12 },
         ],
         model: 0,
       };
