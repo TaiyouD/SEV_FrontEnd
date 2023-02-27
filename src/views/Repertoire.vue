@@ -1,5 +1,6 @@
 <template>
     <div>
+      <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
           <v-toolbar-title>My Repertoire</v-toolbar-title>
@@ -8,14 +9,14 @@
         </v-toolbar>
         <br />
         <h3>Voice/Instrument: {{ instrumentId }} 
-        <dropdown
-          title="Select a Voice/Instrument"
-          text="Click to filter"
-          :items-drop="[
-            {text: 'Item 1'},
-            {text: 'Item 2'}
-          ]">
-        </dropdown>
+
+        <v-select class="dropdown"
+          :items="items"
+          filled 
+          label="Select Voice/Instrument"
+          ></v-select>
+
+
         </h3> <!--make it select a drop down box-->
         <h4>Instructor: {{ accompanistId }}</h4>
         <br /><br />
@@ -56,6 +57,11 @@
           </v-data-table>
         </v-card>
       </v-container>
+    <router-link to="/addsong" tag="v-btn">
+      <v-btn color="success" class="mr-4" style="text-align: center; margin-left: 20px;">
+          Add Song
+      </v-btn>
+      </router-link>
     </div>
   </template>
   
@@ -78,7 +84,8 @@
           { text: "Song Title", value: "song_title" },
           { text: "Composer", value: "composer" },
           { text: "Date Added", value: "date_added"}
-        ]
+        ],
+        items:['Instrument 1', 'Instrument 2', 'Instrument 3']
       };
     },
     mounted() {
@@ -132,4 +139,11 @@
     },
   };
   </script>
+
+  <style>
+
+  .dropdown {
+    width:38%;
+  }
+</style>
   
