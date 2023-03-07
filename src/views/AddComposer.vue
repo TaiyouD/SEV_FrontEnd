@@ -26,7 +26,7 @@
             required
             ></v-text-field>
             <v-text-field
-            v-model="composer.firstName"
+            v-model="composer.nationality"
             id="nationality"
             :counter="30"
             label="Nationality"
