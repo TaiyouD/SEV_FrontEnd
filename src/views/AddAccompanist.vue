@@ -12,13 +12,14 @@
         <br />
         <v-form ref="form" v-model="valid" lazy validation>
           <v-text-field
-            v-model="accompanist.firstName"
+            v-model="user.firstName"
             id="firstName"
             :counter="50"
             label="First Name"
+            required
           ></v-text-field>
           <v-text-field
-            v-model="accompanist.lastName"
+            v-model="user.lastName"
             id="lastName"
             :counter="50"
             label="Last Name"
@@ -29,7 +30,7 @@
             :disabled="!valid"
             color="success"
             class="mr-4"
-            @click="saveComposer()"
+            @click="saveAccompanist()"
           >
             Save
           </v-btn>
@@ -41,44 +42,40 @@
   </template>
 
 <script>
-import ComposerServices from "../services/composerServices";
+import AccompanistServices from "../services/composerServices";
 
 export default {
   name: "addaccompanist",
   data() {
     return {
       valid: false,
-      composer: {
+      user: {
         id: null,
         firstName:"",
-        lastName:"",
-        nationality: "",
-        birthday:"",
-        deathDate:""
-      },
+        lastName:""      },
       message: "Enter data and click save.",
     };
   },
 
   methods: {
-    saveComposer() {
-        //check if composer last name exists
+    saveAccompanist() {
+        //check if accompanist first and last name exists
       var data = {
-        firstName: this.accompanist.firstName,
-        lastName: this.accompanist.lastName
+        firstName: this.user.firstName,
+        lastName: this.user.lastName
       };
-      ComposerServices.create(data)
+      AccompanistServices.create(data)
         .then((response) => {
-          this.composer.id = response.data.id;
+          this.user.id = response.data.id;
           console.log("add " + response.data);
-          this.$router.push({ name: "accompanist" });
+          this.$router.push({ name: "signupevents" });
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
     },
     cancel() {
-      this.$router.push({ name: "accompanist" });
+      this.$router.push({ name: "signupevents" });
     },
   },
 };
