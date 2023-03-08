@@ -1,5 +1,6 @@
 <template>
     <div>
+      <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
           <v-toolbar-title>New Accompanist</v-toolbar-title>
