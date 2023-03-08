@@ -52,17 +52,20 @@ export default {
       user: {
         id: null,
         firstName:"",
-        lastName:""      },
+        lastName:"",
+        isApproved: false
+      },
       message: "Enter data and click save.",
     };
   },
 
   methods: {
     saveAccompanist() {
-        //check if accompanist first and last name exists
+        //send email to admin
       var data = {
         firstName: this.user.firstName,
-        lastName: this.user.lastName
+        lastName: this.user.lastName,
+        isApproved: this.role.isApproved
       };
       AccompanistServices.create(data)
         .then((response) => {
