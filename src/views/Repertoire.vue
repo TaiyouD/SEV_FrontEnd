@@ -8,17 +8,19 @@
           <v-toolbar-title>{{this.message}}</v-toolbar-title> -->
         </v-toolbar>
         <br />
-        <h3>Voice/Instrument: {{ instrumentId }} 
-
-        <v-select class="dropdown"
-          :items="items"
-          filled 
-          label="Select Voice/Instrument"
+        <div class="d-flex align-center">
+          <h3 class="mr-3">Voice/Instrument: {{ instrumentId }}</h3>
+          <v-select v-if="showDropdown" 
+              :items="items" 
+              filled 
+              label="Select Voice/Instrument"
+              v-model="selectedItem"
           ></v-select>
-
-
-        </h3> <!--make it select a drop down box-->
-        <h4>Instructor: {{ accompanistId }}</h4>
+        <div v-else>
+            {{ items[0] }}
+        </div>
+        </div>
+        <h4>Instructor: {{ privateInstructortId }}</h4>
         <br /><br />
         <v-card>
           <v-card-title>
@@ -67,13 +69,14 @@
   </template>
   
   <script>
-  import SongServices from "../services/songServices";
+  import RepertoireSongServices from "../services/songServices";
   import Utils from "@/config/utils.js";
 
   export default {
     name: "repertoire-list",
     data() {
       return {
+        intrumentRole: {}, //do I have to initialize instructorId and instrumentID?
         search: "",
         songs: [],
         currentRepertoire: null,
@@ -84,13 +87,19 @@
         headers: [
           { text: "Song Title", value: "song_title" },
           { text: "Composer", value: "composer" },
-          { text: "Date Added", value: "date_added"}
+          { text: "Semester", value: "semester"}
         ],
-        items:['Instrument 1', 'Instrument 2', 'Instrument 3']
+        items:[],
+        selectedItem: null
       };
     },
+    computed: {
+    showDropdown() {
+      return this.items.length > 1;
+      }
+   },
     mounted() {
-      this.user = Utils.getStore("user");
+      this.user = Utils.getStore("user"); //is this right?
       this.retrieveSongs();
     },
     methods: {
@@ -101,7 +110,7 @@
         this.$router.push({ name: "view", params: { id: song.id } });
       },
       deleteSong(song) {
-        SongServices.delete(song.id)
+        RepertoireSongServices.delete(song.id)
           .then(() => {
             this.retrieveSongs();
           })
@@ -110,7 +119,7 @@
           });
       },
       retrieveSongs() {
-        SongServices.getAllForUser(this.user.userId)
+        RepertoireSongServices.getAllForUser(this.user.userId)
           .then((response) => {
             this.songs = response.data;
           })
@@ -128,7 +137,7 @@
         this.currentIndex = song ? index : -1;
       },
       removeAllSongs() {
-        SongServices.deleteAll()
+        RepertoireSongServices.deleteAll()
           .then((response) => {
             console.log(response.data);
             this.refreshList();
@@ -137,14 +146,14 @@
             this.message = e.response.data.message;
           });
       },
-    },
+      onSelect() {
+      this.selectedItem = null;
+      }
+    }
   };
   </script>
 
-  <style>
+<style>
 
-  .dropdown {
-    width:38%;
-  }
 </style>
   
