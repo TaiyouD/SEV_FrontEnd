@@ -61,7 +61,7 @@
         <br>
         <router-link to="/addsong" tag="v-btn">
           <v-btn color="success" class="mr-4">
-              Add Song
+              Add Piece
           </v-btn>
           </router-link>
       </v-container>
@@ -83,9 +83,9 @@
         currentIndex: -1,
         title: "",
         user: {},
-        message: "Search, Edit or Delete Songs",
+        message: "Search, Edit or Delete Pieces",
         headers: [
-          { text: "Song Title", value: "song_title" },
+          { text: "Piece Title", value: "song_title" },
           { text: "Composer", value: "composer" },
           { text: "Semester", value: "semester"}
         ],
