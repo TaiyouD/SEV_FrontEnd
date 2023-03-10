@@ -14,8 +14,8 @@ export default {
   name: "login_signup_social",
   data() {
     return {
-      fName: "",
-      lName: "",
+      firstName: "",
+      lastName: "",
       roleCounter: 0,
       user: {},
     };
@@ -54,8 +54,8 @@ export default {
         .then((response) => {
           this.user = response.data;
           Utils.setStore("user", this.user);
-          this.fName = this.user.fName;
-          this.lName = this.user.lName;
+          this.firstName = this.user.firstName;
+          this.lastName = this.user.lastName;
           this.$router.push({ name: "home" });
           this.$router.go();
         })
