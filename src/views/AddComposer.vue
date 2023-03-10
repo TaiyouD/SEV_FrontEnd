@@ -1,5 +1,6 @@
 <template>
     <div>
+      <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
           <v-toolbar-title>New Composer</v-toolbar-title>
@@ -9,6 +10,9 @@
   
         <br />
         <h4>{{ message }}</h4>
+        <div class="alertMessage">
+        <h5>{{ messageSimilarity }}</h5>
+        </div>
         <br />
         <v-form ref="form" v-model="valid" lazy validation>
           <v-text-field
@@ -25,7 +29,7 @@
             required
             ></v-text-field>
             <v-text-field
-            v-model="composer.firstName"
+            v-model="composer.nationality"
             id="nationality"
             :counter="30"
             label="Nationality"
@@ -75,6 +79,7 @@ export default {
         deathDate:""
       },
       message: "Enter data and click save. Leave it blank if you do not know an information. Last name is required.",
+      // messageSimilarity: "Do you mean by any of these composers"
     };
   },
 
@@ -88,20 +93,89 @@ export default {
         birthday: this.composer.birthday,
         deathDate: this.composer.deathDate
       };
+      let lastName = this.composer.lastName;
+      let similarNames = this.check_similarities(lastName);
+      if (similarNames != "")
+      {
+        console.log(similarNames);
+        alert("Are the following names ");
+        //button to make it "yes" or "no"
+        for (let x = 0; x < similarNames.length; x++) {
+          similarNames[x]; //print this
+        }
+      }
+      else {
       ComposerServices.create(data)
         .then((response) => {
           this.composer.id = response.data.id;
           console.log("add " + response.data);
-          this.$router.push({ name: "composer" });
+          this.$router.push({ name: "addsong" });
         })
         .catch((e) => {
+          alert("Last Name field is required")
           this.message = e.response.data.message;
         });
+      }
     },
     cancel() {
-      this.$router.push({ name: "composer" });
+      this.$router.push({ name: "addsong" });
     },
+    check_similarities(lastName){
+      let arrayComp = ComposerServices.getAll();
+      let size_array = arrayComp.lenght;
+      let str1 = "";
+      let similars = [];
+
+      for (let x = 0; x < size_array; x++) {
+          str1=arrayComp[x].lastName;
+          let answer = this.similar_name(str1, lastName);
+          if (answer != "no")
+          {
+            similars.push(answer);
+          }
+      }
+
+      return similars;
+    }, 
+    similar_name(str1, str2) {
+     
+      let size_a = str1.length + 1;
+      let size_b = str2.length + 1;
+      
+      let matrix = Array.from(Array(size_a), () => new Array(size_b).fill(0));
+      
+      // Step 2
+      for (let i = 0; i < size_a; i++) {
+          matrix[i][0] = i;
+      }
+      
+      for (let j = 0; j < size_b; j++) {
+          matrix[0][j] = j;
+      }
+      
+      // Step 3
+      for (let i = 1; i < size_a; i++) {
+          for (let j = 1; j < size_b; j++) {
+              if (str1[i - 1] === str2[j - 1]) {
+                  matrix[i][j] = Math.min(matrix[i - 1][j - 1], matrix[i - 1][j] + 1, matrix[i][j - 1] + 1);
+              } else {
+                  matrix[i][j] = Math.min(matrix[i - 1][j] + 1, matrix[i - 1][j - 1] + 1, matrix[i][j - 1] + 1);
+              }
+          }
+      }
+      if (matrix[size_a - 1][size_b - 1] < 5) {
+          return str2;
+      } else {
+          return 'no';
+      }
+    }
   },
 };
 </script>
-<style></style>
+<style>
+
+.alertMessage {
+  color: red;
+}
+
+</style>

@@ -5,7 +5,9 @@ import Login from "./views/Login.vue";
 
 import Homepage from "./views/Homepage.vue";
 import SignupEvent from "./views/SignupEvent.vue";
+import AddAccompanist from "./views/AddAccompanist.vue";
 import AddComposer from "./views/AddComposer.vue";
+import AddSongRepertoire from "./views/AddSongRepertoire.vue";
 import EventUpcomingList from "./views/EventUpcomingList.vue";
 import EventPastList from "./views/EventPastList.vue";
 import EventEdit from "./views/EventEdit.vue";
@@ -13,7 +15,6 @@ import EventEvaluation from "./views/EventEvaluation.vue";
 import Repertoire from "./views/Repertoire.vue";
 import ProfileStudent from "./views/ProfileStudent.vue";
 import ProfileFaculty from "./views/ProfileFaculty.vue";
-import ProfileAdmin from "./views/ProfileAdmin.vue";
 
 import TutorialsList from "./views/TutorialsList.vue";
 import EditTutorial from "./views/EditTutorial.vue";
@@ -49,7 +50,18 @@ const router = new Router({
     {
       path: "/addcomposer",
       name: "addcomposer",
-      component: AddComposer,
+      component: AddComposer
+    },
+    {
+      path: "/addaccompanist",
+      name: "addaccompanist",
+      component: AddAccompanist
+    },
+    {
+      path: "/addsong",
+      name: "addsong",
+      component: AddSongRepertoire,
+      //props: true
     },
     {
       path: "/eventupcoming",
@@ -88,12 +100,6 @@ const router = new Router({
       path: "/profilefaculty",
       name: "profilefaculty",
       component: ProfileFaculty,
-      props: true,
-    },
-    {
-      path: "/profileadmin",
-      name: "profileadmin",
-      component: ProfileAdmin,
       props: true,
     },
     {
