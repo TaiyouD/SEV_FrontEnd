@@ -54,6 +54,10 @@ export default {
   color : #F2EFE4;
 }
 
+#dark_grey{
+  background: #808080;
+  color : #F2EFE4;
+}
 
 
 </style>
