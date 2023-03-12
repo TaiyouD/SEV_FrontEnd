@@ -23,11 +23,13 @@
         <div class="wrapper">
             <tabs :mode="mode" style="padding-left: 130px; padding-right: 130px;"> 
                 <tab title="Recital">     
-  <v-row>
+  <!-- <v-row>
     <v-col>
       <v-sheet height="400"  style="text-align: center;">
-        Select Accompanist and Signup Date to See Available Times 
-        <v-calendar 
+        Select Accompanist and Signup Date to See Available Times  -->
+
+
+        <!-- <v-calendar 
         v-if="selected === '2023-4-15' && selected2 === 'John Doe'"
         start = 2023-4-15
         color="primary"
@@ -98,11 +100,24 @@
             >
             </div>
           </template>
-        </v-calendar>
+        </v-calendar> -->
 
-      </v-sheet>
+      <!-- </v-sheet>
     </v-col>
-  </v-row>
+  </v-row> -->
+
+  <!-- ============================TEST============================ -->
+  <div>
+    <h2>Available Time Slots</h2>
+    <ul><v-virtual-scroll
+  height="100"
+  item-height="20"
+>
+<li v-for="slot in timeSlots" :key="slot">{{ slot }}</li>
+</v-virtual-scroll>
+    </ul>
+  </div>
+  <!-- ============================TEST============================ -->
 
                     <!-- Time Select Above -->
        <!-- Select Hearing Date Below -->
@@ -219,86 +234,6 @@
 <!-- ================START of JURY TAB================= -->
 <tab title="Jury">
         <!-- Select Hearing Date Below -->
-        <v-row>
-    <v-col>
-      <v-sheet height="400"  style="text-align: center;">
-        Select Accompanist and Signup Date to See Available Times 
-        <v-calendar 
-        v-if="selected === '2023-4-15' && selected2 === 'John Doe'"
-        start = 2023-4-15
-        color="primary"
-        type="day"
-        :events = events
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-              class="text-center"
-            >
-              Today
-            </template>
-          </template>
-
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar>
-
-        <v-calendar 
-        v-else-if="selected === '2023-4-15'"
-        start = 2023-4-15
-        color="primary"
-        type="day"
-        :events = events2
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-              class="text-center"
-            >
-              Today
-            </template>
-          </template>
-
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar>
-
-
-        <v-calendar 
-        v-else
-        now
-        color="primary"
-        type="day"
-        :events = events
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-              class="text-center"
-            >
-              Today
-            </template>
-          </template>
-
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar>
-
-      </v-sheet>
-    </v-col>
-  </v-row>
 
                     <!-- Time Select Above -->
        <!-- Select Hearing Date Below -->
@@ -475,38 +410,6 @@
           timed: true,
         },   
     ],
-    events2: [
-            {
-          name: 'Event 2',
-          start: '2023-04-15T10:00:00',
-          end: '2023-04-15T10:10:00',
-          timed: true,
-        },
-        {
-          name: 'Event 1',
-          start: '2023-04-15T08:00:00',
-          end: '2023-04-15T08:10:00',
-          timed: true,
-        },
-        {
-          name: 'Event 3',
-          start: '2023-04-15T11:20:00',
-          end: '2023-04-15T11:30:00',
-          timed: true,
-        },   
-        {
-          name: 'Event 4',
-          start: '2023-04-15T15:20:00',
-          end: '2023-04-15T15:30:00',
-          timed: true,
-        },
-        {
-          name: 'Event 5',
-          start: '2023-04-15T15:40:00',
-          end: '2023-04-15T15:50:00',
-          timed: true,
-        },   
-    ]
       };
     },
     mounted() {
@@ -569,6 +472,35 @@
           });
       },
     },
+
+// =============================================================================
+    computed: {
+    timeSlots() {
+      const slots = [];
+      let hour, minute, time;
+
+      // Loop through 24 hours
+      for (hour = 8; hour < 17; hour++) {
+        // Loop through 60 minutes
+        for (minute = 0; minute < 60; minute += 5) {
+          // Format the time as "hh:mm AM/PM"
+          time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+          if (hour < 12) {
+            time += ' AM';
+          } else {
+            time += ' PM';
+          }
+
+          // Add the time to the array
+          slots.push(time);
+        }
+      }
+
+      return slots;
+    }
+  }
+// ===========================================================================  
     
   };
   </script>
