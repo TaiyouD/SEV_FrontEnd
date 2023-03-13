@@ -22,90 +22,12 @@
     <div>
         <div class="wrapper">
             <tabs :mode="mode" style="padding-left: 130px; padding-right: 130px;"> 
-                <tab title="Recital">     
-  <!-- <v-row>
-    <v-col>
-      <v-sheet height="400"  style="text-align: center;">
-        Select Accompanist and Signup Date to See Available Times  -->
+                <tab title="Recital">   
+    <!-- ============================This was where calendar was============================ -->
 
-
-        <!-- <v-calendar 
-        v-if="selected === '2023-4-15' && selected2 === 'John Doe'"
-        start = 2023-4-15
-        color="primary"
-        type="day"
-        :events = events
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-              class="text-center"
-            >
-              Today
-            </template>
-          </template>
-
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar>
-
-        <v-calendar 
-        v-else-if="selected === '2023-4-15'"
-        start = 2023-4-15
-        color="primary"
-        type="day"
-        :events = events2
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-              class="text-center"
-            >
-              Today
-            </template>
-          </template>
-
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar>
-
-
-        <v-calendar 
-        v-else
-        now
-        color="primary"
-        type="day"
-        :events = events
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-              class="text-center"
-            >
-              Today
-            </template>
-          </template>
-
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar> -->
-
-      <!-- </v-sheet>
-    </v-col>
-  </v-row> -->
-
+    
+  
+  
   <!-- ============================TEST============================ -->
   <div>
     <h2>Available Time Slots</h2>
