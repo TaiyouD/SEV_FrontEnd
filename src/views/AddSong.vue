@@ -47,7 +47,7 @@
             v-model="select"
             :search-input.sync="search"
             :loading="loading"
-            :items="selected"
+            :items="composer"
             class="mr-4"
             density="comfortable"
             hide-no-data
@@ -96,7 +96,7 @@
 import ComposerServices from "../services/composerServices";
 import SongServices from "../services/songServices";
 //import  Translator  from 'vue-google-translate';
-import translate from 'google-translate-api';
+//import translate from 'google-translate-api';
 export default {
   name: "add-song",
   /*
@@ -117,7 +117,7 @@ export default {
         title: "",
         language: "",
         translation: "",
-        selected: []
+        composer: [] //coloco composer aqui? pq é um FK
       },
       message: "Enter data and click save",
       lyrics: "",
@@ -310,7 +310,7 @@ export default {
           this.loading = true
           // Simulated ajax query
           setTimeout(() => {
-            this.selected = this.composers.filter(e => {
+            this.composer = this.composers.filter(e => {
               return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
             })
             this.loading = false
@@ -337,20 +337,23 @@ export default {
     saveSong() {
       var data = {
         title: this.song.title,
-        composerId: this.composerId
+        language: this.song.language,
+        translation: this.song.translation,
+        composerId: this.song.composer.id //como passar o id e não o nome? //ta certo isso?
       };
-      SongServices.create(this.composerId, data)
+      SongServices.create(data)
         .then((response) => {
           this.song.id = response.data.id;
+          console.log("add " + response.data);
 
-          this.$router.push({ name: "view", params: { id: this.composerId } });
+          this.$router.push({ name: "addpiecerepertoire"}); //fazer v-if aqui pq depende do user pra qual pag vai direcionar
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
     },
     cancel() {
-      this.$router.push({ name: "view", params: { id: this.composerId } });
+      this.$router.push({ name: "addpiecerepertoire"});
     },
   },
 };
