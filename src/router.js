@@ -7,6 +7,7 @@ import Homepage from "./views/Homepage.vue";
 import SignupEvent from "./views/SignupEvent.vue";
 import AddAccompanist from "./views/AddAccompanist.vue";
 import AddComposer from "./views/AddComposer.vue";
+import AddSong from "./views/AddSong.vue";
 import AddSongRepertoire from "./views/AddSongRepertoire.vue";
 import EventUpcomingList from "./views/EventUpcomingList.vue";
 import EventPastList from "./views/EventPastList.vue";
@@ -60,6 +61,12 @@ const router = new Router({
     {
       path: "/addsong",
       name: "addsong",
+      component: AddSong,
+      //props: true
+    },
+    {
+      path: "/addpiecerepertoire",
+      name: "addpiecerepertoire",
       component: AddSongRepertoire,
       //props: true
     },
