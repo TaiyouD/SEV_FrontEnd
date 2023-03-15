@@ -197,14 +197,19 @@
 
      <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn variant="tonal" style="text-align: center;">
+<v-btn color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
-<router-link to="/addcomposer" tag="v-btn">
-<v-btn variant="tonal" style="text-align: center; margin-left: 20px;">
-    Missing Composers?
+<router-link to="/addaccompanist" tag="v-btn">
+<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+    Add Accompanist
 </v-btn>
 </router-link>
+<router-link to="/addsong" tag="v-btn">
+  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+      Add Song
+  </v-btn>
+  </router-link>
 </div>
 </div>
     </tab>
@@ -379,14 +384,19 @@
 
      <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn variant="tonal" style="text-align: center;">
+<v-btn color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
-<router-link to="/addcomposer" tag="v-btn">
-<v-btn variant="tonal" style="text-align: center; margin-left: 20px;">
-    Missing Composers?
+<router-link to="/addaccompanist" tag="v-btn">
+<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+    Add Accompanist
 </v-btn>
 </router-link>
+<router-link to="/addsong" tag="v-btn">
+  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+      Add Song
+  </v-btn>
+  </router-link>
 </div>
 </div>
                 </tab>
