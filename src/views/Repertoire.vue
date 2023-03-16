@@ -9,18 +9,21 @@
         </v-toolbar>
         <br />
         <div class="d-flex align-center">
-          <h3 class="mr-3">Voice/Instrument: {{ instrumentId }}</h3>
+          <h3 class="mr-3">Voice/Instrument: </h3>
           <v-select v-if="showDropdown" 
-              :items="items" 
-              filled 
+              :items="instrumentRole.instrumentId"
+              item-tile="Instrument"
+              item-value="type" 
+              return-object
+              single-line
               label="Select Voice/Instrument"
-              v-model="selectedItem"
+              v-model="instrumentRole.instrumentId"
           ></v-select>
         <div v-else>
-            {{ items[0] }}
+            {{ instrumentRole.instrumentId[0] }}
         </div>
         </div>
-        <h4>Instructor: {{ privateInstructortId }}</h4>
+        <h4>Instructor: {{ instrumentRole.privateInstructortId }}</h4> <!--Como pegar o nome?-->
         <br /><br />
         <v-card>
           <v-card-title>
@@ -59,8 +62,8 @@
           </v-data-table>
         </v-card>
         <br>
-        <router-link to="/addsong" tag="v-btn">
-          <v-btn color="success" class="mr-4">
+        <router-link to="/addpiecerepertoire" tag="v-btn">
+          <v-btn color="primary" class="mr-4">
               Add Piece
           </v-btn>
           </router-link>
@@ -69,45 +72,57 @@
   </template>
   
   <script>
-  import RepertoireSongServices from "../services/songServices";
+  import RepertoireSongServices from "../services/repertoireSongServices";
   import Utils from "@/config/utils.js";
+  import instrumentRoleServices from "../services/instrumentRoleServices";
+  import instrumentServices from "../services/instrumentServices";
 
   export default {
     name: "repertoire-list",
+    props: [],
     data() {
       return {
-        intrumentRole: {}, //do I have to initialize instructorId and instrumentID?
+        instrumentRole: {
+          id: null,
+          instrumentId: [],
+          privateInstructortId: "",
+          accompanistId: ""
+        },
+        instrument: {
+          id: null,
+          type: "", 
+          isVoice: ""
+        },
         search: "",
         songs: [],
         currentRepertoire: null,
         currentIndex: -1,
-        title: "",
         user: {},
         message: "Search, Edit or Delete Pieces",
         headers: [
-          { text: "Piece Title", value: "song_title" },
+          { text: "Piece Title", value: "title" },
           { text: "Composer", value: "composer" },
           { text: "Semester", value: "semester"}
-        ],
-        items:[],
-        selectedItem: null
+        ]
       };
     },
     computed: {
     showDropdown() {
-      return this.items.length > 1;
+      return this.instrumentRole.instrumentId.length > 1;
       }
    },
     mounted() {
-      this.user = Utils.getStore("user"); //is this right?
+      this.user = Utils.getStore("user"); 
+      this.instrumentRole = instrumentRoleServices.getAllForUser(this.id);
+      this.instrument = instrumentServices.getAll();
       this.retrieveSongs();
     },
     methods: {
       editSong(song) {
-        this.$router.push({ name: "edit", params: { id: song.id } });
+        this.$router.push({ name: "edit", params: { id: song.id } }); //ter isso? ou criar pág pra isso
       },
       viewSong(song) {
-        this.$router.push({ name: "view", params: { id: song.id } });
+        this.$router.push({ name: "view", params: { id: song.id } });// mesmo de cima
       },
       deleteSong(song) {
         RepertoireSongServices.delete(song.id)
@@ -146,9 +161,10 @@
             this.message = e.response.data.message;
           });
       },
+      /*
       onSelect() {
       this.selectedItem = null;
-      }
+      }*/
     }
   };
   </script>
