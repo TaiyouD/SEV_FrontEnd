@@ -17,17 +17,27 @@
           required
         ></v-text-field>
         <div>
-        <v-text-field
+        <!--<v-text-field
         v-model="song.language"
         id="language"
         :counter="30"
         label="Language - Field required for voice pieces"
-        ></v-text-field>
+        ></v-text-field>-->
+        <v-select 
+          v-model="song.language"
+          :items="countries"
+          item-title="title"
+          item-text="title"
+          item-value="code"
+          label="Select Language - Leave it blank if it is an Intrumental Piece"
+          return-object
+          single-line
+        ></v-select>
         <v-textarea
           id="paragraph"
           label="Enter piece lyrics"
           ></v-textarea>
-        <v-btn @click="translate()" color="success" class="mr-4">
+        <v-btn @click="translate()" color="primary" class="mr-4">
           Translate
         </v-btn>
         <div v-if="translated">
@@ -57,7 +67,7 @@
             return-object
             required
         ></v-autocomplete>
-          <br><br>
+          <br>
       
         <!-- <v-select 
           :items="selected"
@@ -70,11 +80,11 @@
           filled
       ></v-select>-->
       <router-link to="/addcomposer" tag="v-btn">
-        <v-btn color="success" class="mr-4">
+        <v-btn color="primary" class="mr-4">
             Missing Composer?
         </v-btn>
         </router-link>
-        <br><br>
+        <br><br><br>
 
 
           <v-btn
