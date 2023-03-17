@@ -73,6 +73,8 @@ export default {
         semester: ""
       },
       message: "Enter data and click save",
+      songId: "",
+      song: {}
     };
   },
   watch: {
@@ -97,6 +99,11 @@ export default {
         .catch((e) => {
           this.message = e.response.data.message;
         });
+    },
+    getSongId(){ //how to do it right?
+        this.song = SongServices.findByTitle(this.select);
+        this.songId = this.song.id;
+
     },
     saveSongRepertoire() {
       var data = {
