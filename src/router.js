@@ -30,7 +30,7 @@ const router = new Router({
   linkExactActiveClass: "active",
   base:
     //    process.env.NODE_ENV === 'development'? "/" : "/tutorScheduling/", - for AWS
-    process.env.NODE_ENV === "development" ? "/" : "/performance/t4/",
+    process.env.NODE_ENV === "development" ? "/" : "/performance/t4",
   routes: [
     {
       path: "/",
