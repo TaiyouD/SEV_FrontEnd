@@ -35,15 +35,15 @@
           <v-data-table
             :headers="headers"
             :search="search"
-            :items="events"
+            :items="eventSessions"
             :items-per-page="50"
           >
             <template v-slot:[`item.actions`]="{ item }">
               <div>
-                <v-icon small class="mx-4" @click="editEvent(item)">
+                <v-icon small class="mx-4" @click="editEventSession(item)">
                   mdi-pencil
                 </v-icon>
-                <v-icon small class="mx-4" @click="viewEvent(item)">
+                <v-icon small class="mx-4" @click="viewEventSession(item)">
                   mdi-format-list-bulleted-type
                 </v-icon>
                 <!-- <v-icon small class="mx-4" @click="deleteSong(item)">
@@ -64,75 +64,80 @@
   </template>
   
   <script>
-  import eventServices from "../services/eventServices";
-  //import eventSessionServices from "../services/eventSessionServices";
+  //import eventServices from "../services/eventServices";
+  import eventSessionServices from "../services/eventSessionServices";
   import Utils from "@/config/utils.js";
 
   export default {
-    name: "Events-list",
+    name: "upcoming-events-list",
     data() {
       return {
         search: "",
         events: [],
-        eventSession:[],
+        eventSessions:[],
         currentEvent: null,
         currentEventSession: null,
         currentIndex: -1,
+        overlay: false,
         title: "",
         user: {},
-        message: "Search, Edit or Cancel Events",
+        message: "Search, Edit or Cancel EventSessions",
         headers: [
-          { text: "Event Id", value: "id" },
-          { text: "Date", value: "date" },
+          { text: "Event Session Id", value: "id" },
+          { text: "Student Id", value: "date" },
+          { text: "Instructor Id", value: "date" },
+          { text: "Accompanist Id", value: "date" },
+          { text: "Event Id", value: "date" },
           { text: "Start Time", value: "startTime"},
           { text: "End Time", value: "endTime"},
-          { text: "Duration", value: "duration"},
-          { text: "Capstone Level", value: "capstoneLevel"},
-          { text: "Is Ready", value: "isReady"}
+          //{ text: "Duration", value: "duration"},
+          //{ text: "Event Type", value: "eventType"},
+          //{ text: "Is Ready", value: "isReady"}
         ],
-        items:['Instrument 1', 'Instrument 2', 'Instrument 3']
+        //items:['Instrument 1', 'Instrument 2', 'Instrument 3']
       };
     },
     mounted() {
       this.user = Utils.getStore("user");
-      this.retrieveEvents();
+      this.retrieveEventSessions();
     },
+   
     methods: {
-      editEvent(event) {
-        this.$router.push({ name: "edit", params: { id: event.id } });
+      editEventSession(eventSession) {
+        this.$router.push({ name: "edit", params: { id: eventSession.id } });
       },
-      viewEvent(event) {
-        this.$router.push({ name: "view", params: { id: event.id } });
+      viewEventSession(eventSession) {
+        this.$router.push({ name: "view", params: { id: eventSession.id } });
       },
-      deleteEvent(event) {
-        eventServices.delete(event.id)
+      deleteEventSession(eventSession) {
+        eventSessionServices.delete(eventSession.id)
           .then(() => {
-            this.retrieveEvents();
+            this.retrieveEventSessions();
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
-      retrieveEvents() {
-        eventServices.getAllForUser(this.user.userId)
+      retrieveEventSessions() {
+        eventSessionServices.getAllForUser(this.user.userId)
           .then((response) => {
-            this.events = response.data;
+            this.eventSessions = response.data;
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
       refreshList() {
-        this.retrieveEvents();
-        this.currentEvent = null;
+        this.retrieveEventSessions();
+        this.currentEventSession = null;
         this.currentIndex = -1;
       },
-      setActiveEvent(event, index) {
-        this.currentEvent = event;
-        this.currentIndex = event ? index : -1;
+      setActiveEventSession(eventSession, index) {
+        this.currentEventSession = eventSession;
+        this.currentIndex = eventSession ? index : -1;
       },
-      removeAllEvents() {
-        eventServices.deleteAll()
+      removeAllEventSessions() {
+        eventSessionServices.deleteAll()
           .then((response) => {
             console.log(response.data);
             this.refreshList();

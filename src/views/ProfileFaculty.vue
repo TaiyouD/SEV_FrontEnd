@@ -124,7 +124,7 @@
     import AuthServices from "@/services/authServices";
     
     export default {
-      name: "App",
+      name: "profile-faculty",
       data: () => ({
         user: {},
         title: "Music Department",

@@ -11,9 +11,12 @@ import EventUpcomingList from "./views/EventUpcomingList.vue";
 import EventPastList from "./views/EventPastList.vue";
 import EventEdit from "./views/EventEdit.vue";
 import EventEvaluation from "./views/EventEvaluation.vue";
+import EventView from "./views/EventView.vue";
+import Critique from "./views/Critique.vue";
 import Repertoire from "./views/Repertoire.vue";
 import ProfileStudent from "./views/ProfileStudent.vue";
 import ProfileFaculty from "./views/ProfileFaculty.vue";
+
 
 import TutorialsList from "./views/TutorialsList.vue";
 import EditTutorial from "./views/EditTutorial.vue";
@@ -77,6 +80,16 @@ const router = new Router({
       path: "/eventevaluation",
       name: "eventevaluation",
       component: EventEvaluation,
+    },
+    {
+      path: "/eventview",
+      name: "eventview",
+      component: EventView,
+    },
+    {
+      path: "/critique",
+      name: "critique",
+      component: Critique,
     },
     {
       path: "/repertoire",
