@@ -40,10 +40,14 @@
         <v-btn @click="translate()" color="primary" class="mr-4">
           Translate
         </v-btn>
-        <div v-if="translated">
+        <!--<div v-if="translated">
           <h3>Translated Piece:</h3>
           <p>{{ translation }}</p>
-        </div>
+        </div>-->
+        <v-textarea
+        v-model="song.translation"
+        id="translation"
+        ></v-textarea>
         <vue-google-translator />
         </div>
         <br><br>
@@ -54,10 +58,11 @@
           visible
         ></v-textarea>-->
         <v-autocomplete
-            v-model="select"
+            v-model="song.composer"
             :search-input.sync="search"
             :loading="loading"
-            :items="composer"
+            :items="composers"
+            item-value="lastName"
             class="mr-4"
             density="comfortable"
             hide-no-data
@@ -119,7 +124,6 @@ export default {
       valid: true,
       // disable: 0,
       loading: false,
-      search: null,
       select: null,
       composers: [],
       song: {
@@ -294,10 +298,14 @@ export default {
       }
       ]  };
   },
+  mounted() {
+    this.composers = ComposerServices.getAll();
+    console.log(this.composers);
+  },
   watch: {
-      search (val) {
+      search(val) {
         val && val !== this.select && this.querySelections(val)
-      },
+      }
     },
     /*
   computed: {
@@ -313,7 +321,7 @@ export default {
 
   },*/
   methods: {
-    querySelections (v) {
+    querySelections(v) {
       ComposerServices.getAll()
         .then((response) => {
           this.composers = response.data;
@@ -343,11 +351,11 @@ export default {
         (country) =>
           country.code.toLowerCase() === countryObject.code.toLowerCase() &&
           country.title.toLowerCase() === countryObject.title.toLowerCase()
-      );*/
+      );},*/
     saveSong() {
       var data = {
         title: this.song.title,
-        language: this.song.language,
+        language: this.song.language.title,
         translation: this.song.translation,
         composerId: this.song.composer.id //como passar o id e não o nome? //ta certo isso?
       };
