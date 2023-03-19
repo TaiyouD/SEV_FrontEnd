@@ -85,6 +85,25 @@ export default {
 
   methods: {
     saveComposer() {
+      var data = {
+        firstName: this.composer.firstName,
+        lastName: this.composer.lastName,
+        nationality: this.composer.nationality,
+        birthday: this.composer.birthday,
+        deathDate: this.composer.deathDate
+      };
+      ComposerServices.create(data)
+        .then((response) => {
+          this.composer.id = response.data.id;
+          console.log("add " + response.data);
+          this.$router.push({ name: "addsong" });
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+      }
+      /* trying to make algorithm work
+    saveComposer() {
         //check if composer last name exists
       var data = {
         firstName: this.composer.firstName,
@@ -168,7 +187,7 @@ export default {
       } else {
           return 'no';
       }
-    }
+    }*/
   },
 };
 </script>
