@@ -16,7 +16,7 @@
         <h4>Piece:</h4>
         <br>
         <!--<h3>Performer: {{role.name}}</h3>-->
-       <!-- <h3>Piece: {{eventsession.songId}}</h3>-->
+       <!-- <h3>Piece: {{eventsession.songId}}</h3>-->    
         <v-form ref="form" v-model="valid" lazy validation>
           <h5>Deportment (Poise, entrance/exit bow)</h5>
           <v-textarea
@@ -26,12 +26,48 @@
             style="width:50%;"
             required
           ></v-textarea>
+        <v-row>
+          <v-col
+          cols="4"
+          sm="4"
+          md="4"
+        >
           <v-checkbox
             v-model="critique.deportmentGrade"
             label="Poor"
             color="red"
             value="critique.deportmentGrade"
           ></v-checkbox>
+        </v-col>
+        <v-col
+        cols="4"
+        sm="4"
+        md="4"
+      >
+          <v-checkbox
+          v-model="critique.deportmentGrade"
+          label="Fair"
+          color="orange"
+          value="critique.deportmentGrade"
+        ></v-checkbox>
+      </v-col>
+      <v-col>
+        <v-checkbox
+        v-model="critique.deportmentGrade"
+        label="Good"
+        color="yellow"
+        value="critique.deportmentGrade"
+      ></v-checkbox>
+    </v-col>
+    <v-col>
+      <v-checkbox
+      v-model="critique.deportmentGrade"
+      label="Excellent"
+      color="green"
+      value="critique.deportmentGrade"
+    ></v-checkbox>
+  </v-col>
+        </v-row>
           <h5>Tone (beauty, control/capacity, vibrato, warmth)</h5>
           <v-textarea
             v-model="critique.tone"
