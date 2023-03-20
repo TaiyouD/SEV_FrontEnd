@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app absolute id="navbar-maroon">
+    <v-app-bar app absolute elevate-on-scroll id="navbar-maroon">
       <router-link :to="{ name: 'home' }">
         <v-img
           class="mx-2"
@@ -15,10 +15,10 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-toolbar-items v-if="user == null" >
+    <v-toolbar-items v-if="user == null" >
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" >
             Sign Up
           </v-btn>
         </template>
@@ -33,7 +33,7 @@
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" >
             My Events
           </v-btn>
         </template>
@@ -45,7 +45,7 @@
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" >
             Student Events
           </v-btn>
         </template>
@@ -56,7 +56,7 @@
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" >
             Maintain Roles
           </v-btn>
         </template>
@@ -68,7 +68,7 @@
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" dark v-bind="attrs" v-on="on" >
+          <v-btn plain id="navbar-maroon" v-bind="attrs" v-on="on" >
             Events
           </v-btn>
         </template>
@@ -82,8 +82,9 @@
             <v-list-item exact :to="{ name: 'eventevaluation' }" text>Place Holder</v-list-item>
         </v-list>
       </v-menu>
-      </v-toolbar-items>
-
+    </v-toolbar-items>
+        
+    <div v-if="user != null">
       <v-menu bottom min-width="200px" rounded offset-y v-if="user != null">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon x-large v-on="on" v-bind="attrs">
@@ -108,12 +109,41 @@
               <v-btn depressed rounded text @click="logout()"> Logout </v-btn>
             </div>
           </v-list-item-content>
-        </v-card>
-        
+        </v-card> 
       </v-menu>
-     
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" id="navbar-maroon"></v-app-bar-nav-icon>
-
+    </div>
+    <div else>
+      <v-menu bottom min-width="200px" rounded offset-y v-if="user == null">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon x-large v-on="on" v-bind="attrs">
+            <v-avatar v-if="user == null">
+              <v-icon color ="secondary">
+                {{ icons.mdiAccountCircle }}
+              </v-icon>
+            </v-avatar>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-list-item-content class="justify-center">
+            <div class="mx-auto text-center">
+              <!-- <v-avatar color="secondary" class="mt-2 mb-2">
+                <span class="accent--text font-weight-bold">{{
+                  initials
+                }}</span>
+              </v-avatar>
+              <h3>{{ name }}</h3>
+              <p class="text-caption mt-1">
+                {{ user.email }}
+              </p>
+              <v-divider class="my-3"></v-divider> -->
+              
+              <v-btn depressed rounded exact :to="{ name: 'login' }" text> Login </v-btn>
+            </div>
+          </v-list-item-content>
+        </v-card> 
+      </v-menu>
+    </div>
+      <v-icon @click.stop="drawer = !drawer" id="navbar-maroon">{{ icons.mdiDotsVertical }}</v-icon>
     </v-app-bar>
     
     <v-navigation-drawer app v-model="drawer" temporary right>
@@ -161,15 +191,33 @@
 <script>
 import Utils from "@/config/utils.js";
 import AuthServices from "@/services/authServices";
+import {
+    mdiAccountCircle,
+    mdiPencil,
+    mdiShareVariant,
+    mdiDelete,
+    mdiAccountCogOutline,
+    mdiApps,
+    mdiDotsVertical,
+  } from '@mdi/js'
 
 export default {
-  name: "App",
+  name: "Menu-Bar",
   data: () => ({
     drawer: false,
+    icons: {
+        mdiAccountCircle,
+        mdiPencil,
+        mdiShareVariant,
+        mdiDelete,
+        mdiAccountCogOutline,
+        mdiApps,
+        mdiDotsVertical,
+      },
     navitems1: [
       { title: 'Profile stud', icon: 'mdi-account-box', route:'/profilestudent'},
       { title: 'Profile fac', icon: 'mdi-account-box', route:'/profilefaculty'},
-      { title: 'My Repertoire', icon: 'mdi-view-dashboard', route:'/repertoire'},
+      { title: 'My Repertoire', icon: 'mdi-music-box-outline', route:'/repertoire'},
     ],
     navitems2: [
       { title: 'Settings', icon: 'mdi-cog' },

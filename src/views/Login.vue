@@ -1,12 +1,18 @@
 <template>
-  <v-container>
-    <v-toolbar>
-      <v-toolbar-title>Welcome to the World of Music!</v-toolbar-title>
-    </v-toolbar>
-    <br /><br />
+
+<div>
+    <v-img  height = "1300" cover src="../assets/church-window-1.jpg" >
+    <v-container>
+      <v-toolbar>
+        <v-toolbar-title>Welcome to the World of Music!</v-toolbar-title>
+      </v-toolbar>
+    </v-container>
+    <br /><br /><br />
     <SocialLogin />
-    <br /><br />
-  </v-container>
+    </v-img>
+   
+  </div>
+
 </template>
 
 <script>
@@ -18,3 +24,9 @@ export default {
   },
 };
 </script>
+
+<style>
+/* .v-image__image{
+ background-size:100% 100%;
+} */
+</style>
