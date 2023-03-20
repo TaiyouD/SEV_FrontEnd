@@ -43,7 +43,7 @@
           <v-data-table
             :headers="headers"
             :search="search"
-            :items="songs"
+            :items="repertoireSongs"
             :items-per-page="50"
           >
             <template v-slot:[`item.actions`]="{ item }">
@@ -94,7 +94,7 @@
           isVoice: ""
         },
         search: "",
-        songs: [],
+        repertoireSongs: [],
         currentRepertoire: null,
         currentIndex: -1,
         user: {},
@@ -102,7 +102,8 @@
         headers: [
           { text: "Piece Title", value: "title" },
           { text: "Composer", value: "composer" },
-          { text: "Semester", value: "semester"}
+          { text: "Semester", value: "semester"},
+          { text: "Actions", value: "actions", sortable: false }
         ]
       };
     },
@@ -113,7 +114,9 @@
    },
     mounted() {
       this.user = Utils.getStore("user"); 
-      this.instrumentRole = instrumentRoleServices.getAllForUser(this.id);
+      console.log(this.user)
+      this.instrumentRole = instrumentRoleServices.getAllForUser("userId");
+      console.log(this.instrumentRole)
       this.instrument = instrumentServices.getAll();
       this.retrieveSongs();
     },

@@ -2,7 +2,7 @@ import apiClient from "@/services/services.js";
 
 export default { //howwwwwww
   getAllForUser(userId) {
-    return apiClient.get(`${userId}/repertoireSong`);
+    return apiClient.get(`/repertoireSong/userPerf/${userId}`);
   },
   get(id) {
     return apiClient.get(`/repertoireSong/${id}`);
