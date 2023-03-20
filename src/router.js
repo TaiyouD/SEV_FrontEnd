@@ -25,7 +25,8 @@ import AddLesson from "./views/AddLesson.vue";
 import EditLesson from "./views/EditLesson.vue";
 
 
-// Views
+// CRUD for Admin to maintain roles
+import MaintainRoles from "./views/MaintainRole.vue";
 import ViewComposers from "./views/ViewComposer.vue";
 import AddComposers from "./views/AddComposer.vue";
 import EditComposers from "./views/EditComposer.vue";
@@ -142,6 +143,11 @@ const router = new Router({
       name: "editLesson",
       component: EditLesson,
       props: true,
+    },
+    {
+      path: "/maintainrole",
+      name: "maintainrole",
+      component: MaintainRoles
     },
     {
       path: "/viewcomposer",
