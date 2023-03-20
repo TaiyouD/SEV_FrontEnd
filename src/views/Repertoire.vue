@@ -9,7 +9,7 @@
         </v-toolbar>
         <br />
         <div class="d-flex align-center">
-          <h3 class="mr-3">Voice/Instrument: </h3>
+          <h4 class="mr-3">Voice/Instrument: </h4>
           <v-select v-if="showDropdown" 
               :items="instrumentRole.instrumentId"
               item-tile="Instrument"
