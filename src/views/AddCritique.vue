@@ -23,15 +23,11 @@
             v-model="critique.deportment"
             id="deportment"
             label=""
-            style="width:50%;"
+            style="width:40%;"
             required
           ></v-textarea>
         <v-row>
-          <v-col
-          cols="4"
-          sm="4"
-          md="4"
-        >
+          <v-col>
           <v-checkbox
             v-model="critique.deportmentGrade"
             label="Poor"
@@ -39,11 +35,7 @@
             value="critique.deportmentGrade"
           ></v-checkbox>
         </v-col>
-        <v-col
-        cols="4"
-        sm="4"
-        md="4"
-      >
+        <v-col>
           <v-checkbox
           v-model="critique.deportmentGrade"
           label="Fair"
@@ -132,7 +124,7 @@
   
   export default {
     name: "add-critique",
-    props: ["eventsessionId"],
+    props: ["eventsessionId", "eventsessionStudentId"],
     data() {
       return {
         critique: {
@@ -170,7 +162,10 @@
       this.user = Utils.getStore("user");
     },
     methods: {
-      saveCritique() {
+      hasAdditional() {
+      return this.critique.deportmentGrade.length > 0
+      },
+      saveCritique() { //how to get student id?
         var data = {
           date: this.critique.date,
           deportment: this.critique.deportment,
@@ -190,7 +185,8 @@
           performSuggest: this.critique.performSuggest,
           hasPassed:this.critique.hasPassed,
           facultyId: this.user.userId,
-          eventsessionId: this.eventsessionId
+          eventsessionId: this.eventsessionId,
+          studentId: this.eventsessionStudentId
         };
         CritiqueServices.createCritique(this.eventsessionId, data)
         .then((response) => {
