@@ -1,3 +1,4 @@
+
 import Vue from "vue";
 import Router from "vue-router";
 
@@ -22,6 +23,12 @@ import AddTutorial from "./views/AddTutorial.vue";
 import ViewTutorial from "./views/ViewTutorial.vue";
 import AddLesson from "./views/AddLesson.vue";
 import EditLesson from "./views/EditLesson.vue";
+
+
+// Views
+import ViewComposers from "./views/ViewComposer.vue";
+import AddComposers from "./views/AddComposer.vue";
+import EditComposers from "./views/EditComposer.vue";
 
 Vue.use(Router);
 
@@ -135,6 +142,22 @@ const router = new Router({
       name: "editLesson",
       component: EditLesson,
       props: true,
+    },
+    {
+      path: "/viewcomposer",
+      name: "viewcomposer",
+      component: ViewComposers
+    },
+    {
+      path: "/addcomposer",
+      name: "addcomposer",
+      component: AddComposers
+    },
+    {
+      path: "/editcomposer",
+      name: "editcomposer",
+      component: EditComposers,
+      props: true
     },
   ],
 });

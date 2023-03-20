@@ -170,6 +170,7 @@ export default {
       { title: 'Profile stud', icon: 'mdi-account-box', route:'/profilestudent'},
       { title: 'Profile fac', icon: 'mdi-account-box', route:'/profilefaculty'},
       { title: 'My Repertoire', icon: 'mdi-view-dashboard', route:'/repertoire'},
+      { title: 'View Composers', icon: 'mdi-view-dashboard', route:'/viewcomposer'},
     ],
     navitems2: [
       { title: 'Settings', icon: 'mdi-cog' },
