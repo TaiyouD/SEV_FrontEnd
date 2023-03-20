@@ -87,10 +87,11 @@ export default {
       SongServices.getAll()
         .then((response) => {
           this.titles = response.data;
+          console.log(this.titles); //titles.?
           this.loading = true
           // Simulated ajax query
           setTimeout(() => {
-            this.selected = this.titles.filter(e => {
+            this.selected.id.title = this.titles.id.title.filter(e => {
               return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
             })
             this.loading = false

@@ -82,7 +82,7 @@ export default {
         });
     },
     cancel() {
-      this.$router.push({ name: "view", params: { id: this.composerId } });
+      this.$router.push({ name: "addpiecerepertoire", params: { id: this.composerId } });
     },
   },
 };
