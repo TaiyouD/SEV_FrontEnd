@@ -62,7 +62,7 @@ export default {
 
   methods: {
     saveAccompanist() {
-        //send email to admin
+        //send notification to admin
       var data = {
         firstName: this.user.firstName,
         lastName: this.user.lastName,
