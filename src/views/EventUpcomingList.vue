@@ -65,14 +65,15 @@
     <v-dialog
       v-model="edit_dialog"
       persistent
-      max-width="600px"
+      max-width="800"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-icon
-          color="primary"
+          color="grey"
           dark
           v-bind="attrs"
           v-on="on"
+          small 
           class="mx-4"
         >
         mdi-pencil
@@ -80,27 +81,27 @@
       </template>
       <v-card>
         <v-card-title>
-          <span class="text-h5">User Profile</span>
+          <span class="text-h5">Edit Event Session</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-banner
+          <!-- <v-banner
           v-model="banner"
           transition="slide-y-transition"
-        >
-        By editing the event session and
-        clicking the submit button you will notifiy an 
-        Admin of your event session change and it will be either approved or disapproved.
-          <template v-slot:actions="{ dismiss }">
-            <v-btn
-              text
-              color="primary"
-              @click="dismiss"
+          >
+          By editing the event session and
+          clicking the submit button you will notifiy an 
+          Admin of your event session change and it will be either approved or disapproved.
+            <template v-slot:actions="{ dismiss }">
+              <v-btn
+                text
+                color="primary"
+                @click="dismiss"
             >
               Dismiss
             </v-btn>
           </template>
-        </v-banner>
+        </v-banner> -->
 
           <v-form ref="form" v-model="valid" lazy validation>
           <!-- <v-text-field
@@ -120,7 +121,8 @@
   
                             
        <!-- Select Hearing Date Below -->
-       <v-select style="padding-top: 50px;"
+       <v-select 
+        class="mt-6"
         :items="selected"
         label="Select Available Event Dates"
         @change="selectButton"
@@ -158,8 +160,9 @@
 
         <!-- Instructor Select Below -->
     <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 260px;"
+    <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+    
+    <v-select class=" mr-4"  width = "260"
         :items="items2"
         item-title="state2"
         label="Select Instructor"
@@ -168,7 +171,7 @@
         filled
      ></v-select>
 
-     <v-select style="padding-right: 30px; width: 260px;"
+     <v-select class=" mr-4" width = "260"
         :items="items2"
 
         label="Select Duration"
@@ -179,7 +182,8 @@
                 
 
                     <!--  Instrument Select Below -->
-    <v-select   style="width: 260px;"
+    <v-select
+       width = "260"
         v-model="select"
         :items="items4"
         item-title="Instrument"
@@ -191,57 +195,70 @@
     ></v-select>
     </div>
 </div>
-                   
-<v-container fluid>
-    <v-text-field
-      name="input-7-1"
-      label="Select Piece"
-      filled
-      auto-grow
-    ></v-text-field>
-  </v-container>
 
-  <v-select style="padding-top: 8px;"
+    <v-select 
+        item-title="song"
+        label="Select Piece"
+        return-object
+        single-line
+        filled
+     ></v-select>
+ 
+
+  <!-- <v-select style="padding-top: 8px;"
         item-title="date"
         label="Select Composer"
         return-object
         single-line
         filled
-     ></v-select>
+     ></v-select> -->
           </v-form>
           </v-container>
-          <small>*indicates required field</small>
+          <!-- <small>*indicates required field</small> -->
         </v-card-text>
         <v-card-actions>
+          <router-link to="/addaccompanist" tag="v-btn">
+            <v-btn color="primary" text>
+              Add Accompanist
+            </v-btn>
+          </router-link>
+          <router-link to="/addsongrepertoire" tag="v-btn">
+            <v-btn color="primary" text>
+              Add Piece
+            </v-btn>
+          </router-link>
+       
           <v-spacer></v-spacer>
           <v-btn
-            color="blue darken-1"
+            color="primary"
+            text
+            @click="updateEventSession()"
+          >
+            Save
+          </v-btn>
+          <v-btn
+            color="primary"
             text
             @click="edit_dialog = false"
           >
             Close
           </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="edit_dialog = false"
-          >
-            Save
-          </v-btn>
+         
         </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog
       v-model="view_dialog"
       persistent
-      max-width="600px"
+      max-width="800"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-icon
-          color="primary"
+          color="grey"
           dark
           v-bind="attrs"
           v-on="on"
+          small 
           class="mx-4"
         >
         mdi-format-list-bulleted-type
@@ -249,101 +266,172 @@
       </template>
       <v-card>
         <v-card-title>
-          <span class="text-h5">User Profile</span>
+          <span class="text-h5">View Event Session</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  label="Legal first name*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  label="Legal middle name"
-                  hint="example of helper text only on focus"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  label="Legal last name*"
-                  hint="example of persistent helper text"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Email*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Password*"
-                  type="password"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Age*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-autocomplete
-                  :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                  label="Interests"
-                  multiple
-                ></v-autocomplete>
-              </v-col>
-            </v-row>
+          <!-- <v-banner
+          v-model="banner"
+          transition="slide-y-transition"
+          >
+          By editing the event session and
+          clicking the submit button you will notifiy an 
+          Admin of your event session change and it will be either approved or disapproved.
+          <template v-slot:actions="{ dismiss }">
+            <v-btn
+              text
+              color="primary"
+              @click="dismiss"
+            >
+              Dismiss
+            </v-btn>
+          </template>
+        </v-banner> -->
+
+          <v-form ref="form" v-model="valid" lazy validation>
+          <!-- <v-text-field
+            v-model="tutorial.title"
+            id="title"
+            :counter="50"
+            label="Title"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="tutorial.description"
+            id="description"
+            :counter="50"
+            label="Description"
+            required
+          ></v-text-field> -->
+  
+                            
+       <!-- Select Hearing Date Below -->
+       <v-text-field 
+        class="mt-6"
+        :items="selected"
+        label="Event Date"
+        @change="selectButton"
+        v-model="selected"
+        item-title="date"
+        return-object
+        single-line
+        filled
+        disabled
+     ></v-text-field>
+
+
+                     <!-- Accompanist Select Below -->
+    <v-text-field  
+        :items="selected2"
+        item-title="Accompanist"
+        item-value=""
+        label="Accompanist"
+        @change="selectButton"
+        v-model="selected2"
+        return-object
+        single-line
+        filled
+        disabled
+    ></v-text-field >
+
+    <v-text-field  
+
+        item-title="Time Slot"
+        item-value=""
+        label="Time Slot"
+        return-object
+        single-line
+        filled
+        disabled
+    ></v-text-field >
+
+        <!-- Instructor Select Below -->
+    <div style="text-align: center;">
+    <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+    
+    <v-text-field  class=" mr-4"  width = "260"
+        :items="items2"
+        item-title="state2"
+        label="Instructor"
+        return-object
+        single-line
+        filled
+        disabled
+     ></v-text-field >
+
+     <v-text-field  class=" mr-4" width = "260"
+        :items="items2"
+
+        label="Duration"
+        return-object
+        single-line
+        filled
+        disabled
+     ></v-text-field >
+                
+
+                    <!--  Instrument Select Below -->
+    <v-text-field 
+       width = "260"
+        v-model="select"
+        :items="items4"
+        item-title="Instrument"
+        item-value=""
+        label="Voice or Instrument"
+        return-object
+        single-line
+        filled
+        disabled
+    ></v-text-field>
+    </div>
+</div>
+
+    <v-text-field 
+        item-title="song"
+        label="Piece"
+        return-object
+        single-line
+        filled
+        disabled
+     ></v-text-field>
+ 
+
+  <!-- <v-select style="padding-top: 8px;"
+        item-title="date"
+        label="Select Composer"
+        return-object
+        single-line
+        filled
+     ></v-select> -->
+          </v-form>
           </v-container>
-          <small>*indicates required field</small>
+          <!-- <small>*indicates required field</small> -->
         </v-card-text>
         <v-card-actions>
+          <router-link to="/critique" tag="v-btn">
+          <v-btn color="primary"
+            text>
+          View Critiques
+          </v-btn>
+          </router-link>
+       
           <v-spacer></v-spacer>
+          
           <v-btn
-            color="blue darken-1"
+            color="primary"
             text
             @click="view_dialog = false"
           >
             Close
           </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="view_dialog = false"
-          >
-            Save
-          </v-btn>
+         
         </v-card-actions>
       </v-card>
     </v-dialog>
   </v-row>
-      
+      <!-- <v-icon small class="mx-4" @click="deleteSong(item)">
+                  mdi-trash-can
+                </v-icon> -->
     </div>
     
   </template>
@@ -389,8 +477,9 @@
     },
    
     methods: {
-      editEventSession(eventSession) {
-        this.$router.push({ name: "edit", params: { id: eventSession.id } });
+      updateEventSession() {
+        // this.$router.push({ name: "edit", params: { id: eventSession.id } });
+        this.edit_dialog = false;
       },
       viewEventSession(eventSession) {
         this.$router.push({ name: "view", params: { id: eventSession.id } });
