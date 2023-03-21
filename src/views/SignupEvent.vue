@@ -21,115 +21,54 @@
     <!-- This is where the multiple tab container is going to go  -->
     <div>
         <div class="wrapper">
-            <tabs :mode="mode" style="padding-left: 130px; padding-right: 130px;"> 
-                <tab title="Recital">   
     <!-- ============================This was where calendar was============================ -->
-
-    
-  
-  
-  <!-- ============================TEST============================ -->
-  <div>
     <h2>Available Time Slots</h2>
-    <ul><v-virtual-scroll
-  height="100"
-  item-height="20"
->
-<li v-for="slot in timeSlots" :key="slot">{{ slot }}</li>
-</v-virtual-scroll>
-    </ul>
-  </div>
-  <!-- ============================TEST============================ -->
-
-                    <!-- Time Select Above -->
-       <!-- Select Hearing Date Below -->
-       <v-select style="padding-top: 80px;"
-        :items="selected"
-        label="Select Available Hearing Dates"
-        @change="selectButton"
-        v-model="selected"
-        item-title="date"
-        return-object
-        single-line
-        filled
-     ></v-select>
+    <v-container>
+        <v-card>
+          <v-card-title>
+            Select Upcoming Event
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-card-text>
+            <b>{{ message }}</b>
+          </v-card-text>
 
 
-                     <!-- Accompanist Select Below -->
-    <v-select 
-        :items="selected2"
-        item-title="Accompanist"
-        item-value=""
-        label="Select Accompanist"
-        @change="selectButton"
-        v-model="selected2"
-        return-object
-        single-line
-        filled
-    ></v-select>
+          <v-data-table
+            :headers="headers"
+            :search="search"
+            :items="events2"
+            :items-per-page="50"
+          >
+          <template #item="{ item }">
+            <tr>
+              <!-- <td>Something</td> -->
+              <td>{{ item.isVoice }}</td>
+              <td>
+                <div class="d-flex justify-end">
+                  <v-icon color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
+                  <v-icon color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
+                </div>
+              </td>
+            </tr>
+          </template>
 
-    <v-select 
+          </v-data-table>
+        </v-card>
+      </v-container>
 
-        item-title="Time Slot"
-        item-value=""
-        label="Select Time Slot"
-        return-object
-        single-line
-        filled
-    ></v-select>
-
-        <!-- Instructor Select Below -->
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 260px;"
-        :items="items2"
-        item-title="state2"
-        label="Select Instructor"
-        return-object
-        single-line
-        filled
-     ></v-select>
-
-     <v-select style="padding-right: 30px; width: 260px;"
-        :items="items2"
-
-        label="Select Duration"
-        return-object
-        single-line
-        filled
-     ></v-select>
-                
-
-                    <!--  Instrument Select Below -->
-    <v-select   style="width: 260px;"
-        v-model="select"
-        :items="items4"
-        item-title="Instrument"
-        item-value=""
-        label="Select Voice or Instrument"
-        return-object
-        single-line
-        filled
-    ></v-select>
-    </div>
-</div>
-                   
-<v-container fluid>
-    <v-text-field
-      name="input-7-1"
-      label="Selection Title"
-      filled
-      auto-grow
-    ></v-text-field>
-  </v-container>
-
-  <v-select style="padding-top: 8px;"
-        item-title="date"
-        label="Select Composer"
-        return-object
-        single-line
-        filled
-     ></v-select>
+      <v-flex class = "mt-4">
+        <popup>
+        </popup>
+      </v-flex>
+      
 
 
      <div style="text-align: center;">
@@ -149,115 +88,6 @@
   </router-link>
 </div>
 </div>
-    </tab>
-
-
-
-<!-- ================START of JURY TAB================= -->
-<tab title="Jury">
-        <!-- Select Hearing Date Below -->
-
-                    <!-- Time Select Above -->
-       <!-- Select Hearing Date Below -->
-       <v-select style="padding-top: 80px;"
-        :items="selected"
-        label="Select Available Hearing Dates"
-        @change="selectButton"
-        v-model="selected"
-        item-title="date"
-        return-object
-        single-line
-        filled
-     ></v-select>
-
-
-                     <!-- Accompanist Select Below -->
-    <v-select 
-        :items="selected2"
-        item-title="Accompanist"
-        item-value=""
-        label="Select Accompanist"
-        @change="selectButton"
-        v-model="selected2"
-        return-object
-        single-line
-        filled
-    ></v-select>
-
-    <v-select 
-
-        item-title="Time Slot"
-        item-value=""
-        label="Select Time Slot"
-        return-object
-        single-line
-        filled
-    ></v-select>
-
-        <!-- Instructor Select Below -->
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 260px;"
-        :items="items2"
-        item-title="state2"
-        label="Select Instructor"
-        return-object
-        single-line
-        filled
-     ></v-select>
-                
-
-                    <!--  Instrument Select Below -->
-    <v-select   style="width: 260px;"
-        v-model="select"
-        :items="items4"
-        item-title="Instrument"
-        item-value=""
-        label="Select Voice or Instrument"
-        return-object
-        single-line
-        filled
-    ></v-select>
-    </div>
-</div>
-                   
-<v-container fluid>
-    <v-text-field
-      name="input-7-1"
-      label="Selection Title"
-      filled
-      auto-grow
-    ></v-text-field>
-  </v-container>
-
-  <v-select style="padding-top: 8px;"
-        item-title="date"
-        label="Select Composer"
-        return-object
-        single-line
-        filled
-     ></v-select>
-
-
-     <div style="text-align: center;">
-<div style="display:inline-block; margin:auto;">
-<v-btn color="success" variant="tonal" style="text-align: center;">
-    Submit
-</v-btn>
-<router-link to="/addaccompanist" tag="v-btn">
-<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-    Add Accompanist
-</v-btn>
-</router-link>
-<router-link to="/addsong" tag="v-btn">
-  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Add Song
-  </v-btn>
-  </router-link>
-</div>
-</div>
-                </tab>
-            </tabs>
 
     </div>
     </div>
@@ -267,28 +97,23 @@
 </template>
   
   <script>
-  import TutorialServices from "../services/tutorialServices";
-  import Utils from "@/config/utils.js";
-  import Tab from '../components/Tab'
-  import Tabs from '../components/Tabs'
+  import eventServices from "../services/signupServices";
+  import Utils from "@/config/utils.js"
+  import popup from '../components/popup'
 
   export default {
-    name: "tutorials-list",
+    name: "events-list",
     components: {
-      Tab,
-      Tabs
+      popup
     },
     data() {
       return {
         data: () => ({}),
+        events2: [],
         sheet:null,
-        selected: [' ','2023-4-15', '2023-4-16', '2023-4-17', '2023-4-18'],
-        selected2: [' ', 'John Doe', 'John Doe2', 'John Doe3'],
         extended: false,
         mode: 'light',
         search: "",
-        tutorials: [],
-        currentTutorial: null,
         currentIndex: -1,
         title: "",
         user: {},
@@ -298,51 +123,15 @@
           { text: "Description", value: "description" },
           { text: "Actions", value: "actions", sortable: false },
         ],
-        colors: [
-          'primary',
-          'secondary',
-          'yellow darken-2',
-          'red',
-          'orange',
-        ],
-        model: 0,
-        dates: [
-        '2023-4-15', '2023-4-16', '2023-4-17', '2023-4-18',
-        ],
-        items2: ['John Doe', 'John Doe2', 'John Doe3'],
-        items3: ['John Doe', 'John Doe2', 'John Doe3'],
-        items4: ['Thing1', 'Thing2', 'Thing3', 'Thing4'],
-        events: [
-            {
-          name: 'Event 2',
-          start: '2023-04-15T10:00:00',
-          end: '2023-04-15T10:10:00',
-          timed: true,
-        },
-        {
-          name: 'Event 1',
-          start: '2023-04-15T08:00:00',
-          end: '2023-04-15T08:10:00',
-          timed: true,
-        },
-        {
-          name: 'Event 3',
-          start: '2023-04-15T11:20:00',
-          end: '2023-04-15T11:30:00',
-          timed: true,
-        },   
-    ],
+
       };
     },
     mounted() {
       this.user = Utils.getStore("user");
-      this.retrieveTutorials();
+      this.retrieveEvents();
     },
     methods: {
-    selectButton(){
-        this.$nextTick(() => {
-        this.select = 0;
-    });},
+
     changeStyle () {
       if (this.mode === 'dark') {
         this.mode = 'light'
@@ -350,41 +139,41 @@
         this.mode = 'dark'
       }
     },
-      editTutorial(tutorial) {
-        this.$router.push({ name: "edit", params: { id: tutorial.id } });
+      editEvent(event) {
+        this.$router.push({ name: "edit", params: { id: event.id } });
       },
-      viewTutorial(tutorial) {
-        this.$router.push({ name: "view", params: { id: tutorial.id } });
+      viewEvent(event) {
+        this.$router.push({ name: "view", params: { id: event.id } });
       },
-      deleteTutorial(tutorial) {
-        TutorialServices.delete(tutorial.id)
+      deleteEvent(event) {
+        eventServices.delete(event.id)
           .then(() => {
-            this.retrieveTutorials();
+            this.retrieveevents();
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
-      retrieveTutorials() {
-        TutorialServices.getAllForUser(this.user.userId)
+      retrieveEvents() {
+        eventServices.getAll()
           .then((response) => {
-            this.tutorials = response.data;
+            this.events2 = response.data;
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
       refreshList() {
-        this.retrieveTutorials();
-        this.currentTutorial = null;
+        this.retrieveEvents();
+        this.currentevent = null;
         this.currentIndex = -1;
       },
-      setActiveTutorial(tutorial, index) {
-        this.currentTutorial = tutorial;
-        this.currentIndex = tutorial ? index : -1;
+      setActiveEvent(event, index) {
+        this.currentevent = event;
+        this.currentIndex = event ? index : -1;
       },
-      removeAllTutorials() {
-        TutorialServices.deleteAll()
+      removeAllEvents() {
+        eventServices.deleteAll()
           .then((response) => {
             console.log(response.data);
             this.refreshList();
