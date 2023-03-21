@@ -15,21 +15,21 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
-    <v-toolbar-items v-if="user == null" >
+    <v-toolbar-items >
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" >
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'signupevents' }">
             Sign Up
           </v-btn>
         </template>
-        <v-list>
-          <!-- <v-list-item v-for="index in 4" :key="index">
+        <!-- <v-list>
+          <v-list-item v-for="index in 4" :key="index">
             <v-list-item-title>Item {{ index }}</v-list-item-title>
-          </v-list-item> -->
+          </v-list-item>
           <v-list-item exact :to="{ name: 'signupevents' }" text>Event Sign Up</v-list-item>
           <v-divider></v-divider>
           <v-list-item exact :to="{ name: 'missinginfo' }" text>Missing Info</v-list-item>
-        </v-list>
+        </v-list> -->
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
@@ -51,28 +51,24 @@
         </template>
         <v-list>
             <v-list-item exact :to="{ name: 'eventevaluation' }" text>Event Evalution</v-list-item>
-            <v-divider></v-divider>
         </v-list>
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" >
+          <v-btn plain  dark v-bind="attrs" v-on="on" 
+          exact :to="{ name: 'eventevaluation' }" text>
             Maintain Roles
           </v-btn>
         </template>
-        <v-list>
-            <v-list-item exact :to="{ name: 'eventevaluation' }" text>Place Holder</v-list-item>
-            <v-divider></v-divider>
-            <v-list-item exact :to="{ name: 'eventevaluation' }" text>Place Holder</v-list-item>
-        </v-list>
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn plain id="navbar-maroon" v-bind="attrs" v-on="on" >
-            Events
+          <v-btn plain id="navbar-maroon" v-bind="attrs" v-on="on" 
+          exact :to="{ name: 'eventevaluation' }" text>
+            Maintain Events
           </v-btn>
         </template>
-        <v-list>
+        <!-- <v-list>
             <v-list-item exact :to="{ name: 'eventevaluation' }" text> Create Event</v-list-item>
             <v-divider></v-divider>
             <v-list-item exact :to="{ name: 'eventevaluation' }" text>View Events</v-list-item>
@@ -80,7 +76,7 @@
             <v-list-item exact :to="{ name: 'eventevaluation' }" text>Place Holder</v-list-item>
             <v-divider></v-divider>
             <v-list-item exact :to="{ name: 'eventevaluation' }" text>Place Holder</v-list-item>
-        </v-list>
+        </v-list> -->
       </v-menu>
     </v-toolbar-items>
         
@@ -105,7 +101,18 @@
               <p class="text-caption mt-1">
                 {{ user.email }}
               </p>
-              <v-divider class="my-3"></v-divider>
+              <v-list dense nav>
+                <v-list-item v-for="item in profileitems1" :key="item.title" link @click="$router.push({ path: item.route})">
+                  <v-list-item-icon>
+                    <v-icon>{{ item.icon }}</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+              <v-divider class="my-1"></v-divider>
               <v-btn depressed rounded text @click="logout()"> Logout </v-btn>
             </div>
           </v-list-item-content>
@@ -127,15 +134,24 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <!-- <v-avatar color="secondary" class="mt-2 mb-2">
-                <span class="accent--text font-weight-bold">{{
-                  initials
-                }}</span>
+                <span class="accent--text font-weight-bold"> CJ </span>
               </v-avatar>
-              <h3>{{ name }}</h3>
-              <p class="text-caption mt-1">
-                {{ user.email }}
+              <h3>Carl Jackson</h3>
+              <p class="text-caption">
+                c.jackson@gamil.com
               </p>
-              <v-divider class="my-3"></v-divider> -->
+              <v-list dense nav>
+                <v-list-item v-for="item in profileitems1" :key="item.title" link @click="$router.push({ path: item.route})">
+                  <v-list-item-icon>
+                    <v-icon>{{ item.icon }}</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+              <v-divider></v-divider> -->
               
               <v-btn depressed rounded exact :to="{ name: 'login' }" text> Login </v-btn>
             </div>
@@ -143,6 +159,7 @@
         </v-card> 
       </v-menu>
     </div>
+    
       <v-icon @click.stop="drawer = !drawer" id="navbar-maroon">{{ icons.mdiDotsVertical }}</v-icon>
     </v-app-bar>
     
@@ -214,12 +231,15 @@ export default {
         mdiApps,
         mdiDotsVertical,
       },
+    profileitems1: [
+      { title: 'Profile page stud', icon: 'mdi-account-box', route:'/profilestudent'},
+      { title: 'Profile page facu', icon: 'mdi-account-box', route:'/profilefaculty'},
+    ],
     navitems1: [
-      { title: 'Profile stud', icon: 'mdi-account-box', route:'/profilestudent'},
-      { title: 'Profile fac', icon: 'mdi-account-box', route:'/profilefaculty'},
       { title: 'My Repertoire', icon: 'mdi-music-box-outline', route:'/repertoire'},
     ],
     navitems2: [
+      { title: 'Vocal Level Info', icon: 'mdi-receipt' },
       { title: 'Settings', icon: 'mdi-cog' },
     ],
     user: {},
