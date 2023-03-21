@@ -59,7 +59,7 @@
         ></v-textarea>-->
         <v-autocomplete
             v-model="song.composer"
-            :search-input.sync="search"
+            :search-input.sync="searchV"
             :loading="loading"
             :items="composers"
             item-value="lastName"
@@ -124,6 +124,7 @@ export default {
       valid: true,
       // disable: 0,
       loading: false,
+      searchV: null,
       select: null,
       composers: [],
       song: {
@@ -298,10 +299,20 @@ export default {
       }
       ]  };
   },
-  mounted() {
-    this.composers = ComposerServices.getAll();
-    console.log(this.composers);
+  async mounted() {
+    const result = await this.getComposers()
+    this.composers=result.data
+    console.log(this.composers)
+    
   },
+  /*
+  async mounted () {
+    const response = await fetch(ComposerServices.getAll());
+    const { data: composers } = await response.json()
+    this.composers = composers;
+    console.log(this.composers);
+  },*/
+  
   watch: {
       search(val) {
         val && val !== this.select && this.querySelections(val)
@@ -321,6 +332,9 @@ export default {
 
   },*/
   methods: {
+    getComposers(){
+      return ComposerServices.getAll()
+    },
     querySelections(v) {
       ComposerServices.getAll()
         .then((response) => {
@@ -338,13 +352,14 @@ export default {
           this.message = e.response.data.message;
         });
     },
+    /*
     async translate() {
       const result = await this.$translate(this.paragraph, {
         from: this.song.language,
         to: 'en'
       })
       this.song.translation = result.text
-    },
+    },*/
     /*
     checkIfCountryIsAvailableInDefaults() {
       return this.defaultCountries.some(
