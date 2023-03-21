@@ -11,43 +11,43 @@
         <br><br><br><br><br>
         <v-row justify="center">
           <v-col md="4">
-            <v-card class="elevation-10 hover" @click="$router.push('/viewaccompanist')">
+            <v-card class="elevation-10 hover" @click="$router.push('/maintainaccompanist')">
               <v-card-title>Accompanists</v-card-title>
             </v-card>
           </v-col>
   
           <v-col md="4">
-            <v-card class="elevation-10 hover" @click="$router.push('/viewcomposer')">
+            <v-card class="elevation-10 hover" @click="$router.push('/maintaincomposer')">
               <v-card-title>Composers</v-card-title>
             </v-card>
           </v-col>
   
           <v-col md="4">
-            <v-card class="elevation-10 hover" @click="$router.push('/viewinstrument')">
+            <v-card class="elevation-10 hover" @click="$router.push('/maintaininstrument')">
               <v-card-title>Instruments</v-card-title>
             </v-card>
           </v-col>
   
           <v-col md="4">
-            <v-card class="elevation-10 hover" @click="$router.push('/viewlevel')">
+            <v-card class="elevation-10 hover" @click="$router.push('/maintainlevel')">
               <v-card-title>Levels</v-card-title>
             </v-card>
           </v-col>
   
           <v-col md="4">
-            <v-card class="elevation-10 hover" @click="$router.push('/viewinstructor')">
+            <v-card class="elevation-10 hover" @click="$router.push('/maintaininstructor')">
               <v-card-title>Instructors</v-card-title>
             </v-card>
           </v-col>
   
           <v-col md="4">
-            <v-card class="elevation-10 hover" @click="$router.push('/viewfaculty')">
+            <v-card class="elevation-10 hover" @click="$router.push('/maintainfaculty')">
               <v-card-title>Faculties</v-card-title>
             </v-card>
           </v-col>
   
           <v-col md="4">
-            <v-card class="elevation-10 hover" @click="$router.push('/viewadmin')">
+            <v-card class="elevation-10 hover" @click="$router.push('/maintainadmin')">
               <v-card-title>Admins</v-card-title>
             </v-card>
           </v-col>

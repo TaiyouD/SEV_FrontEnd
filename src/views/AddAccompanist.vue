@@ -42,7 +42,7 @@
   </template>
 
 <script>
-import AccompanistServices from "../services/composerServices";
+import AccompanistServices from "../services/accompanistServices";
 
 export default {
   name: "addaccompanist",

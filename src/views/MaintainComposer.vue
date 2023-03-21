@@ -27,8 +27,10 @@
               <td>{{ item.birthday }}</td>
               <td>{{ item.deathDate }}</td>
               <td>
-                <v-icon color="primary" @click="editComposer(item)">mdi-pencil</v-icon>
-                <v-icon color="error" @click="deleteComposer(item)">mdi-delete</v-icon>
+                <div class="d-flex justify-end">
+                  <v-icon color="primary" @click="editComposer(item)">mdi-pencil</v-icon>
+                  <v-icon color="error" @click="deleteComposer(item)">mdi-delete</v-icon>
+                </div>
               </td>
             </tr>
           </template>
@@ -43,7 +45,7 @@
 import ComposerServices from "../services/composerServices";
 
 export default {
-  name: "view-composers",
+  name: "maintaincomposer",
   props: ["id"],
   data() {
     return {

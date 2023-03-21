@@ -78,7 +78,7 @@ data() {
       birthday:"",
       deathDate:""
     },
-    message: "Enter data and click save. Leave it blank if you do not know an information. Last name is required.",
+    message: "Leave it blank if you do not know the information about the composer (Last Name is Required).",
     // messageSimilarity: "Do you mean by any of these composers"
   };
 },
@@ -91,19 +91,18 @@ methods: {
       birthday: this.composer.birthday,
       deathDate: this.composer.deathDate
     };
-    alert(JSON.stringify(data))
     ComposerServices.create(data)
       .then((response) => {
         this.composer.id = response.data.id;
         console.log("add " + response.data);
-        this.$router.push({ name: "addsong" });
+        this.$router.push({ name: "maintaincomposer" });
       })
       .catch((e) => {
         this.message = e.response.data.message;
       });
     },
     cancel() {
-    this.$router.push({ name: "addsong" });
+    this.$router.push({ name: "maintaincomposer" });
     },
     /* trying to make algorithm work
   saveComposer() {

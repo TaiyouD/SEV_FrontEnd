@@ -27,9 +27,12 @@ import EditLesson from "./views/EditLesson.vue";
 
 // CRUD for Admin to maintain roles
 import MaintainRoles from "./views/MaintainRole.vue";
-import ViewComposers from "./views/ViewComposer.vue";
+import MaintainComposers from "./views/MaintainComposer.vue";
 import AddComposers from "./views/AddComposer.vue";
 import EditComposers from "./views/EditComposer.vue";
+import MaintainInstruments from "./views/MaintainInstrument.vue";
+import AddInstruments from "./views/AddInstrument.vue";
+import EditInstruments from "./views/EditInstrument.vue";
 
 Vue.use(Router);
 
@@ -150,9 +153,9 @@ const router = new Router({
       component: MaintainRoles
     },
     {
-      path: "/viewcomposer",
-      name: "viewcomposer",
-      component: ViewComposers
+      path: "/maintaincomposer",
+      name: "maintaincomposer",
+      component: MaintainComposers
     },
     {
       path: "/addcomposer",
@@ -163,6 +166,22 @@ const router = new Router({
       path: "/editcomposer",
       name: "editcomposer",
       component: EditComposers,
+      props: true
+    },
+    {
+      path: "/maintaininstrument",
+      name: "maintaininstrument",
+      component: MaintainInstruments
+    },
+    {
+      path: "/addinstrument",
+      name: "addinstrument",
+      component: AddInstruments
+    },
+    {
+      path: "/editinstrument",
+      name: "editinstrument",
+      component: EditInstruments,
       props: true
     },
   ],

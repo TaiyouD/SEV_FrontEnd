@@ -63,7 +63,7 @@
 
 <script>
 
-import ComposerServices from "../services/composerServices";
+import ComposerServices from "../services/instrumentServices";
 
 export default {
   name: "editcomposer",
