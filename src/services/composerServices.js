@@ -24,5 +24,5 @@ export default {
   },
   findByLastName(lastName) {
     return apiClient.get(`/composer?lastName=${lastName}`);
-  },
+  }
 };

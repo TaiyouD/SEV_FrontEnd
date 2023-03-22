@@ -62,7 +62,7 @@
           </v-data-table>
         </v-card>
         <br>
-        <router-link to="/addpiecerepertoire" tag="v-btn">
+        <router-link to="/addpiecerepertoire">
           <v-btn color="primary" class="mr-4">
               Add Piece
           </v-btn>
@@ -74,6 +74,7 @@
   <script>
   import RepertoireSongServices from "../services/repertoireSongServices";
   import Utils from "@/config/utils.js";
+  import RoleServices from "../services/roleServices";
   import instrumentRoleServices from "../services/instrumentRoleServices";
   import instrumentServices from "../services/instrumentServices";
 
@@ -94,6 +95,8 @@
           isVoice: ""
         },
         search: "",
+        role:{},
+        roleId2: [],
         repertoireSongs: [],
         currentRepertoire: null,
         currentIndex: -1,
@@ -112,12 +115,11 @@
       return this.instrumentRole.instrumentId.length > 1;
       }
    },
-    mounted() {
-      this.user = Utils.getStore("user"); 
-      console.log(this.user)
-      this.instrumentRole = instrumentRoleServices.getAllForUser("userId");
-      console.log(this.instrumentRole)
-      this.instrument = instrumentServices.getAll();
+    async created() {
+      this.user = Utils.getStore("user");
+      await this.retrieveRole();
+      this.retrieveInstruments();
+      this.retrieveInstrumentRoles();
       this.retrieveSongs();
     },
     methods: {
@@ -136,8 +138,46 @@
             this.message = e.response.data.message;
           });
       },
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data;
+            this.roleId2 = this.role.map(function(el) {
+                return el.id;});
+            console.log('role');
+            console.log(this.roleId2[0]);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveInstruments() {
+        await instrumentServices.getAll()
+          .then((response) => {
+            this.instrument = response.data;
+            console.log('instrument');
+            console.log(this.instrument);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      retrieveInstrumentRoles() {
+        /*var roleId2 = this.role.map(function(el) {
+            return el.id;});
+          console.log('role');   */ 
+        instrumentRoleServices.getAllForUser(this.roleId2)
+          .then((response) => {
+            this.instrumentRole = response.data;
+            console.log('instrumentRole');
+            console.log(this.instrumentRole);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
       retrieveSongs() {
-        RepertoireSongServices.getAllForUser(this.user.userId)
+        RepertoireSongServices.getAllForUser(this.roleId2[0])
           .then((response) => {
             this.songs = response.data;
           })
