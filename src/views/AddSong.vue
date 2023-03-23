@@ -57,12 +57,14 @@
           label="Translation"
           visible
         ></v-textarea>-->
+        
+        <!--:item-text="item => `${item.firstName} ${item.lastName}`"-->
         <v-autocomplete
             v-model="song.composer"
             :search-input.sync="searchV"
             :loading="loading"
             :items="composers"
-            item-value="lastName"
+            item-text="lastName"
             class="mr-4"
             density="comfortable"
             hide-no-data
@@ -342,7 +344,7 @@ export default {
           this.loading = true
           // Simulated ajax query
           setTimeout(() => {
-            this.composer = this.composers.filter(e => {
+            this.song.composer = this.composers.lastName.filter(e => {
               return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
             })
             this.loading = false
