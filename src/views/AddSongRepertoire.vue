@@ -21,7 +21,6 @@
         item-title="Composer"
         item-value=""
         label="Select Composer"
-        @change="selectButton"
         v-model="selected"
         return-object
         single-line
@@ -33,18 +32,6 @@
       </v-btn>
       </router-link>
       <br><br>
-      <div class="container">
-        <form @submit.prevent="handleSubmit">
-            <div class="form-group form-check">
-                <input type="checkbox" v-model="user.accept" id="accept" class="form-check-input">
-                <label class="form-check-label" for="accept">Accept terms and conditions</label>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary">Submit</button>
-            </div>
-        </form>
-        
-    </div>
 
 
         <v-btn
