@@ -54,11 +54,6 @@
           </v-data-table>
         </v-card>
         <br>
-        <!-- <router-link to="/addsong" tag="v-btn">
-          <v-btn color="success" class="mr-4">
-              Add Song
-          </v-btn>
-        </router-link> -->
       </v-container>
       
     <v-row justify="center">
@@ -80,46 +75,15 @@
         </v-icon>
       </template>
       <v-card>
-        <v-card-title>
+        <v-card-title   >
+          <v-toolbar id="navbar-maroon">
           <span class="text-h5">Edit Event Session</span>
+        </v-toolbar>
         </v-card-title>
         <v-card-text>
           <v-container>
-          <!-- <v-banner
-          v-model="banner"
-          transition="slide-y-transition"
-          >
-          By editing the event session and
-          clicking the submit button you will notifiy an 
-          Admin of your event session change and it will be either approved or disapproved.
-            <template v-slot:actions="{ dismiss }">
-              <v-btn
-                text
-                color="primary"
-                @click="dismiss"
-            >
-              Dismiss
-            </v-btn>
-          </template>
-        </v-banner> -->
 
           <v-form ref="form" v-model="valid" lazy validation>
-          <!-- <v-text-field
-            v-model="tutorial.title"
-            id="title"
-            :counter="50"
-            label="Title"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="tutorial.description"
-            id="description"
-            :counter="50"
-            label="Description"
-            required
-          ></v-text-field> -->
-  
-                            
        <!-- Select Hearing Date Below -->
        <v-select 
         class="mt-6"
@@ -132,6 +96,7 @@
         single-line
         filled
         disabled
+        append-icon="mdi-calendar-today"
      ></v-select>
 
 
@@ -146,16 +111,17 @@
         return-object
         single-line
         filled
+        append-icon="mdi-account-outline"
     ></v-select>
 
     <v-select 
-
         item-title="Time Slot"
         item-value=""
         label="Select Time Slot"
         return-object
         single-line
         filled
+        append-icon="mdi-clock-outline"
     ></v-select>
 
         <!-- Instructor Select Below -->
@@ -169,29 +135,30 @@
         return-object
         single-line
         filled
+        append-icon="mdi-school-outline"
      ></v-select>
-
+     <!-- mdi-human-male-board -->
      <v-select class=" mr-4" width = "260"
         :items="items2"
-
         label="Select Duration"
         return-object
         single-line
         filled
-     ></v-select>
-                
+        append-icon="mdi-timer-sand"
+     ></v-select>     
 
-                    <!--  Instrument Select Below -->
+    <!--  Instrument Select Below -->
     <v-select
        width = "260"
         v-model="select"
         :items="items4"
         item-title="Instrument"
         item-value=""
-        label="Select Voice or Instrument"
+        label="Select Voice/Instrument"
         return-object
         single-line
         filled
+        append-icon="mdi-instrument-triangle"
     ></v-select>
     </div>
 </div>
@@ -202,28 +169,21 @@
         return-object
         single-line
         filled
+        append-icon="mdi-file-music-outline"
      ></v-select>
  
-
-  <!-- <v-select style="padding-top: 8px;"
-        item-title="date"
-        label="Select Composer"
-        return-object
-        single-line
-        filled
-     ></v-select> -->
           </v-form>
           </v-container>
           <!-- <small>*indicates required field</small> -->
         </v-card-text>
         <v-card-actions>
           <router-link to="/addaccompanist" tag="v-btn">
-            <v-btn color="primary" text>
+            <v-btn color="primary" class="mr-4">
               Add Accompanist
             </v-btn>
           </router-link>
           <router-link to="/addsongrepertoire" tag="v-btn">
-            <v-btn color="primary" text>
+            <v-btn color="primary">
               Add Piece
             </v-btn>
           </router-link>
@@ -231,14 +191,14 @@
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
-            text
+            class="mr-2"
             @click="updateEventSession()"
           >
             Save
           </v-btn>
           <v-btn
             color="primary"
-            text
+            
             @click="edit_dialog = false"
           >
             Close
@@ -266,45 +226,15 @@
       </template>
       <v-card>
         <v-card-title>
+          <v-toolbar id="navbar-maroon">
           <span class="text-h5">View Event Session</span>
+          </v-toolbar>
         </v-card-title>
         <v-card-text>
           <v-container>
-          <!-- <v-banner
-          v-model="banner"
-          transition="slide-y-transition"
-          >
-          By editing the event session and
-          clicking the submit button you will notifiy an 
-          Admin of your event session change and it will be either approved or disapproved.
-          <template v-slot:actions="{ dismiss }">
-            <v-btn
-              text
-              color="primary"
-              @click="dismiss"
-            >
-              Dismiss
-            </v-btn>
-          </template>
-        </v-banner> -->
 
-          <v-form ref="form" v-model="valid" lazy validation>
-          <!-- <v-text-field
-            v-model="tutorial.title"
-            id="title"
-            :counter="50"
-            label="Title"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="tutorial.description"
-            id="description"
-            :counter="50"
-            label="Description"
-            required
-          ></v-text-field> -->
-  
-                            
+        <v-form ref="form" v-model="valid" lazy validation>
+             
        <!-- Select Hearing Date Below -->
        <v-text-field 
         class="mt-6"
@@ -317,10 +247,10 @@
         single-line
         filled
         disabled
+        append-icon="mdi-calendar-today"
      ></v-text-field>
 
-
-                     <!-- Accompanist Select Below -->
+      <!-- Accompanist Select Below -->
     <v-text-field  
         :items="selected2"
         item-title="Accompanist"
@@ -332,10 +262,10 @@
         single-line
         filled
         disabled
+        append-icon="mdi-account-outline"
     ></v-text-field >
 
     <v-text-field  
-
         item-title="Time Slot"
         item-value=""
         label="Time Slot"
@@ -343,6 +273,7 @@
         single-line
         filled
         disabled
+        append-icon="mdi-clock-outline"
     ></v-text-field >
 
         <!-- Instructor Select Below -->
@@ -357,20 +288,20 @@
         single-line
         filled
         disabled
+        append-icon="mdi-school-outline"
      ></v-text-field >
 
      <v-text-field  class=" mr-4" width = "260"
         :items="items2"
-
         label="Duration"
         return-object
         single-line
         filled
         disabled
+        append-icon="mdi-timer-sand"
      ></v-text-field >
                 
-
-                    <!--  Instrument Select Below -->
+      <!--  Instrument Select Below -->
     <v-text-field 
        width = "260"
         v-model="select"
@@ -382,6 +313,7 @@
         single-line
         filled
         disabled
+        append-icon="mdi-instrument-triangle"
     ></v-text-field>
     </div>
 </div>
@@ -393,24 +325,16 @@
         single-line
         filled
         disabled
+        append-icon="mdi-file-music-outline"
      ></v-text-field>
  
-
-  <!-- <v-select style="padding-top: 8px;"
-        item-title="date"
-        label="Select Composer"
-        return-object
-        single-line
-        filled
-     ></v-select> -->
           </v-form>
           </v-container>
           <!-- <small>*indicates required field</small> -->
         </v-card-text>
         <v-card-actions>
           <router-link to="/critique" tag="v-btn">
-          <v-btn color="primary"
-            text>
+          <v-btn color="primary">
           View Critiques
           </v-btn>
           </router-link>
@@ -419,7 +343,6 @@
           
           <v-btn
             color="primary"
-            text
             @click="view_dialog = false"
           >
             Close
@@ -428,10 +351,62 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog
+      v-model="delete_dialog"
+      persistent
+      max-width="800"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-icon
+          color="grey"
+          dark
+          v-bind="attrs"
+          v-on="on"
+          small 
+          class="mx-4"
+        >
+        mdi-trash-can
+        </v-icon>
+      </template>
+      <v-card>
+        <v-card-title>
+          <v-toolbar id="navbar-maroon">
+          <span class="text-h5">Cancel Event Session</span>
+          </v-toolbar>
+        </v-card-title>
+        <v-card-text>
+          <v-form ref="form" v-model="valid" lazy validation>
+          <v-container>
+          <p class="font-weight-heavy mt-6">
+            By clicking the submit button you will notifiy an 
+            Admin of your desire to cancel the event session and it will be either approved or disapproved.
+          </p>
+          </v-container>
+          </v-form>
+
+          <!-- <small>*indicates required field</small> -->
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            color="primary"
+            @click="deleteEventSession()"
+          >
+            Submit
+          </v-btn>
+       
+          <v-spacer></v-spacer>
+          
+          <v-btn
+            color="primary"
+            @click=" delete_dialog = false"
+          >
+            Close
+          </v-btn>
+         
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-row>
-      <!-- <v-icon small class="mx-4" @click="deleteSong(item)">
-                  mdi-trash-can
-                </v-icon> -->
     </div>
     
   </template>
@@ -453,9 +428,10 @@
         currentIndex: -1,
         view_dialog: false,
         edit_dialog: false,
+        delete_dialog: false,
         title: "",
         user: {},
-        message: "Search, Edit or Cancel EventSessions",
+        message: "Search, Edit or Cancel Event Sessions",
         headers: [
           { text: "Event Session Id", value: "id" },
           { text: "Student Id", value: "date" },
@@ -487,6 +463,7 @@
       deleteEventSession(eventSession) {
         eventSessionServices.delete(eventSession.id)
           .then(() => {
+            this.edit_dialog = false;
             this.retrieveEventSessions();
           })
           .catch((e) => {
