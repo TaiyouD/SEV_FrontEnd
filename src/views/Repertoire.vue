@@ -11,19 +11,19 @@
         <div class="d-flex align-center">
           <h4 class="mr-3">Voice/Instrument: </h4>
           <v-select v-if="showDropdown" 
-              :items="instrumentRole.instrumentId"
+              :items="instrumentRole"
               item-tile="Instrument"
-              item-value="type" 
+              item-text="instrument.type" 
               return-object
               single-line
               label="Select Voice/Instrument"
               v-model="instrumentRole.instrumentId"
           ></v-select>
         <div v-else>
-            {{ instrumentRole.instrumentId[0] }}
+            {{ instrumentRole.instrument.type }} <!--check if it works-->
         </div>
         </div>
-        <h4>Instructor: {{ instrumentRole.privateInstructortId }}</h4> <!--Como pegar o nome?-->
+        <h4>Instructor: {{ instrumentRole.privateInstructorId }}</h4> <!--Como pegar o nome?--><!--tem q fazer v-if ou chamar alguma função-->
         <br /><br />
         <v-card>
           <v-card-title>
@@ -76,7 +76,6 @@
   import Utils from "@/config/utils.js";
   import RoleServices from "../services/roleServices";
   import instrumentRoleServices from "../services/instrumentRoleServices";
-  import instrumentServices from "../services/instrumentServices";
 
   export default {
     name: "repertoire-list",
@@ -86,25 +85,22 @@
         instrumentRole: {
           id: null,
           instrumentId: [],
+          instrument: {},
+          song: {},
           privateInstructortId: "",
           accompanistId: ""
         },
-        instrument: {
-          id: null,
-          type: "", 
-          isVoice: ""
-        },
         search: "",
         role:{},
-        roleId2: [],
         repertoireSongs: [],
         currentRepertoire: null,
         currentIndex: -1,
         user: {},
+        composer: {},
         message: "Search, Edit or Delete Pieces",
         headers: [
-          { text: "Piece Title", value: "title" },
-          { text: "Composer", value: "composer" },
+          { text: "Piece Title", value: "song.title" },
+          { text: "Composer", value: "song.composer.lastName" },
           { text: "Semester", value: "semester"},
           { text: "Actions", value: "actions", sortable: false }
         ]
@@ -112,15 +108,14 @@
     },
     computed: {
     showDropdown() {
-      return this.instrumentRole.instrumentId.length > 1;
+      return this.instrumentRole.length > 1;
       }
    },
     async created() {
       this.user = Utils.getStore("user");
       await this.retrieveRole();
-      this.retrieveInstruments();
-      this.retrieveInstrumentRoles();
-      this.retrieveSongs();
+      await this.retrieveInstrumentRoles();
+      await this.retrieveSongs();
     },
     methods: {
       editSong(song) {
@@ -141,32 +136,21 @@
       async retrieveRole() {
         await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
-            this.role = response.data;
-            this.roleId2 = this.role.map(function(el) {
-                return el.id;});
+            this.role = response.data[0];
+            /*this.roleId2 = this.role.map(function(el) {
+                return el.id;});*/
             console.log('role');
-            console.log(this.roleId2[0]);
+            console.log(this.role);
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
-      async retrieveInstruments() {
-        await instrumentServices.getAll()
-          .then((response) => {
-            this.instrument = response.data;
-            console.log('instrument');
-            console.log(this.instrument);
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
-      retrieveInstrumentRoles() {
+      async retrieveInstrumentRoles() {
         /*var roleId2 = this.role.map(function(el) {
             return el.id;});
           console.log('role');   */ 
-        instrumentRoleServices.getAllForUser(this.roleId2)
+        await instrumentRoleServices.getAllForUser(this.role.id)
           .then((response) => {
             this.instrumentRole = response.data;
             console.log('instrumentRole');
@@ -176,10 +160,12 @@
             this.message = e.response.data.message;
           });
       },
-      retrieveSongs() {
-        RepertoireSongServices.getAllForUser(this.roleId2[0])
+      async retrieveSongs() {
+        await RepertoireSongServices.getAllForUser(this.role.id)
           .then((response) => {
-            this.songs = response.data;
+            this.repertoireSongs = response.data;
+            console.log('song');
+            console.log(this.repertoireSongs);
           })
           .catch((e) => {
             this.message = e.response.data.message;

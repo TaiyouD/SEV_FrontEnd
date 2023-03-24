@@ -1,6 +1,6 @@
 import apiClient from "@/services/services.js";
 
-export default { //howwwwwww
+export default { 
   getAllForUser(userId) {
     return apiClient.get(`/repertoireSong/userPerf/${userId}`);
   },
