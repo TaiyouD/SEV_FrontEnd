@@ -18,7 +18,7 @@
         <v-card-text>
           <b>{{ message }}</b>
         </v-card-text>
-        <v-data-table :headers="headers" :items="composers" :search="search" :items-per-page="5">
+        <v-data-table :headers="headers" :items="composers" :search="search" :items-per-page="5" :sort-by="['firstName']" :sort-desc="[false]">
           <template #item="{ item }">
             <tr>
               <td>{{ item.firstName }}</td>
@@ -53,11 +53,11 @@ export default {
       composers: [],
       message: "Add, Edit or Delete Composers",
       headers: [
-        { text: "First Name", value: "firstName" },
-        { text: "Last Name", value: "lastName" },
-        { text: "Nationality", value: "nationality" },
-        { text: "Birthday", value: "birthday" },
-        { text: "Death Date", value: "deathDate" },
+        { text: "First Name", value: "firstName", sortable: false },
+        { text: "Last Name", value: "lastName", sortable: false },
+        { text: "Nationality", value: "nationality", sortable: false },
+        { text: "Birthday", value: "birthday", sortable: false },
+        { text: "Death Date", value: "deathDate", sortable: false },
       ],
     };
   },

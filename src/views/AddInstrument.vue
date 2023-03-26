@@ -13,7 +13,6 @@
           <v-text-field
             v-model="instrument.type"
             id="type"
-            :counter="50"
             label="Type"
           ></v-text-field>
           <v-select
@@ -49,7 +48,7 @@
         instrument: {
           id: null,
           type:"",
-          isVoice:null
+          isVoice: null
         },
         message: "Enter Data and Click Save.",
       };
@@ -82,4 +81,3 @@
     color: red;
   }
   </style>
-  

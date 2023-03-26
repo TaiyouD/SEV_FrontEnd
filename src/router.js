@@ -26,13 +26,18 @@ import EditLesson from "./views/EditLesson.vue";
 
 
 // CRUD for Admin to maintain roles
-import MaintainRoles from "./views/MaintainRole.vue";
+import Maintain from "./views/Maintain.vue";
 import MaintainComposers from "./views/MaintainComposer.vue";
 import AddComposers from "./views/AddComposer.vue";
 import EditComposers from "./views/EditComposer.vue";
 import MaintainInstruments from "./views/MaintainInstrument.vue";
 import AddInstruments from "./views/AddInstrument.vue";
 import EditInstruments from "./views/EditInstrument.vue";
+import MaintainLevels from "./views/MaintainLevel.vue";
+import EditLevels from "./views/EditLevel.vue";
+import MaintainRoles from "./views/MaintainRole.vue";
+import AddRoles from "./views/AddRole.vue";
+import EditRoles from "./views/EditRole.vue";
 
 Vue.use(Router);
 
@@ -148,9 +153,9 @@ const router = new Router({
       props: true,
     },
     {
-      path: "/maintainrole",
-      name: "maintainrole",
-      component: MaintainRoles
+      path: "/maintain",
+      name: "maintain",
+      component: Maintain
     },
     {
       path: "/maintaincomposer",
@@ -182,6 +187,33 @@ const router = new Router({
       path: "/editinstrument",
       name: "editinstrument",
       component: EditInstruments,
+      props: true
+    },
+    {
+      path: "/maintainlevel",
+      name: "maintainlevel",
+      component: MaintainLevels
+    },
+    {
+      path: "/editlevel",
+      name: "editlevel",
+      component: EditLevels,
+      props: true
+    },
+    {
+      path: "/maintainrole",
+      name: "maintainrole",
+      component: MaintainRoles
+    },
+    {
+      path: "/addrole",
+      name: "addrole",
+      component: AddRoles
+    },
+    {
+      path: "/editrole",
+      name: "editrole",
+      component: EditRoles,
       props: true
     },
   ],

@@ -19,32 +19,27 @@
         <v-text-field
           v-model="composer.firstName"
           id="firstName"
-          :counter="50"
           label="First Name"
         ></v-text-field>
         <v-text-field
           v-model="composer.lastName"
           id="lastName"
-          :counter="50"
           label="Last Name"
           required
           ></v-text-field>
           <v-text-field
           v-model="composer.nationality"
           id="nationality"
-          :counter="30"
           label="Nationality"
           ></v-text-field>
           <v-text-field
           v-model="composer.birthday"
           id="birthday"
-          :counter="10"
           label="Birth Year"
           ></v-text-field>
           <v-text-field
           v-model="composer.deathDate"
           id="deathDate"
-          :counter="10"
           label="Death Year"
           ></v-text-field>
 

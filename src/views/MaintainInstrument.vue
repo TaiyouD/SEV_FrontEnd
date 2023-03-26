@@ -18,11 +18,11 @@
         <v-card-text>
           <b>{{ message }}</b>
         </v-card-text>
-        <v-data-table :headers="headers" :items="instruments" :search="search" :items-per-page="5">
+        <v-data-table :headers="headers" :items="instruments" :search="search" :items-per-page="5" :sort-by="['type']" :sort-desc="[false]">
           <template #item="{ item }">
             <tr>
               <td>{{ item.type }}</td>
-              <td>{{ item.isVoice }}</td>
+              <td>{{ item.isVoice ? '&#10003;' : '' }}</td>
               <td>
                 <div class="d-flex justify-end">
                   <v-icon color="primary" @click="editInstrument(item)">mdi-pencil</v-icon>
@@ -50,8 +50,8 @@ export default {
       instruments: [],
       message: "Add, Edit or Delete Instruments",
       headers: [
-        { text: "Instrument", value: "type" },
-        { text: "Voice", value: "isVoice" },
+        { text: "Instrument", value: "type", sortable: false },
+        { text: "Voice", value: "isVoice", sortable: false },
       ],
     };
   },

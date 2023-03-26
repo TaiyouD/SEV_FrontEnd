@@ -1,34 +1,39 @@
 
+// I am needing the levelNumber to be in the title. Can you fix that?
+
 <template>
     <div>
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
-          <v-toolbar-title>Edit Instrument</v-toolbar-title>
+          <v-toolbar-title>Edit: {{ levelNumber }}</v-toolbar-title>
         </v-toolbar>
         <br />
         <h4>{{ message }}</h4>
         <br />
         <v-form ref="form" v-model="valid" lazy validation>
-          <v-text-field
-            v-model="instrument.type"
-            id="instrument"
-            label="Instrument"
+          <v-textarea
+            v-model="level.oneHourDescription"
+            id="oneHourDescription"
+            label="One Hour Description"
+            rows="5"
+            cols="10"
             required
-          ></v-text-field>
-          <v-select
-            v-model="instrument.isVoice"
-            id="isVoice"
-            :items="[{ text: 'True', value: true }, { text: 'False', value: false }]"
-            label="Voice"
+          ></v-textarea>
+          <v-textarea
+            v-model="level.twoHourDescription"
+            id="twoHourDescription"
+            label="Two Hour Description"
+            rows="5"
+            cols="10"
             required
-          ></v-select>
+          ></v-textarea>
   
           <v-btn
             :disabled="!valid"
             color="success"
             class="mr-4"
-            @click="updateInstrument()"
+            @click="updateLevel()"
           >
             Save
           </v-btn>
@@ -41,38 +46,39 @@
   
   <script>
   
-  import InstrumentServices from "../services/instrumentServices";
+  import LevelServices from "../services/levelServices";
   
   export default {
-    name: "editinstrument",
+    name: "editlevel",
     props: ['id'],
   data() {
     return {
-      instrument: {
-        type: '',
-        isVoice: ''
+      level: {
+        oneHourDescription: '',
+        twoHourDescription: ''
       },
       message: '',
       valid: false
     }
   },
   mounted() {
-    this.getInstrument(this.id);
+    this.getLevel(this.id);
   },
   methods: {
-      getInstrument(id) {
-        InstrumentServices.get(id)
+      getLevel(id) {
+        LevelServices.get(id)
           .then(response => {
-            this.instrument = response.data;
+            this.level = response.data;
+            this.levelNumber = this.level.levelNumber;
           })
           .catch(e => {
             this.message = e.response.data.message;
           });
       },
-      updateInstrument() {
-        InstrumentServices.update(this.id, this.instrument)
+      updateLevel() {
+        LevelServices.update(this.id, this.level)
           .then(() => {
-            this.message = 'The Instrument was updated successfully!';
+            this.message = 'The Level was updated successfully!';
           })
           .catch(e => {
             this.message = e.response.data.message;

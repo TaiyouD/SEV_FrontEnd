@@ -13,35 +13,30 @@
         <v-text-field
           v-model="composer.firstName"
           id="firstName"
-          :counter="50"
           label="First Name"
           required
         ></v-text-field>
         <v-text-field
           v-model="composer.lastName"
           id="lastName"
-          :counter="50"
           label="Last Name"
           required
         ></v-text-field>
         <v-text-field
           v-model="composer.nationality"
           id="nationality"
-          :counter="50"
           label="Nationality"
           required
         ></v-text-field>
         <v-text-field
           v-model="composer.birthday"
           id="birthday"
-          :counter="50"
           label="Birthday"
           required
         ></v-text-field>
         <v-text-field
           v-model="composer.deathDate"
           id="deathDate"
-          :counter="50"
           label="Death Date"
           required
         ></v-text-field>
@@ -63,7 +58,7 @@
 
 <script>
 
-import ComposerServices from "../services/instrumentServices";
+import ComposerServices from "../services/composerServices";
 
 export default {
   name: "editcomposer",
