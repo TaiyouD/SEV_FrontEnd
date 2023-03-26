@@ -23,7 +23,7 @@
             {{ instrumentRole.instrument.type }} <!--check if it works-->
         </div>
         </div>
-        <h4>Instructor: {{ instrumentRole.privateInstructorId }}</h4> <!--Como pegar o nome?--><!--tem q fazer v-if ou chamar alguma função-->
+        <h4>Instructor: {{ instructorRole.user.fName }}</h4> <!--Como pegar o nome?--><!--tem q fazer v-if ou chamar alguma função-->
         <br /><br />
         <v-card>
           <v-card-title>
@@ -92,6 +92,11 @@
         },
         search: "",
         role:{},
+        instructorRole:{
+          user:{
+            fName:""
+          }
+        },
         repertoireSongs: [],
         currentRepertoire: null,
         currentIndex: -1,
@@ -116,6 +121,7 @@
       await this.retrieveRole();
       await this.retrieveInstrumentRoles();
       await this.retrieveSongs();
+      await this.retrieveInstructor();
     },
     methods: {
       editSong(song) {
@@ -166,6 +172,19 @@
             this.repertoireSongs = response.data;
             console.log('song');
             console.log(this.repertoireSongs);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveInstructor() {
+        await RoleServices.get(this.instrumentRole[0].privateInstructortId)
+          .then((response) => {
+            this.instructorRole = response.data;
+            /*this.roleId2 = this.role.map(function(el) {
+                return el.id;});*/
+            console.log('instructor');
+            console.log(this.instructorRole);
           })
           .catch((e) => {
             this.message = e.response.data.message;
