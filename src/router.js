@@ -95,7 +95,6 @@ const router = new Router({
       path: "/repertoire",
       name: "repertoire",
       component: Repertoire,
-      props: true,
     },
     {
       path: "/profilestudent",

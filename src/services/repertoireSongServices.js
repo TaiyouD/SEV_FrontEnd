@@ -11,7 +11,7 @@ export default {
     return apiClient.post(`/users/${userId}/repertoireSong`, data);
   },*/
   create(data) {
-    return apiClient.post("/repertoireSongs", data);
+    return apiClient.post("/repertoireSong", data);
   },
   update(id, data) {
     return apiClient.put(`/repertoireSong/${id}`, data);

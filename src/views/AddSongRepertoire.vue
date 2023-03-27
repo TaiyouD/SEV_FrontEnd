@@ -13,7 +13,8 @@
         v-model="select"
         :search-input.sync="search"
         :loading="loading"
-        :items="selected"
+        :items="song"
+        item-text="title"
         class="mr-4"
         density="comfortable"
         hide-no-data
@@ -24,7 +25,7 @@
         required
         ></v-autocomplete>
         <br>
-      <router-link to="/addsong" tag="v-btn">
+      <router-link to="/addsong" >
       <v-btn color="primary" class="mr-4">
           Missing Piece?
       </v-btn>
@@ -57,64 +58,80 @@
 <script>
 import SongServices from "../services/songServices";
 import RepertoireSongServices from "../services/repertoireSongServices";
+import Utils from "@/config/utils.js";
+import RoleServices from "../services/roleServices";
 export default {
   name: "add-piece-repertoire",
-  props: [],
   data() {
     return {
       valid: true,
       loading: false,
       search: null,
-      select: "",
-      selected: [],
-      titles: [],
+      select: null,
       repertoireSong: {
         id: null,
         semester: ""
       },
       message: "Enter data and click save",
-      songId: "",
-      song: {}
+      song: [],
+      user:{},
+      role:{}
     };
   },
+  mounted() {
+    this.user = Utils.getStore("user");
+  },
+  async created(){
+    const result = await SongServices.getAll();
+    this.song = result.data;
+    await this.retrieveRole();
+  },/*
   watch: {
       search (val) {
         val && val !== this.select && this.querySelections(val)
       }
-    },
+    },*/
   methods: {
+    getSongs(){
+      return SongServices.getAll();
+    },/*
     querySelections (v) {
-      SongServices.getAll()
-        .then((response) => {
-          this.titles = response.data;
-          console.log(this.titles); //titles.?
+
+          console.log("song2");
+          console.log(this.song[this.select.id-1].title);
           this.loading = true
+          console.log(this.select.title);
           // Simulated ajax query
           setTimeout(() => {
-            this.selected.id.title = this.titles.id.title.filter(e => {
+            this.select = this.song.title.filter(e => {
               return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
             })
             this.loading = false
           }, 500)
-      })
-        .catch((e) => {
-          this.message = e.response.data.message;
-        });
-    },
-    getSongId(){ //how to do it right?
-        this.song = SongServices.findByTitle(this.select);
-        this.songId = this.song.id;
 
-    },
+    },*/
+    async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+            console.log('role');
+            console.log(this.role.id);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
     saveSongRepertoire() {
       var data = {
-        semester: this.repertoireSong.semester
+        semester: this.repertoireSong.semester,
+        songId: this.select.id,
+        studentId: this.role.id
       };
       RepertoireSongServices.create(data)
         .then((response) => {
           this.repertoireSong.id = response.data.id;
           console.log("add " + response.data);
-          this.$router.push({ name: "repertoire" });
+          this.$router.push({ name: "repertoire"});
         })
         .catch((e) => {
           this.message = e.response.data.message;

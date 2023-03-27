@@ -57,7 +57,7 @@
           </v-data-table>
         </v-card>
         <br>
-        <router-link to="/addsong" tag="v-btn">
+        <router-link to="/addpiecerepertoire" tag="v-btn">
           <v-btn color="success" class="mr-4">
               Add Song
           </v-btn>
