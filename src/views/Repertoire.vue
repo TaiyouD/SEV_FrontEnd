@@ -17,7 +17,7 @@
               return-object
               single-line
               label="Select Voice/Instrument"
-              v-model="instrumentRole.instrumentId"
+              v-model="selected"
           ></v-select>
         <div v-else>
             {{ instrumentRole.instrument.type }} <!--check if it works-->
@@ -90,11 +90,13 @@
           privateInstructortId: "",
           accompanistId: ""
         },
+        selected: [],
         search: "",
         role:{},
         instructorRole:{
           user:{
-            fName:""
+            fName:"",
+            lName:""
           }
         },
         repertoireSongs: [],
@@ -121,7 +123,6 @@
       await this.retrieveRole();
       await this.retrieveInstrumentRoles();
       await this.retrieveSongs();
-      await this.retrieveInstructor();
     },
     methods: {
       editSong(song) {
@@ -178,7 +179,10 @@
           });
       },
       async retrieveInstructor() {
-        await RoleServices.get(this.instrumentRole[0].privateInstructortId)
+        console.log("instructor id")
+        console.log(this.selected)
+        console.log(this.instrumentRole[0].privateInstructorId)
+        await RoleServices.get(this.selected.privateInstructorId)
           .then((response) => {
             this.instructorRole = response.data;
             /*this.roleId2 = this.role.map(function(el) {
