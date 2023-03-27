@@ -60,7 +60,7 @@
         id="translation"
         label="Enter piece translation"
         ></v-textarea>
-        <vue-google-translator />
+        <!-- <vue-google-translator /> -->
         </div>
         <br><br>
         <!--<v-textarea v-if="isForeign"
@@ -98,7 +98,7 @@
           single-line
           filled
       ></v-select>-->
-      <router-link to="/addcomposer" tag="v-btn">
+      <router-link to="/addcomposer">
         <v-btn color="primary" class="mr-4">
             Missing Composer?
         </v-btn>
