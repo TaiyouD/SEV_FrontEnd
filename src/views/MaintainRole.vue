@@ -31,7 +31,7 @@
         <v-card-text>
           <b>{{ message }}</b>
         </v-card-text>
-        <v-data-table :headers="headers" :items="filteredRoles" :search="search" :items-per-page="5" :sort-by="['roleType']" :sort-desc="[false]">
+        <v-data-table :headers="headers" :items="filteredRoles" :search="search" :items-per-page="5" :sort-by="['roleType', 'fName']" :sort-desc="[false, false]">
           <template #item="{ item }">
             <tr>
               <td>{{ item.roleType }}</td>
@@ -65,7 +65,7 @@ export default {
       search: "",
       roles: [],
       filteredRoles: [],
-      rolesList: ["All Roles", "Accompanist", "Faculty", "Incoming Student", "Student"],
+      rolesList: ["All Roles", "Accompanist", "Admin", "Faculty", "Incoming Student", "Student"],
       selectedRole: null,
       message: "Add, Edit or Delete Roles",
       headers: [
@@ -121,12 +121,22 @@ export default {
       this.$router.push({ name: "editrole", params: { id: role.id } });
     },
     deleteRole(role) {
-      if (confirm(`Are you sure you want to delete ${role.roleType}?`)) {
+      if (confirm(`Are you sure you want to delete "${role.fName} ${role.lName}?`)) {
         RoleServices.delete(role.id)
           .then(() => {
-            const index = this.roles.indexOf(role);
-            this.roles.splice(index, 1);
-            this.message = `${role.roleType} deleted successfully.`;
+            // Delete user record using the userId property in the role object
+            UserServices.delete(role.userId)
+              .then(() => {
+                const index = this.roles.indexOf(role);
+                this.roles.splice(index, 1);
+                this.message = `${role.roleType} deleted successfully.`;
+
+                // Remove the deleted role from filteredRoles as well
+                this.filteredRoles = this.roles.filter(r => r.roleType === this.selectedRole || !this.selectedRole);
+              })
+              .catch((e) => {
+                this.message = e.response.data.message;
+              });
           })
           .catch((e) => {
             this.message = e.response.data.message;

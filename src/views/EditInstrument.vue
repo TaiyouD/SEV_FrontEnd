@@ -12,7 +12,7 @@
         <v-form ref="form" v-model="valid" lazy validation>
           <v-text-field
             v-model="instrument.type"
-            id="instrument"
+            id="type"
             label="Instrument"
             required
           ></v-text-field>
