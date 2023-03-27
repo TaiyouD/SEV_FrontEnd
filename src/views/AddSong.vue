@@ -17,6 +17,13 @@
           required
         ></v-text-field>
         <div>
+          <v-checkbox
+            v-model="enabled"
+            label="Vocal Piece"
+            class="pe-2"
+          ></v-checkbox>
+        </div>
+        <div>
         <!--<v-text-field
         v-model="song.language"
         id="language"
@@ -25,28 +32,32 @@
         ></v-text-field>-->
         <v-select 
           v-model="song.language"
+          :disabled="!enabled"
           :items="countries"
           item-title="title"
           item-text="title"
           item-value="code"
-          label="Select Language - Leave it blank if it is an Intrumental Piece"
+          label="Select Language"
           return-object
           single-line
         ></v-select>
+        <!-- auto translate part
         <v-textarea
           id="paragraph"
           label="Enter piece lyrics"
           ></v-textarea>
         <v-btn @click="translate()" color="primary" class="mr-4">
           Translate
-        </v-btn>
+        </v-btn>-->
         <!--<div v-if="translated">
           <h3>Translated Piece:</h3>
           <p>{{ translation }}</p>
         </div>-->
         <v-textarea
         v-model="song.translation"
+        :disabled="!enabled"
         id="translation"
+        label="Enter piece translation"
         ></v-textarea>
         <vue-google-translator />
         </div>
@@ -125,6 +136,7 @@ export default {
     return {
       valid: true,
       // disable: 0,
+      enabled: false,
       loading: false,
       searchV: null,
       select: null,
@@ -134,7 +146,7 @@ export default {
         title: "",
         language: "",
         translation: "",
-        composer: [] //coloco composer aqui? pq é um FK
+        composer: [] 
       },
       message: "Enter data and click save",
       lyrics: "",
@@ -374,7 +386,7 @@ export default {
         title: this.song.title,
         language: this.song.language.title,
         translation: this.song.translation,
-        composerId: this.song.composer.id //como passar o id e não o nome? //ta certo isso?
+        composerId: this.song.composer.id 
       };
       SongServices.create(data)
         .then((response) => {
