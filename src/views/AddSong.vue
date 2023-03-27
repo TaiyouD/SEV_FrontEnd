@@ -32,6 +32,7 @@
         ></v-text-field>-->
         <v-select 
           v-model="song.language"
+          clearable
           :disabled="!enabled"
           :items="countries"
           item-title="title"
