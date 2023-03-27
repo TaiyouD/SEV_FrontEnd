@@ -43,7 +43,7 @@
   </template>
 
 <script>
-import AccompanistServices from "../services/composerServices";
+import RoleServices from "../services/roleServices";
 
 export default {
   name: "addaccompanist",
@@ -56,6 +56,11 @@ export default {
         lastName:"",
         isApproved: false
       },
+      role: {
+        id: null,
+        roleType: "Accompanist",
+        isApproved: false
+      },
       message: "Enter data and click save.",
     };
   },
@@ -64,13 +69,14 @@ export default {
     saveAccompanist() {
         //send notification to admin
       var data = {
-        firstName: this.user.firstName,
-        lastName: this.user.lastName,
+        //firstName: this.user.firstName,
+        //lastName: this.user.lastName,
+        roleType: this.role.roleType,
         isApproved: this.role.isApproved
       };
-      AccompanistServices.create(data)
+      RoleServices.create(data)
         .then((response) => {
-          this.user.id = response.data.id;
+          this.role.id = response.data.id;
           console.log("add " + response.data);
           this.$router.push({ name: "signupevents" });
         })
