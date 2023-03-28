@@ -2,6 +2,9 @@
 import apiClient from "@/services/services.js";
 
 export default {
+  getRoleForUser(userId) {
+    return apiClient.get(`/role/userPerf/${userId}`);
+  },
   getAll() {
     return apiClient.get("/role");
   },

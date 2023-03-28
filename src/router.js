@@ -7,7 +7,6 @@ import Login from "./views/Login.vue";
 import Homepage from "./views/Homepage.vue";
 import SignupEvent from "./views/SignupEvent.vue";
 import AddAccompanist from "./views/AddAccompanist.vue";
-import AddComposer from "./views/AddComposer.vue";
 import AddSongRepertoire from "./views/AddSongRepertoire.vue";
 import EventUpcomingList from "./views/EventUpcomingList.vue";
 import EventPastList from "./views/EventPastList.vue";
@@ -30,6 +29,9 @@ import Maintain from "./views/Maintain.vue";
 import MaintainComposers from "./views/MaintainComposer.vue";
 import AddComposers from "./views/AddComposer.vue";
 import EditComposers from "./views/EditComposer.vue";
+import MaintainSongs from "./views/MaintainSong.vue";
+import AddSongs from "./views/AddSong.vue";
+import EditSongs from "./views/EditSong.vue";
 import MaintainInstruments from "./views/MaintainInstrument.vue";
 import AddInstruments from "./views/AddInstrument.vue";
 import EditInstruments from "./views/EditInstrument.vue";
@@ -64,20 +66,14 @@ const router = new Router({
       component: SignupEvent,
     },
     {
-      path: "/addcomposer",
-      name: "addcomposer",
-      component: AddComposer
-    },
-    {
       path: "/addaccompanist",
       name: "addaccompanist",
       component: AddAccompanist
     },
     {
-      path: "/addsong",
-      name: "addsong",
+      path: "/addpiecerepertoire",
+      name: "addpiecerepertoire",
       component: AddSongRepertoire,
-      //props: true
     },
     {
       path: "/eventupcoming",
@@ -171,6 +167,22 @@ const router = new Router({
       path: "/editcomposer",
       name: "editcomposer",
       component: EditComposers,
+      props: true
+    },
+    {
+      path: "/maintainsong",
+      name: "maintainsong",
+      component: MaintainSongs
+    },
+    {
+      path: "/addsong",
+      name: "addsong",
+      component: AddSongs
+    },
+    {
+      path: "/editsong",
+      name: "editsong",
+      component: EditSongs,
       props: true
     },
     {
