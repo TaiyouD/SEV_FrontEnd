@@ -17,13 +17,14 @@
               return-object
               single-line
               label="Select Voice/Instrument"
+              @change="retrieveInstructor"
               v-model="selected"
           ></v-select>
         <div v-else>
             {{ instrumentRole.instrument.type }} <!--check if it works-->
         </div>
         </div>
-        <h4>Instructor: {{ instructorRole.user.fName }}</h4> <!--Como pegar o nome?--><!--tem q fazer v-if ou chamar alguma função-->
+        <h4>Instructor: {{ instructorRole.user.fName }} {{ instructorRole.user.lName }}</h4> <!--Como pegar o nome?--><!--tem q fazer v-if ou chamar alguma função-->
         <br /><br />
         <v-card>
           <v-card-title>
