@@ -96,6 +96,21 @@
         label="Student Major"
         required
       ></v-text-field>
+      <v-select
+        v-model="role.studentLevel"
+            id="studentLevel"
+            label="Student Level"
+            required
+            :items="[{ text: 'Level I', value: 1 }, 
+                    { text: 'Level II', value: 2 },
+                    { text: 'Level III', value: 3 },
+                    { text: 'Level IV', value: 4 },
+                    { text: 'Level V', value: 5 },
+                    { text: 'Level VI', value: 7 },
+                    { text: 'Level VII', value: 8 },
+                    { text: 'Level VIII', value: 9 }
+                    ]"
+        ></v-select>
     </div>
 
     <!-- Show fields for adding Accompanist -->
@@ -148,7 +163,8 @@
           studentClassification: null,
           studentSemester: null,
           studentMajor: '',
-          isApproved: null
+          isApproved: null,
+          studentLevel: null
         },
         message: "Enter Data and Click Save.",
       }
@@ -193,19 +209,20 @@
             studentSemester: this.role.studentSemester,
             studentMajor: this.role.studentMajor,
             isApproved: this.role.isApproved,
+            studentLevel: this.role.studentLevel,
             userId: this.user.id
         }; 
         await RoleServices.create(roleData)
         .then((response) => {
             this.role.id = response.data.id;
-            this.$router.push({ name: "maintainrole" });
+            this.$router.go(-1);
             })
             .catch((e) => {
             this.message = e.response.data.message;
             });
     },
       cancel() {
-        this.$router.push({ name: "maintainrole" });
+        this.$router.go(-1);
       },
     },
   };

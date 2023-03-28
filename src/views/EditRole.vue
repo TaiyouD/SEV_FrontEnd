@@ -81,6 +81,21 @@
         label="Student Major"
         required
       ></v-text-field>
+      <v-select
+        v-model="role.studentLevel"
+            id="studentLevel"
+            label="Student Level"
+            required
+            :items="[{ text: 'Level I', value: 1 }, 
+                    { text: 'Level II', value: 2 },
+                    { text: 'Level III', value: 3 },
+                    { text: 'Level IV', value: 4 },
+                    { text: 'Level V', value: 5 },
+                    { text: 'Level VI', value: 6 },
+                    { text: 'Level VII', value: 7 },
+                    { text: 'Level VIII', value: 8 }
+                    ]"
+        ></v-select>
     </div>
 
     <!-- Show fields for editing Accompanist -->
@@ -118,6 +133,11 @@
     props: ['id'],
     data() {
       return {
+        user: {
+          fName: '',
+          lName: '',
+          email: '',
+        },
         role: {
           roleType: '',
           facultyType: '',
@@ -127,11 +147,7 @@
           studentSemester: '',
           studentMajor: '',
           isApproved: '',
-        },
-        user: {
-          fName: '',
-          lName: '',
-          email: '',
+          studentLevel: null,
         },
         message: '',
         valid: false
@@ -153,22 +169,22 @@
     },
     methods: {
         getRole(id) {
-        RoleServices.get(id)
-            .then(response => {
-            this.role = response.data;
-            this.role.isApproved = response.data.isApproved; // update isApproved
-            UserServices.get(this.role.userId)
-                .then(response => {
-                this.user = response.data;
-                })
-                .catch(e => {
-                this.message = e.response.data.message;
-                });
-            })
-            .catch(e => {
-            this.message = e.response.data.message;
-            });
-        },
+          RoleServices.get(id)
+              .then(response => {
+                  this.role = response.data;
+                  this.role.isApproved = response.data.isApproved;
+                  UserServices.get(this.role.userId)
+                      .then(response => {
+                          this.user = response.data;
+                      })
+                      .catch(e => {
+                          this.message = e.response.data.message;
+                      });
+              })
+              .catch(e => {
+                  this.message = e.response.data.message;
+              });
+      },
       updateRole() {
         RoleServices.update(this.id, this.role)
           .then(() => {

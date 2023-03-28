@@ -4,6 +4,9 @@
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
+        <v-btn icon to="/maintain">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
         <v-toolbar-title>Composer View</v-toolbar-title>
         <v-spacer></v-spacer>
           <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
@@ -96,5 +99,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

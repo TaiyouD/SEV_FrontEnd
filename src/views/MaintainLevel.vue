@@ -4,6 +4,9 @@
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
+        <v-btn icon to="/maintain">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
         <v-toolbar-title>Level View</v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
@@ -81,5 +84,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

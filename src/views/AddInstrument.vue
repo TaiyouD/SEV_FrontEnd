@@ -63,14 +63,14 @@
           .then((response) => {
             this.instrument.id = response.data.id;
             console.log("add " + response.data);
-            this.$router.push({ name: "maintaininstrument" });
+            this.$router.go(-1);
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
       cancel() {
-        this.$router.push({ name: "maintaininstrument" });
+        this.$router.go(-1);
       },
     },
   };

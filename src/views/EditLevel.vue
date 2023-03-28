@@ -1,6 +1,4 @@
 
-// I am needing the levelNumber to be in the title. Can you fix that?
-
 <template>
     <div>
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />

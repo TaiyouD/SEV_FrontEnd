@@ -90,14 +90,14 @@ methods: {
       .then((response) => {
         this.composer.id = response.data.id;
         console.log("add " + response.data);
-        this.$router.push({ name: "maintaincomposer" });
+        this.$router.go(-1);
       })
       .catch((e) => {
         this.message = e.response.data.message;
       });
     },
     cancel() {
-    this.$router.push({ name: "maintaincomposer" });
+      this.$router.go(-1);
     },
     /* trying to make algorithm work
   saveComposer() {
