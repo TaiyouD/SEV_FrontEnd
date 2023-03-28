@@ -8,7 +8,7 @@
       </v-toolbar>
     </v-container>
     <br /><br /><br />
-    <SocialLogin />
+    <SocialLogin  />
     </v-img>
    
   </div>

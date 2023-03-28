@@ -1,7 +1,7 @@
 <template>
   <div class="signup-buttons">
     <v-row justify="center">
-      <div display="flex" id="parent_id"></div>
+      <div  display="flex" id="parent_id"></div>
     </v-row>
   </div>
 </template>
@@ -43,6 +43,8 @@ export default {
           size: "large",
           text: "signup_with",
           width: 400,
+          logo_alignment: "center",
+          
         }
       );
     },
