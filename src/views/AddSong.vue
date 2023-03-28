@@ -124,6 +124,8 @@
 <script>
 import ComposerServices from "../services/composerServices";
 import SongServices from "../services/songServices";
+import Utils from "@/config/utils.js";
+import RoleServices from "../services/roleServices";
 //import  Translator  from 'vue-google-translate';
 //import translate from 'google-translate-api';
 export default {
@@ -312,9 +314,14 @@ export default {
         code: 'en|uk',
         title: 'Ukrainian',
       }
-      ]  };
+      ],
+      user: {},
+      role: {}  
+    };
   },
   async mounted() {
+    this.user = Utils.getStore("user");
+    await this.retrieveRole();
     const result = await this.getComposers()
     this.composers=result.data
     console.log(this.composers)
@@ -350,6 +357,19 @@ export default {
     getComposers(){
       return ComposerServices.getAll()
     },
+    async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+            /*this.roleId2 = this.role.map(function(el) {
+                return el.id;});*/
+            console.log('role');
+            console.log(this.role);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
     querySelections(v) {
       ComposerServices.getAll()
         .then((response) => {
@@ -393,15 +413,26 @@ export default {
         .then((response) => {
           this.song.id = response.data.id;
           console.log("add " + response.data);
-
-          this.$router.push({ name: "addpiecerepertoire"}); //fazer v-if aqui pq depende do user pra qual pag vai direcionar
+          console.log("role")
+          console.log(this.role.roleType)
+          if (this.role.roleType == "Student" || this.role.facultyType == "Instructor"){
+            this.$router.push({ name: "addpiecerepertoire"});
+          }
+          else{
+            this.$router.push({ name: "maintain"}); //what is the right name?
+          }
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
     },
     cancel() {
-      this.$router.push({ name: "addpiecerepertoire"});
+      if (this.role.roleType == "Student" || this.role.facultyType == "Instructor"){
+            this.$router.push({ name: "addpiecerepertoire"});
+          }
+      else{
+            this.$router.push({ name: "maintain"}); //what is the right name?
+          }
     },
   },
 };
