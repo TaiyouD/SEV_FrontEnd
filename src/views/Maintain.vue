@@ -12,7 +12,7 @@
         <v-col v-for="(card, index) in cards" :key="index" cols="6">
           <v-row justify="center">
             <v-col>
-              <v-card class="elevation-10 hover" @click="$router.push(card.path)" max-width="600" height="150">
+              <v-card class="elevation-10 hover" @click="$router.push(card.path)" max-width="600" height="95">
                 <v-card-text class="card-text">
                   <div class="card-title">{{ card.title }}</div>
                   <v-icon class="card-icon">{{ card.icon }}</v-icon>
@@ -49,7 +49,7 @@
 
 .bottom-line {
   border-top: 1.5px solid black;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 </style>
 
@@ -57,9 +57,11 @@
 export default {
   data: () => ({
     cards: [
-      { title: "Composers", path: "/maintaincomposer", icon: "mdi-music-note" },
-      { title: "Instruments", path: "/maintaininstrument", icon: "mdi-guitar-electric" },
-      { title: "Levels", path: "/maintainlevel", icon: "mdi-numeric-3-box-multiple-outline" },
+      { title: "Composers", path: "/maintaincomposer", icon: "mdi-account-music" },
+      { title: "Songs", path: "/maintainsong", icon: "mdi-playlist-music" },
+      { title: "Instruments", path: "/maintaininstrument", icon: "mdi-piano" },
+      { title: "Levels", path: "/maintainlevel", icon: "mdi-signal" },
+      { title: "Events", path: "/maintainevent", icon: "mdi-calendar-check" },
       { title: "Roles", path: "/maintainrole", icon: "mdi-account-group" }
     ]
   })
