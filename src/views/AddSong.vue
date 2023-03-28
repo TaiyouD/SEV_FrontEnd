@@ -24,12 +24,6 @@
           ></v-checkbox>
         </div>
         <div>
-        <!--<v-text-field
-        v-model="song.language"
-        id="language"
-        :counter="30"
-        label="Language - Field required for voice pieces"
-        ></v-text-field>-->
         <v-select 
           v-model="song.language"
           clearable
@@ -77,6 +71,7 @@
             :loading="loading"
             :items="composers"
             item-text="lastName"
+            item-value="lastName"
             class="mr-4"
             density="comfortable"
             hide-no-data
@@ -84,20 +79,15 @@
             label="Composer"
             single-line
             return-object
-            required
-        ></v-autocomplete>
+            required>
+            <!-- <template slot="selection" slot-scope="data">
+              {{ data.item.firstName }} {{ data.item.lastName }}
+          </template>
+          <template slot="item" slot-scope="data">
+            {{ data.item.firstName }} {{ data.item.lastName }}
+          </template> -->
+        </v-autocomplete>
           <br>
-      
-        <!-- <v-select 
-          :items="selected"
-          item-title="Composer"
-          item-value=""
-          label="Select Composer"
-          v-model="selected"
-          return-object
-          single-line
-          filled
-      ></v-select>-->
       <router-link to="/addcomposer">
         <v-btn color="primary" class="mr-4">
             Missing Composer?
@@ -327,13 +317,6 @@ export default {
     console.log(this.composers)
     
   },
-  /*
-  async mounted () {
-    const response = await fetch(ComposerServices.getAll());
-    const { data: composers } = await response.json()
-    this.composers = composers;
-    console.log(this.composers);
-  },*/
   
   watch: {
       search(val) {
@@ -342,7 +325,7 @@ export default {
     },
     /*
   computed: {
-    isForeig() {
+    isForeign() {
       if(this.song.language != "")
       {
         return this.visible==true;
@@ -415,24 +398,14 @@ export default {
           console.log("add " + response.data);
           console.log("role")
           console.log(this.role.roleType)
-          if (this.role.roleType == "Student" || this.role.facultyType == "Instructor"){
-            this.$router.push({ name: "addpiecerepertoire"});
-          }
-          else{
-            this.$router.push({ name: "maintain"}); //what is the right name?
-          }
+          this.$router.go(-1);
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
     },
     cancel() {
-      if (this.role.roleType == "Student" || this.role.facultyType == "Instructor"){
-            this.$router.push({ name: "addpiecerepertoire"});
-          }
-      else{
-            this.$router.push({ name: "maintain"}); //what is the right name?
-          }
+            this.$router.go(-1); 
     },
   },
 };
