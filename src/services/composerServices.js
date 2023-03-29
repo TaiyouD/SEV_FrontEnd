@@ -4,9 +4,6 @@ export default {
   getAll() {
     return apiClient.get("/composer");
   },
-//  getAllForUser(userId) { -----------> getComposerForSong?
-//    return apiClient.get("/composer/userTut/" + userId);
-  //},
   get(id) {
     return apiClient.get(`/composer/${id}`);
   },

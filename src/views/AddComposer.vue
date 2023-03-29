@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
@@ -90,14 +89,24 @@ methods: {
       .then((response) => {
         this.composer.id = response.data.id;
         console.log("add " + response.data);
-        this.$router.go(-1);
+        if (this.role.roleType == "Student" || this.role.faculty == "Instructor"){
+              this.$router.push({name: "addsong"});
+            }
+        else{
+              this.$router.push({name: "maintaincomposer"});
+            }
       })
       .catch((e) => {
         this.message = e.response.data.message;
       });
     },
     cancel() {
-      this.$router.go(-1);
+      if (this.role.roleType == "Student" || this.role.faculty == "Instructor"){
+              this.$router.push({name: "addsong"});
+            }
+        else{
+              this.$router.push({name: "maintaincomposer"});
+            }
     },
     /* trying to make algorithm work
   saveComposer() {

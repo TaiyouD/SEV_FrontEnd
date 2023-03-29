@@ -1,4 +1,3 @@
-
 import apiClient from "@/services/services.js";
 
 export default {
@@ -22,5 +21,5 @@ export default {
   },
   deleteAll() {
     return apiClient.delete(`/role`);
-  },
+  }
 };
