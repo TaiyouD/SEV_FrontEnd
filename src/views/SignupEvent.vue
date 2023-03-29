@@ -37,7 +37,7 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
-              class="text-center"
+         
             >
               Today
             </template>
@@ -61,7 +61,7 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
-              class="text-center"
+       
             >
               Today
             </template>
@@ -86,7 +86,7 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
-              class="text-center"
+ 
             >
               Today
             </template>
@@ -233,7 +233,7 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
-              class="text-center"
+              
             >
               Today
             </template>
@@ -257,7 +257,7 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
-              class="text-center"
+        
             >
               Today
             </template>
@@ -282,7 +282,7 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
-              class="text-center"
+              
             >
               Today
             </template>
