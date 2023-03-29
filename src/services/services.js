@@ -5,9 +5,9 @@ import Router from "../router.js";
 
 var baseurl = "";
 if (process.env.NODE_ENV === "development") {
-  baseurl = "http://localhost/tutorial/";
+  baseurl = "http://localhost/performance-t4/";
 } else {
-  baseurl = "/tutorial/";
+  baseurl = "/performance-t4/"; 
 }
 
 const apiClient = axios.create({
