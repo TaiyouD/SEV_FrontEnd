@@ -2,14 +2,11 @@ import apiClient from "@/services/services.js";
 
 export default {
   getAllForUser(userId) {
-    return apiClient.get("/repertoireSong/user/" + userId);
+    return apiClient.get(`/repertoireSong/userPerf/${userId}`);
   },
   get(id) {
     return apiClient.get(`/repertoireSong/${id}`);
-  },/*
-  createRepSong(userId, data) {
-    return apiClient.post(`/users/${userId}/repertoireSong`, data);
-  },*/
+  },
   create(data) {
     return apiClient.post("/repertoireSong", data);
   },
@@ -24,5 +21,5 @@ export default {
   },
   findByTitle(title) {
     return apiClient.get(`/repertoireSong?title=${title}`);
-  },
+  }
 };
