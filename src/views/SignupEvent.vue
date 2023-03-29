@@ -40,21 +40,129 @@
             <b>{{ message }}</b>
           </v-card-text>
 
-
           <v-data-table
-            :headers="headers"
+            :headers="headers" 
             :search="search"
-            :items="events2"
-            :items-per-page="50"
+            :items="listOfEvents"
+            :items-per-page="10"
           >
           <template #item="{ item }">
             <tr>
+              <!-- =================================Dialog Box========================= -->
               <!-- <td>Something</td> -->
-              <td>{{ item.isVoice }}</td>
+<!-- v-model = "dialog" -->
+              <v-dialog  max-width="900px">
+                  <template v-slot:activator="{ on, attrs}">
+                    <td v-bind="attrs"
+                      v-on="on">{{ item.eventType }}</td>
+
+                      <td v-bind="attrs"
+                      v-on="on">{{item.date}}</td>
+            </template>
+      <v-card>
+        <v-card-title>
+    <div style="float: center; margin:auto;">
+    <div style="display: inline-block; text-align: center;">
+
+        <!-- ===============Timeslot ==================== -->
+            Add a time slot where students can see what slots are already taken 
+      <!-- <timeslot :min="5"></timeslot> -->
+      <!-- :items="Object.keys(listOfEventsSession).map((key) => ({text:key, value:listOfEventsSession[key]}))" -->
+      <!-- {{  getAccompanist(listOfRoles)}} -->
+      <v-select 
+        :items=accompanists
+        v-model="accompanist"
+        item-text= "fName"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    ></v-select>
+    <v-select 
+        :items="listOfRoles"
+        item-title="Time Slot"
+        item-value=""
+        label="Select Time Slot"
+        return-object
+        single-line
+        filled
+    ></v-select>
+
+        <!-- Instructor Select Below -->
+    <div style="text-align: center;">
+    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
+    <v-select style="padding-right: 30px; width: 100px;"
+    
+        :items="listOfRoles"
+        item-title="state2"
+        label="Select Instructor"
+        return-object
+        single-line
+        filled
+     ></v-select>
+                
+
+                    <!--  Instrument Select Below -->
+    <v-select   style="width: 100px;"
+        item-title="Instrument"
+        item-value=""
+        label="Select Voice or Instrument"
+        return-object
+        single-line
+        filled
+    ></v-select>
+    </div>
+</div>
+                   
+<v-container fluid>
+    <v-text-field
+      name="input-7-1"
+      label="Selection Title"
+      filled
+      auto-grow
+    ></v-text-field>
+  </v-container>
+
+  <v-select style="padding-top: 8px;"
+        item-title="date"
+        label="Select Composer"
+        return-object
+        single-line
+        filled
+     ></v-select>
+
+    <!-- ===========Button for missing song, composer, and submit =================-->
+    <div style="text-align: center;">
+<div style="display:inline-block; margin:auto;">
+<v-btn color="success" variant="tonal" style="text-align: center;">
+    Submit
+</v-btn>
+<router-link to="/addaccompanist" tag="v-btn">
+<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+    Missing an Accompanist?
+</v-btn>
+</router-link>
+<router-link to="/addsong" tag="v-btn">
+  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+      Missing a Song?
+  </v-btn>
+  </router-link>
+</div>
+</div>
+
+    </div>
+    </div>
+    <!-- ============End of button============== -->
+
+        </v-card-title>
+      </v-card>
+
+              </v-dialog>
+
               <td>
                 <div class="d-flex justify-end">
-                  <v-icon color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
-                  <v-icon color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
+                  <!-- <v-icon color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
+                  <v-icon color="error" @click="deleteEvent(item)">mdi-delete</v-icon> -->
                 </div>
               </td>
             </tr>
@@ -63,56 +171,37 @@
           </v-data-table>
         </v-card>
       </v-container>
-
-      <v-flex class = "mt-4">
-        <popup>
-        </popup>
-      </v-flex>
-      
-
-
-     <div style="text-align: center;">
-<div style="display:inline-block; margin:auto;">
-<v-btn color="success" variant="tonal" style="text-align: center;">
-    Submit
-</v-btn>
-<router-link to="/addaccompanist" tag="v-btn">
-<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-    Add Accompanist
-</v-btn>
-</router-link>
-<router-link to="/addsong" tag="v-btn">
-  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Add Song
-  </v-btn>
-  </router-link>
-</div>
-</div>
-
     </div>
     </div>
-    <!-- End of multiple tab container  -->
     </div>
 
 </template>
   
   <script>
-  import eventServices from "../services/signupServices";
+  import eventServices from "../services/eventServices";
+  import eventSessionServices from "../services/eventServices";
+  import roleServices from "../services/rolesServices";
+  import availabilityServices from "../services/availabilityServices";
+  import userServices from "../services/userServices";
   import Utils from "@/config/utils.js"
-  import popup from '../components/popup'
+  //import popup from '../components/popup'
+  //import timeslot from '../components/time-slot.vue'
 
   export default {
     name: "events-list",
     components: {
-      popup
+      // popup
+      //timeslot
     },
     data() {
       return {
-        data: () => ({}),
-        events2: [],
-        sheet:null,
-        extended: false,
-        mode: 'light',
+        listOfEvents: [], //Change this later --- this is the events
+        listOfEventsSession: [],
+        listOfRoles: [],
+        accompanist: null,
+        accompanists: [],
+        availabilities: [],
+        users: [],
         search: "",
         currentIndex: -1,
         title: "",
@@ -120,44 +209,68 @@
         message: "Music Department",
         headers: [
           { text: "Title", value: "title" },
-          { text: "Description", value: "description" },
-          { text: "Actions", value: "actions", sortable: false },
+          { text: "Date", value: "date" },
+          //{ text: "Actions", value: "actions", sortable: false },
         ],
 
       };
     },
-    mounted() {
-      this.user = Utils.getStore("user");
-      this.retrieveEvents();
+    async created() {
+      this.user = Utils.getStore("user"); // This util grabs the specific users' role information
+      await this.retrieveRoles();
+      await this.retrieveEvents();
+      await this.retrieveEventSessions();
+      await this.retrieveUsers();
+      await this.retrieveAvailabilities();
+      this.accompanists = await this.getAccompanist();
     },
     methods: {
-
-    changeStyle () {
-      if (this.mode === 'dark') {
-        this.mode = 'light'
-      } else {
-        this.mode = 'dark'
-      }
-    },
       editEvent(event) {
         this.$router.push({ name: "edit", params: { id: event.id } });
       },
       viewEvent(event) {
         this.$router.push({ name: "view", params: { id: event.id } });
       },
-      deleteEvent(event) {
-        eventServices.delete(event.id)
-          .then(() => {
-            this.retrieveevents();
+      async retrieveEvents() {
+        await eventServices.getAll()
+          .then((response) => {
+            this.listOfEvents = response.data;
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
-      retrieveEvents() {
-        eventServices.getAll()
+      async retrieveEventSessions() {
+        await eventSessionServices.getAll()
           .then((response) => {
-            this.events2 = response.data;
+            this.listOfEventsSession = response.data;
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveRoles(){
+        await roleServices.getAll()
+          .then((response) => {
+            this.listOfRoles = response.data;
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveAvailabilities(){
+        await availabilityServices.getAll()
+          .then((response) => {
+            this.availabilities = response.data;
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveUsers(){
+        await userServices.getAll()
+          .then((response) => {
+            this.users = response.data;
           })
           .catch((e) => {
             this.message = e.response.data.message;
@@ -172,50 +285,45 @@
         this.currentevent = event;
         this.currentIndex = event ? index : -1;
       },
-      removeAllEvents() {
-        eventServices.deleteAll()
-          .then((response) => {
-            console.log(response.data);
-            this.refreshList();
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
-    },
 
-// =============================================================================
-    computed: {
-    timeSlots() {
-      const slots = [];
-      let hour, minute, time;
+      async getAccompanist(){
+        //const accompanists = [];
+        //accompanists = roles.filter(item => item.roleType === 'Student').map(item => item.roleType)
+        const accompanist = []
+        for (let i = 0; i < this.listOfRoles.length; i++){
+          //console.log(this.listOfRoles[i].roleType)
+          if (this.listOfRoles[i].roleType === 'Accompanist'){
+            //console.log(this.listOfRoles[i].roleType)
+            accompanist.push(userServices.get(this.listOfRoles[i].id))
+          
 
-      // Loop through 24 hours
-      for (hour = 8; hour < 17; hour++) {
-        // Loop through 60 minutes
-        for (minute = 0; minute < 60; minute += 5) {
-          // Format the time as "hh:mm AM/PM"
-          time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-
-          if (hour < 12) {
-            time += ' AM';
-          } else {
-            time += ' PM';
+          //console.log(this.users)
+            // for (let x = 0; x < this.users.length; x++){
+            //   console.log("Test")
+            //   if (this.listofRoles[i].userId === this.users[x].id){
+            //     this.accompanists.push(this.users[x].fName)
+            //   }
+            }
           }
-
-          // Add the time to the array
-          slots.push(time);
+          console.log(accompanist)
+          return accompanist
         }
-      }
+        //return accompanists
+      },
+      
+      // getEventId(){
+      //   for (let i = 0; i < this.availabilities.length; i++){
+      //     //if (this.availabilities[i].eventId ===)
+      //   }
+      // }
+    
 
-      return slots;
-    }
-  }
-// ===========================================================================  
     
   };
   </script>
   
+
+
   <style lang="css">
   * {
     margin: 0;
