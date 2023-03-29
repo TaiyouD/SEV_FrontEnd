@@ -21,5 +21,5 @@ export default {
   },
   findByTitle(title) {
     return apiClient.get(`/role?title=${title}`);
-  },
+  }
 };
