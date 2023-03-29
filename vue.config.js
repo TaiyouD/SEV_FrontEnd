@@ -4,6 +4,6 @@ module.exports = {
     port: 8081,
   },
   publicPath:
-    process.env.NODE_ENV === "development" ? "/" : "/performance/t4",
+    process.env.NODE_ENV === "development" ? "/" : "/performance/t4/",
   transpileDependencies: ["vuetify"],
 };
