@@ -21,10 +21,10 @@
               v-model="selected"
           ></v-select>
         <div v-else>
-            {{ instrumentRole.instrument.type }} <!--check if it works-->
+            {{ instrumentRole[0].instrument.type }} 
         </div>
         </div>
-        <h4>Instructor: {{ instructorRole.user.fName }} {{ instructorRole.user.lName }}</h4> <!--Como pegar o nome?--><!--tem q fazer v-if ou chamar alguma função-->
+        <h4>Instructor: {{ instructorRole.user.fName }} {{ instructorRole.user.lName }}</h4> 
         <br /><br />
         <v-card>
           <v-card-title>
@@ -49,12 +49,10 @@
           >
             <template v-slot:[`item.actions`]="{ item }">
               <div>
-                <v-icon small class="mx-4" @click="editSong(item)">
+                <v-icon small class="mx-4" @click="editSong()">
                   mdi-pencil
                 </v-icon>
-                <v-icon small class="mx-4" @click="viewSong(item)">
-                  mdi-format-list-bulleted-type
-                </v-icon>
+
                 <v-icon small class="mx-4" @click="deleteSong(item)">
                   mdi-trash-can
                 </v-icon>
@@ -83,10 +81,12 @@
     props: [],
     data() {
       return {
+        view_dialog: false,
         instrumentRole: {
           id: null,
-          instrumentId: [],
-          instrument: {},
+          instrument: {
+            type:""
+          },
           song: {},
           privateInstructortId: "",
           accompanistId: ""
@@ -124,14 +124,18 @@
       await this.retrieveRole();
       await this.retrieveInstrumentRoles();
       await this.retrieveSongs();
+      if(this.instrumentRole.length <= 1){
+          await this.retrieveInstructorOneInstrument();
+      }
     },
     methods: {
       editSong(song) {
         this.$router.push({ name: "edit", params: { id: song.id } }); //ter isso? ou criar pág pra isso
       },
-      viewSong(song) {
-        this.$router.push({ name: "view", params: { id: song.id } });// mesmo de cima
-      },
+       viewSong() {
+         //this.$router.push({ name: "view", params: { id: song.id } });// mesmo de cima
+          this.edit_dialog = false;
+        },
       deleteSong(song) {
         RepertoireSongServices.delete(song.id)
           .then(() => {
@@ -195,6 +199,21 @@
             this.message = e.response.data.message;
           });
       },
+      async retrieveInstructorOneInstrument() {
+          console.log("instructor id")
+          console.log(this.instrumentRole[0].privateInstructorId)
+          await RoleServices.get(this.instrumentRole[0].privateInstructorId)
+            .then((response) => {
+              this.instructorRole = response.data;
+              /*this.roleId2 = this.role.map(function(el) {
+                  return el.id;});*/
+              console.log('instructor');
+              console.log(this.instructorRole);
+            })
+            .catch((e) => {
+              this.message = e.response.data.message;
+            });
+      },
       refreshList() {
         this.retrieveSongs();
         this.currentSong = null;
@@ -213,11 +232,7 @@
           .catch((e) => {
             this.message = e.response.data.message;
           });
-      },
-      /*
-      onSelect() {
-      this.selectedItem = null;
-      }*/
+      }
     }
   };
   </script>
