@@ -91,39 +91,145 @@
   >
   <v-container fluid>
       <v-row dense>
-        <v-col
+        <!-- <v-col
           v-for="card in cards"
           :key="card.title"
           :cols="card.flex"
         >
           <v-card>
             <v-img
-              :src="card.src"
-              class="align-end"
+            src="../assets/music-notes-bg2.jpg"
+              class="align-end text-white"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="300px"
+              height="50"
               cover
             >
-              <v-card-title class="text-white" text="card.title"></v-card-title>
+            <v-card-title class="white--text">{{card.title}}</v-card-title>
             </v-img>
+
+            <v-card-text>
+
+            </v-card-text>
 
             <v-card-actions>
               <v-spacer></v-spacer>
+              <v-btn size="small" color="surface-variant" variant="text" icon>
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
 
-              <v-btn size="small" color="surface-variant" variant="text" icon="mdi-thumb-down"></v-btn>
+              <v-btn size="small" color="surface-variant" variant="text" icon>
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
 
-              <v-btn size="small" color="surface-variant" variant="text" icon="mdi-thumb-down"></v-btn>
+              <v-btn size="small" color="surface-variant" variant="text">
+                Email
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+          
+        </v-col> -->
+        <v-col cols="5">
+          <v-card>
+            <v-img
+              src="../assets/music-notes-bg2.jpg"
+              class="align-end text-white"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="60"
+              cover
+            >
+            <v-card-title class="white--text">Audition For Scholarships</v-card-title>
+            </v-img>
 
-              <v-btn size="small" color="surface-variant" variant="text" icon="mdi-thumb-down"></v-btn>
+            <v-card-text>
+
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn size="small" color="surface-variant" variant="text" icon>
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
+
+              <v-btn size="small" color="surface-variant" variant="text" icon>
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
+
+              <v-btn size="small" color="surface-variant" variant="text">
+                Email
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
 
+        <v-col cols="7">
+          <v-card>
+            <v-img
+              src="../assets/music-notes-bg2.jpg"
+              class="align-end text-white"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="60"
+              cover
+            >
+            <v-card-title class="white--text">Notification</v-card-title>
+            </v-img>
+
+            <v-card-text>
+
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn size="small" color="surface-variant" variant="text" icon>
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
+
+              <v-btn size="small" color="surface-variant" variant="text" icon>
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
+
+              <v-btn size="small" color="surface-variant" variant="text">
+                Email
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+        <!-- gradient="to bottom, rgba(129,20,41), rgba(129,20,41)" -->
+        <v-col cols="12">
+          <v-card>
+            <v-img
+              src="../assets/music-notes-bg2.jpg"
+              class="align-end text-white"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="60"
+              cover
+            >
+            <v-card-title class="white--text">Music Degrees</v-card-title>
+            </v-img>
+
+            <v-card-text>
+
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn size="small" color="surface-variant" variant="text" icon>
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
+
+              <v-btn size="small" color="surface-variant" variant="text" icon>
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
+
+              <v-btn size="small" color="surface-variant" variant="text">
+                Email
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+          
+        </v-col>
       </v-row>
     </v-container>
     </v-sheet>
-
-
   </div>
 </template>
   
@@ -142,28 +248,17 @@
         // title: "",
         user: {},
         message: "Music Department",
-        // headers: [
-        //   { text: "Title", value: "title" },
-        //   { text: "Description", value: "description" },
-        //   { text: "Actions", value: "actions", sortable: false },
-        // ],
-    
         slides: [
           {title: "picture 1", src: "../assets/music-notes-bg1.jpg"},
           {title: "picture 2", src: "../assets/music-notes-bg2.jpg"},
           {title: "picture 3", src: "../assets/church-window-1.jpg"},
           {title: "picture 4", src: "../assets/piano-1.jpg"},
           {title: "picture 5", src: "../assets/piano-2.jpg"},
-          // 'primary',
-          // 'secondary',
-          // 'yellow darken-2',
-          // 'red',
-          // 'orange',
         ],
         cards: [
-        { title: 'Audition For Scholarships',text: 'Music gives life to the campus of Oklahoma Christian! Our entire campus, no matter what your major, is invited to join choir, band, orchestra and musical performances.', src: '../assets/piano-2.jpg', flex: 8 },
-        { title: 'Watch OC Perfomances',text: 'Music life to the campus of Oklahoma Christian! Our entire campus, no matter what your major, is invited to join choir, band, orchestra and musical performances.', src: '../assets/piano-2.jpg', flex: 4 },
-        { title: 'The Music Degrees',text: 'Develop your voice, advance your craft and invest your talent in musical pursuits alongside professors who value individuality and take the time to pour into students one-on-one.', src: '../assets/piano-2.jpg', flex: 12 },
+        { title: 'Audition For Scholarships',text: 'Music gives life to the campus of Oklahoma Christian! Our entire campus, no matter what your major, is invited to join choir, band, orchestra and musical performances.', src: 'piano-2', flex: 5 },
+        { title: 'Notification',text: 'Music life to the campus of Oklahoma Christian! Our entire campus, no matter what your major, is invited to join choir, band, orchestra and musical performances.', src: 'piano-2', flex: 7},
+        { title: 'The Music Degrees',text: 'Develop your voice, advance your craft and invest your talent in musical pursuits alongside professors who value individuality and take the time to pour into students one-on-one.', src: 'piano-2', flex: 12 },
         ],
         model: 0,
       };
