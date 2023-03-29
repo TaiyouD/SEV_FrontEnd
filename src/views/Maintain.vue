@@ -58,7 +58,7 @@ export default {
   data: () => ({
     cards: [
       { title: "Composers", path: "/maintaincomposer", icon: "mdi-account-music" },
-      { title: "Songs", path: "/maintainsong", icon: "mdi-playlist-music" },
+      { title: "Pieces", path: "/maintainsong", icon: "mdi-playlist-music" },
       { title: "Instruments", path: "/maintaininstrument", icon: "mdi-piano" },
       { title: "Levels", path: "/maintainlevel", icon: "mdi-signal" },
       { title: "Events", path: "/maintainevent", icon: "mdi-calendar-check" },

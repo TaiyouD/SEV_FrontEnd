@@ -7,16 +7,16 @@
           <v-btn icon to="/maintain">
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
-          <v-toolbar-title>Song View</v-toolbar-title>
+          <v-toolbar-title>Piece View</v-toolbar-title>
           <v-spacer></v-spacer>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
         </v-toolbar>
         <br />
         <v-card>
           <v-card-title>
-            {{ "All Songs" }}
+            {{ "All Pieces" }}
             <v-spacer></v-spacer>
-            <v-btn class="mx-2" color="success" @click="addSong(id)">Add Song</v-btn>
+            <v-btn class="mx-2" color="success" @click="addSong(id)">Add Piece</v-btn>
           </v-card-title>
           <v-card-text>
             <b>{{ message }}</b>
@@ -53,7 +53,7 @@
       return {
         search: "",
         songs: [],
-        message: "Add, Edit or Delete Songs",
+        message: "Add, Edit or Delete Pieces",
         headers: [
           { text: "Composer", value: "composer", sortable: false },
           { text: "Title", value: "title", sortable: false },

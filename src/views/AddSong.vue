@@ -10,20 +10,20 @@
         <h4>{{ message }}</h4>
         <br />
         <v-form ref="form" v-model="valid" lazy validation>
-          <v-text-field
-            v-model="song.title"
-            id="title"
-            :counter="50"
-            label="Title"
-            required
-          ></v-text-field>
-          <div>
+          <v-layout row align-center>
             <v-checkbox
               v-model="enabled"
               label="Vocal Piece"
-              class="pe-2"
+              class="mr-6 ml-3"
             ></v-checkbox>
-          </div>
+            <v-text-field
+              v-model="song.title"
+              id="title"
+              label="Title"
+              class="pe-2 mr-1"
+              required
+            ></v-text-field>
+          </v-layout>
           <div>
           <v-select 
             v-model="song.language"
@@ -50,14 +50,15 @@
             <p>{{ translation }}</p>
           </div>-->
           <v-textarea
-          v-model="song.translation"
-          :disabled="!enabled"
-          id="translation"
-          label="Enter piece translation"
+            v-model="song.translation"
+            :disabled="!enabled"
+            id="translation"
+            label="Enter Piece Translation"
+            rows="2"
+            cols="5"
           ></v-textarea>
           <!-- <vue-google-translator /> -->
           </div>
-          <br><br>
           <!--<v-textarea v-if="isForeign"
             v-model="song.translation"
             id="translation"
@@ -79,28 +80,34 @@
               label="Composer"
               single-line
               return-object
+              style="width: 1200px;"
               required
           ></v-autocomplete>
-            <br>
+          <br>
 
-        <router-link to="/addcomposer">
-          <v-btn color="primary" class="mr-4">
-              Missing Composer?
-          </v-btn>
-          </router-link>
-          <br><br><br>
-  
-  
-            <v-btn
-              :disabled="!valid"
-              color="success"
-              class="mr-4"
-              @click="saveSong()"
-            >
-              Save
-            </v-btn>
-  
-            <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+            <div class="d-flex align-center">
+              <div class="ml-1">
+                <router-link to="/addcomposer">
+                  <v-btn color="primary">
+                    Missing Composer?
+                  </v-btn>
+                </router-link>
+              </div>
+
+            <div class="ml-auto">
+              <v-btn
+                :disabled="!valid"
+                color="success"
+                class="mr-4"
+                @click="saveSong()"
+              >
+                Save
+              </v-btn>
+
+                <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+              </div>
+            </div>
+
           </v-form>
       </v-container>
     </div>
@@ -136,7 +143,7 @@
           translation: "",
           composer: [] 
         },
-        message: "Enter data and click save",
+        message: "Enter Data and Click Save",
         lyrics: "",
         countries: [
         {
@@ -389,14 +396,24 @@
           .then((response) => {
             this.song.id = response.data.id;
             console.log("add " + response.data);
-            this.$router.go(-1);
+            if (this.role.roleType == "Student" || this.role.faculty == "Instructor"){
+              this.$router.push({name: "addpiecerepertoire"});
+            }
+            else{
+              this.$router.push({name: "maintainsong"});
+            }
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
       cancel() {
-              this.$router.go(-1);
+        if (this.role.roleType == "Student" || this.role.faculty == "Instructor"){
+              this.$router.push({name: "addpiecerepertoire"});
+            }
+        else{
+              this.$router.push({name: "maintainsong"});
+            }
       },
     },
   };
