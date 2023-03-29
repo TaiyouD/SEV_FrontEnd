@@ -10,9 +10,9 @@
   
         <br />
         <h4>{{ message }}</h4>
-        <div class="alertMessage">
+        <!--<div class="alertMessage">
         <h5>{{ messageSimilarity }}</h5>
-        </div>
+        </div>-->
         <br />
         <v-form ref="form" v-model="valid" lazy validation>
           <v-text-field
@@ -84,6 +84,28 @@ export default {
   },
 
   methods: {
+    saveComposer() {
+      var data = {
+        firstName: this.composer.firstName,
+        lastName: this.composer.lastName,
+        nationality: this.composer.nationality,
+        birthday: this.composer.birthday,
+        deathDate: this.composer.deathDate
+      };
+      ComposerServices.create(data)
+        .then((response) => {
+          this.composer.id = response.data.id;
+          console.log("add " + response.data);
+          this.$router.push({ name: "addsong" });
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+      },
+      cancel() {
+      this.$router.push({ name: "addsong" });
+      },
+      /* trying to make algorithm work
     saveComposer() {
         //check if composer last name exists
       var data = {
@@ -168,7 +190,7 @@ export default {
       } else {
           return 'no';
       }
-    }
+    }*/
   },
 };
 </script>
