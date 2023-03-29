@@ -18,8 +18,5 @@ export default {
   },
   deleteAll() {
     return apiClient.delete(`/role`);
-  },
-  findByTitle(title) {
-    return apiClient.get(`/role?title=${title}`);
   }
 };
