@@ -18,8 +18,5 @@ export default {
   },
   deleteAll() {
     return apiClient.delete(`/instrument`);
-  },
-  findByType(type) {
-    return apiClient.get(`/instrument?type=${type}`);
-  },
+  }
 };

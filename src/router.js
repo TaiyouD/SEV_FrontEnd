@@ -4,19 +4,36 @@ import Router from "vue-router";
 import Login from "./views/Login.vue";
 
 import Homepage from "./views/Homepage.vue";
-import SignupEvent from "./views/SignupEvent.vue";
 import AddAccompanist from "./views/AddAccompanist.vue";
-import AddComposer from "./views/AddComposer.vue";
-import AddSong from "./views/AddSong.vue";
+import AddComposers from "./views/AddComposer.vue";
+import AddCritique from "./views/AddCritique.vue";
+import AddInstruments from "./views/AddInstrument.vue";
+import AddRoles from "./views/AddRole.vue";
+import AddSongs from "./views/AddSong.vue";
 import AddSongRepertoire from "./views/AddSongRepertoire.vue";
-import EventUpcomingList from "./views/EventUpcomingList.vue";
-import EventPastList from "./views/EventPastList.vue";
+import Critique from "./views/Critique.vue";
+import EditComposers from "./views/EditComposer.vue";
+import EditInstruments from "./views/EditInstrument.vue";
+import EditLevels from "./views/EditLevel.vue";
+import EditRoles from "./views/EditRole.vue";
+import EditSongs from "./views/EditSong.vue";
 import EventEdit from "./views/EventEdit.vue";
 import EventEvaluation from "./views/EventEvaluation.vue";
-import Repertoire from "./views/Repertoire.vue";
-import ProfileStudent from "./views/ProfileStudent.vue";
-import ProfileFaculty from "./views/ProfileFaculty.vue";
+import EventPastList from "./views/EventPastList.vue";
+import EventUpcomingList from "./views/EventUpcomingList.vue";
+import EventView from "./views/EventView.vue";
+import Maintain from "./views/Maintain.vue";
+import MaintainComposers from "./views/MaintainComposer.vue";
+import MaintainInstruments from "./views/MaintainInstrument.vue";
+import MaintainLevels from "./views/MaintainLevel.vue";
+import MaintainRoles from "./views/MaintainRole.vue";
+import MaintainSongs from "./views/MaintainSong.vue";
 import ProfileAdmin from "./views/ProfileAdmin.vue";
+import ProfileFaculty from "./views/ProfileFaculty.vue";
+import ProfileStudent from "./views/ProfileStudent.vue";
+import Repertoire from "./views/Repertoire.vue";
+import SignupEvent from "./views/SignupEvent.vue";
+
 
 import TutorialsList from "./views/TutorialsList.vue";
 import EditTutorial from "./views/EditTutorial.vue";
@@ -32,7 +49,7 @@ const router = new Router({
   linkExactActiveClass: "active",
   base:
     //    process.env.NODE_ENV === 'development'? "/" : "/tutorScheduling/", - for AWS
-    process.env.NODE_ENV === "development" ? "/" : "performance/t4",
+    process.env.NODE_ENV === "development" ? "/" : "/performance/t4",
   routes: [
     {
       path: "/",
@@ -45,25 +62,34 @@ const router = new Router({
       component: Homepage,
     },
     {
-      path: "/signupevents",
-      name: "signupevents",
-      component: SignupEvent,
-    },
-    {
-      path: "/addcomposer",
-      name: "addcomposer",
-      component: AddComposer
-    },
-    {
       path: "/addaccompanist",
       name: "addaccompanist",
       component: AddAccompanist
     },
     {
+      path: "/addcomposer",
+      name: "addcomposer",
+      component: AddComposers
+    },
+    {
+      path: "/addcritique",
+      name: "addcritique",
+      component: AddCritique
+    },
+    {
+      path: "/addinstrument",
+      name: "addinstrument",
+      component: AddInstruments
+    },
+    {
+      path: "/addrole",
+      name: "addrole",
+      component: AddRoles
+    },
+    {
       path: "/addsong",
       name: "addsong",
-      component: AddSong,
-      //props: true
+      component: AddSongs
     },
     {
       path: "/addpiecerepertoire",
@@ -72,15 +98,33 @@ const router = new Router({
       //props: true
     },
     {
-      path: "/eventupcoming",
-      name: "eventupcoming",
-      component: EventUpcomingList,
+      path: "/critique",
+      name: "critique",
+      component: Critique,
     },
     {
-      path: "/eventpast",
-      name: "eventpast",
-      component: EventPastList,
-      props: true,
+      path: "/editcomposer",
+      name: "editcomposer",
+      component: EditComposers,
+      props: true
+    },
+    {
+      path: "/editinstrument",
+      name: "editinstrument",
+      component: EditInstruments,
+      props: true
+    },
+    {
+      path: "/editrole",
+      name: "editrole",
+      component: EditRoles,
+      props: true
+    },
+    {
+      path: "/editsong",
+      name: "editsong",
+      component: EditSongs,
+      props: true
     },
     {
       path: "/eventedit",
@@ -93,15 +137,61 @@ const router = new Router({
       component: EventEvaluation,
     },
     {
-      path: "/repertoire",
-      name: "repertoire",
-      component: Repertoire,
+      path: "/editlevel",
+      name: "editlevel",
+      component: EditLevels,
+      props: true
+    },
+    {
+      path: "/eventpast",
+      name: "eventpast",
+      component: EventPastList,
       props: true,
     },
     {
-      path: "/profilestudent",
-      name: "profilestudent",
-      component: ProfileStudent,
+      path: "/eventupcoming",
+      name: "eventupcoming",
+      component: EventUpcomingList,
+    },
+    {
+      path: "/eventview",
+      name: "eventview",
+      component: EventView
+    },
+    {
+      path: "/maintain",
+      name: "maintain",
+      component: Maintain
+    },
+    {
+      path: "/maintaincomposer",
+      name: "maintaincomposer",
+      component: MaintainComposers
+    },
+    {
+      path: "/maintaininstrument",
+      name: "maintaininstrument",
+      component: MaintainInstruments
+    },
+    {
+      path: "/maintainlevel",
+      name: "maintainlevel",
+      component: MaintainLevels
+    },
+    {
+      path: "/maintainrole",
+      name: "maintainrole",
+      component: MaintainRoles
+    },
+    {
+      path: "/maintainsong",
+      name: "maintainsong",
+      component: MaintainSongs
+    },
+    {
+      path: "/profileadmin",
+      name: "profileadmin",
+      component: ProfileAdmin,
       props: true,
     },
     {
@@ -111,10 +201,21 @@ const router = new Router({
       props: true,
     },
     {
-      path: "/profileadmin",
-      name: "profileadmin",
-      component: ProfileAdmin,
+      path: "/profilestudent",
+      name: "profilestudent",
+      component: ProfileStudent,
       props: true,
+    },
+    {
+      path: "/repertoire",
+      name: "repertoire",
+      component: Repertoire,
+      props: true,
+    },
+    {
+      path: "/signupevents",
+      name: "signupevents",
+      component: SignupEvent,
     },
     {
       path: "/tutorials",

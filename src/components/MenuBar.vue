@@ -167,7 +167,8 @@ export default {
   data: () => ({
     drawer: false,
     navitems1: [
-      { title: 'Profile', icon: 'mdi-account-box', route:'/profilestudent'},
+      { title: 'Profile stud', icon: 'mdi-account-box', route:'/profilestudent'},
+      { title: 'Profile fac', icon: 'mdi-account-box', route:'/profilefaculty'},
       { title: 'My Repertoire', icon: 'mdi-view-dashboard', route:'/repertoire'},
     ],
     navitems2: [

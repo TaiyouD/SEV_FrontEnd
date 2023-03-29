@@ -1,6 +1,6 @@
 import apiClient from "@/services/services.js";
 
-export default { 
+export default {
   getAllForUser(userId) {
     return apiClient.get(`/repertoireSong/userPerf/${userId}`);
   },
@@ -21,5 +21,5 @@ export default {
   },
   findByTitle(title) {
     return apiClient.get(`/repertoireSong?title=${title}`);
-  },
+  }
 };
