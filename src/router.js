@@ -5,6 +5,7 @@ import Login from "./views/Login.vue";
 
 import Homepage from "./views/Homepage.vue";
 import AddAccompanist from "./views/AddAccompanist.vue";
+import AddAvailability from "./views/AddAvailability.vue";
 import AddComposers from "./views/AddComposer.vue";
 import AddCritique from "./views/AddCritique.vue";
 import AddInstruments from "./views/AddInstrument.vue";
@@ -65,6 +66,11 @@ const router = new Router({
       path: "/addaccompanist",
       name: "addaccompanist",
       component: AddAccompanist
+    },
+    {
+      path: "/addavailability",
+      name: "addavailability",
+      component: AddAvailability
     },
     {
       path: "/addcomposer",
