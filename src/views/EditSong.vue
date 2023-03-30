@@ -1,4 +1,3 @@
-
 <template>
     <div>
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
@@ -16,16 +15,51 @@
             label="Title"
             required
           ></v-text-field>
-          <v-select 
-            v-model="song.language"
-            clearable
-            :items="countries"
-            item-title="title"
-            item-text="title"
-            item-value="code"
-            label="Language"
-            return-object
-            single-line
+          <v-select
+          v-model="song.language"
+              id="language"
+              label="Language"
+              required
+              :items="[{ text: 'Afrikaans', value: 'Afrikaans' },
+                      { text: 'Albanian', value: 'Albanian' },
+                      { text: 'Arabic', value: 'Arabic' },
+                      { text: 'Armenian', value: 'Armenian' },
+                      { text: 'Azerbaijani', value: 'Azerbaijani' },
+                      { text: 'Basque', value: 'Basque' },
+                      { text: 'Belarusian', value: 'Belarusian' },
+                      { text: 'Bulgarian', value: 'Bulgarian' },
+                      { text: 'Catalan', value: 'Catalan' },
+                      { text: 'Chinese (Simplified)', value: 'Chinese (Simplified)' },
+                      { text: 'Chinese (Traditional)', value: 'Chinese (Traditional)' },
+                      { text: 'Croatian', value: 'Croatian' },
+                      { text: 'Czech', value: 'Czech' },
+                      { text: 'Danish', value: 'Danish' },
+                      { text: 'Dutch', value: 'Dutch' },
+                      { text: 'English', value: 'English' },
+                      { text: 'Estonian', value: 'Estonian' },
+                      { text: 'Filipino', value: 'Filipino' },
+                      { text: 'Finnish', value: 'Finnish' },
+                      { text: 'French', value: 'French' },
+                      { text: 'German', value: 'German' },
+                      { text: 'Greek', value: 'Greek' },
+                      { text: 'Hungarian', value: 'Hungarian' },
+                      { text: 'Indonesian', value: 'Indonesian' },
+                      { text: 'Irish', value: 'Irish' },
+                      { text: 'Italian', value: 'Italian' },
+                      { text: 'Japanese', value: 'Japanese' },
+                      { text: 'Korean', value: 'Korean' },
+                      { text: 'Lithuanian', value: 'Lithuanian' },
+                      { text: 'Malay', value: 'Malay' },
+                      { text: 'Norwegian', value: 'Norwegian' },
+                      { text: 'Polish', value: 'Polish' },
+                      { text: 'Portuguese', value: 'Portuguese' },
+                      { text: 'Romanian', value: 'Romanian' },
+                      { text: 'Russian', value: 'Russian' },
+                      { text: 'Spanish', value: 'Spanish' },
+                      { text: 'Swedish', value: 'Swedish' },
+                      { text: 'Thai', value: 'Thai' },
+                      { text: 'Turkish', value: 'Turkish' },
+                      { text: 'Ukrainian', value: 'Ukrainian' }]"
           ></v-select>
           <v-textarea
             v-model="song.translation"
@@ -36,16 +70,20 @@
             cols="5"
           ></v-textarea>
           
-          <v-btn
-            :disabled="!valid"
-            color="success"
-            class="mr-4"
-            @click="updateSong()"
-          >
-            Save
-          </v-btn>
-  
-          <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+          <div class="d-flex align-center">
+            <div class="ml-auto">
+              <v-btn
+                :disabled="!valid"
+                color="success"
+                class="mr-4"
+                @click="updateSong()"
+              >
+                Save
+              </v-btn>
+
+                <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+              </div>
+            </div>
         </v-form>
       </v-container>
     </div>
@@ -66,7 +104,7 @@
         translation: ''
       },
       message: '',
-      valid: false
+      valid: false,
     }
   },
   mounted() {

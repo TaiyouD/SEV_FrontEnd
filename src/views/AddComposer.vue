@@ -42,16 +42,20 @@
           label="Death Year"
           ></v-text-field>
 
-        <v-btn
-          :disabled="!valid"
-          color="success"
-          class="mr-4"
-          @click="saveComposer()"
-        >
-          Save
-        </v-btn>
+          <div class="d-flex align-center">
+            <div class="ml-auto">
+              <v-btn
+                :disabled="!valid"
+                color="success"
+                class="mr-4"
+                @click="saveComposer()"
+              >
+                Save
+              </v-btn>
 
-        <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+                <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+              </div>
+            </div>
       </v-form>
     </v-container>
   </div>
@@ -59,6 +63,9 @@
 
 <script>
 import ComposerServices from "../services/composerServices";
+import Utils from "@/config/utils.js";
+import RoleServices from "../services/roleServices";
+
 export default {
 name: "addcomposer",
 data() {
@@ -72,11 +79,34 @@ data() {
       birthday:"",
       deathDate:""
     },
+    user:{},
+    role:{},
     message: "Leave it blank if you do not know the information about the composer (Last Name is Required).",
     // messageSimilarity: "Do you mean by any of these composers"
   };
 },
+async mounted() {
+      this.user = Utils.getStore("user");
+      await this.retrieveRole();
+      const result = await this.getComposers()
+      this.composers=result.data
+      console.log(this.composers)
+      
+    },
 methods: {
+  async retrieveRole() {
+          await RoleServices.getRoleForUser(this.user.userId)
+            .then((response) => {
+              this.role = response.data[0];
+              /*this.roleId2 = this.role.map(function(el) {
+                  return el.id;});*/
+              console.log('role');
+              console.log(this.role);
+            })
+            .catch((e) => {
+              this.message = e.response.data.message;
+            });
+        },
   saveComposer() {
     var data = {
       firstName: this.composer.firstName,

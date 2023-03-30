@@ -41,16 +41,20 @@
           required
         ></v-text-field>
 
-        <v-btn
-          :disabled="!valid"
-          color="success"
-          class="mr-4"
-          @click="updateComposer()"
-        >
-          Save
-        </v-btn>
+        <div class="d-flex align-center">
+            <div class="ml-auto">
+              <v-btn
+                :disabled="!valid"
+                color="success"
+                class="mr-4"
+                @click="updateComposer()"
+              >
+                Save
+              </v-btn>
 
-        <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+                <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+              </div>
+            </div>
       </v-form>
     </v-container>
   </div>
