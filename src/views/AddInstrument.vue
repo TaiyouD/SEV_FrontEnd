@@ -43,7 +43,9 @@
   </template>
   
   <script>
+
   import InstrumentServices from "../services/instrumentServices";
+  
   export default {
     name: "addinstrument",
     data() {
