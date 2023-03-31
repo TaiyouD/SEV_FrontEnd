@@ -21,24 +21,84 @@
             label="Event Type"
             required
           ></v-select>
-          <v-text-field
-            v-model="event.date"
-            id="date"
-            label="Date"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="event.startTime"
-            id="startTime"
-            label="Start Time"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="event.endTime"
-            id="endTime"
-            label="End Time"
-            required
-          ></v-text-field>
+          <v-row>
+          <v-col cols="4">
+            <v-menu
+              v-model="datePicker"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="event.date"
+                  id="date"
+                  label="Date"
+                  required
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="event.date" @input="datePicker = false" class="custom-picker-edit"></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="4">
+            <v-menu
+              v-model="startTimePicker"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="event.startTime"
+                  id="startTime"
+                  label="Start Time"
+                  required
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                v-model="event.startTime"
+                format="ampm"
+                @input="startTimePicker = false"
+                class="custom-picker-edit"
+              ></v-time-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="4">
+            <v-menu
+              v-model="endTimePicker"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="event.endTime"
+                  id="endTime"
+                  label="End Time"
+                  required
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                v-model="event.endTime"
+                format="ampm"
+                @input="endTimePicker = false"
+                class="custom-picker-edit"
+              ></v-time-picker>
+            </v-menu>
+          </v-col>
+        </v-row>
           <v-select
             v-model="event.duration"
             id="duration"
@@ -116,4 +176,13 @@
       }
     }
   };
-  </script>
+</script>
+
+<style>
+
+.custom-picker-edit {
+height: 425px;
+width: 369.8px;
+}
+
+</style>

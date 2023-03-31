@@ -34,13 +34,13 @@
           <v-card-text>
             <b>{{ message }}</b>
           </v-card-text>
-          <v-data-table :headers="headers" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType']" :sort-desc="[false]">
+          <v-data-table :headers="headers" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
             <template #item="{ item }">
               <tr>
                 <td>{{ item.eventType }}</td>
                 <td>{{ item.date }}</td>
-                <td>{{ item.startTime }}</td>
-                <td>{{ item.endTime }}</td>
+                <td>{{ convertTime(item.startTime) }}</td>
+                <td>{{ convertTime(item.endTime) }}</td>
                 <td>{{ item.duration }}</td>
                 <td>{{ item.isReady ? '&#10003;' : '' }}</td>
                 <td>
@@ -100,6 +100,11 @@
           });
       });
       },
+      convertTime(time) {
+        const date = new Date(`1/1/2000 ${time}`);
+        const formattedTime = date.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'});
+        return formattedTime;
+      },
       filterEvents(event) {
       if (event === "All Events") {
         this.selectedEvent = null;
@@ -121,7 +126,7 @@
             .then(() => {
               const index = this.events.indexOf(event);
               this.events.splice(index, 1);
-              this.message = `${event.eventType} deleted successfully.`;
+              this.message = `${event.eventType} Event Deleted Successfully.`;
 
               // Remove the deleted event from filteredEvents as well
               this.filteredEvents = this.events.filter(e => e.eventType === this.selectedEvent || !this.selectedEvent);
@@ -133,4 +138,5 @@
       },
     },
   };
+
   </script>

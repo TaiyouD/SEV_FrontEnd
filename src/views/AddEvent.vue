@@ -26,7 +26,6 @@
             <v-menu
               v-model="datePicker"
               :close-on-content-click="false"
-              :nudge-right="40"
               transition="scale-transition"
               offset-y
               min-width="auto"
@@ -42,14 +41,13 @@
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker v-model="event.date" @input="datePicker = false"></v-date-picker>
+              <v-date-picker v-model="event.date" @input="datePicker = false" class="custom-picker-add"></v-date-picker>
             </v-menu>
           </v-col>
           <v-col cols="4">
             <v-menu
               v-model="startTimePicker"
               :close-on-content-click="false"
-              :nudge-right="40"
               transition="scale-transition"
               offset-y
               min-width="auto"
@@ -69,7 +67,7 @@
                 v-model="event.startTime"
                 format="ampm"
                 @input="startTimePicker = false"
-                @change="formatTime('startTime')"
+                class="custom-picker-add"
               ></v-time-picker>
             </v-menu>
           </v-col>
@@ -77,7 +75,6 @@
             <v-menu
               v-model="endTimePicker"
               :close-on-content-click="false"
-              :nudge-right="40"
               transition="scale-transition"
               offset-y
               min-width="auto"
@@ -97,7 +94,7 @@
                 v-model="event.endTime"
                 format="ampm"
                 @input="endTimePicker = false"
-                @change="formatTime('endTime')"
+                class="custom-picker-add"
               ></v-time-picker>
             </v-menu>
           </v-col>
@@ -151,11 +148,6 @@
       };
     },
     methods: {
-      formatTime(timeField) {
-        const selectedTime = new Date(`1970-01-01T${this.event[timeField]}`);
-        const formattedTime = selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-        this.event[timeField] = formattedTime;
-      },
       saveEvent() {
         var data = {
           eventType: this.event.eventType,
@@ -175,14 +167,19 @@
           });
       },
       cancel() {
-        this.$router.go(-1);
+        this.$router.push({name: "maintainevent"});
       },
     },
   };
-  </script>
+</script>
   
-  <style>
-  .alertMessage {
-    color: red;
-  }
-  </style>
+<style>
+.alertMessage {
+  color: red;
+}
+
+.custom-picker-add {
+height: 405px;
+width: 369.8px;
+}
+</style>
