@@ -50,87 +50,97 @@
                       <v-container>
 
                     <v-form ref="form" v-model="valid" lazy validation>
+
                   <!-- Select Hearing Date Below -->
-                    <v-select 
+                    <!-- <v-text-field
                       class="mt-6"
-                      :items="eventSession"
-                      label="Select Available Event Dates"
-                      @change="selectButton"
-                      v-model="selected"
-                      item-title="date"
-                      return-object
+                      item-text="events.eventType"
+                      label="Event Type"
                       single-line
                       filled
                       disabled
+                      readonly
                       append-icon="mdi-calendar-today"
-                  ></v-select>
+                  ></v-text-field> -->
 
+                  <div style="text-align: center;">
+                  <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+    
+                    <!--  Event Type Below -->
+                    <v-text-field class=" mr-4" width = "260"
+                        v-model="select"
+                        item-title=""
+                        item-value=""
+                        label="Event Type"
+                        return-object
+                        single-line
+                        filled
+                        disabled
+                        append-icon="mdi-instrument-triangle"
+                    ></v-text-field>
+    
+    
+                     <!-- Date Below -->
+                    <v-text-field  class=" mr-4" width = "260"
+                        item-text=""
+                        label="Event Date"
+                        return-object
+                        single-line
+                        filled
+                        disabled
+                        readonly
+                        append-icon="mdi-calendar-today"
+                    ></v-text-field>
+    
+    
+                    <!-- mdi-human-male-board -->
 
-                  <!-- Accompanist Select Below -->
-                  <v-select 
-                    :items="selected2"
-                    item-title="Accompanist"
-                    item-value=""
-                    label="Select Accompanist"
-                    @change="selectButton"
-                    v-model="selected2"
-                    return-object
-                    single-line
-                    filled
-                    append-icon="mdi-account-outline"
-                ></v-select>
+                    <!--Event Time Slot-->
+                    <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+                    <v-text-field width = "260"
+                        item-text=""
+                        label="Event Duration"
+                        return-object
+                        single-line
+                        filled
+                        disabled
+                        append-icon="mdi-timer-sand"
+                    ></v-text-field>     
+                    </div>
+                </div>
+
 
                 <div style="text-align: center;">
                 <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
                 <v-select class=" mr-4"  width = "360" 
                     item-title="Time Slot"
                     item-value=""
-                    label="Select Time Slot"
+                    label="Select Start Time"
                     return-object
                     single-line
                     filled
                     append-icon="mdi-clock-outline"
                 ></v-select>
 
-                <v-select class=" mr-0"  width = "360" 
+                <v-text-field class=" mr-0"  width = "360" 
                 item-title="Time Slot"
                 item-value=""
-                label="Select Time Slot"
+                label="End Time"
                 return-object
                 single-line
                 filled
+                readonly
                 append-icon="mdi-clock-outline"
-              ></v-select>
+              ></v-text-field>
 
                 </div></div>
 
-                    <!-- Instructor Select Below -->
+
                 <div style="text-align: center;">
                 <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-                
-                <v-text-field class=" mr-4"  width = "260"
-                    :items="items2"
-                    item-title="state2"
-                    label="Select Instructor"
-                    return-object
-                    single-line
-                    filled
-                    readonly
-                    append-icon="mdi-school-outline"
-                ></v-text-field>
-                <!-- mdi-human-male-board -->
-                <v-select class=" mr-4" width = "260"
-                    :items="items2"
-                    label="Select Duration"
-                    return-object
-                    single-line
-                    filled
-                    append-icon="mdi-timer-sand"
-                ></v-select>     
 
                 <!--  Instrument Select Below -->
-                <v-select
-                  width = "260"
+                <v-select class=" mr-4" width = "260"
                     v-model="select"
                     :items="items4"
                     item-title="Instrument"
@@ -141,6 +151,30 @@
                     filled
                     append-icon="mdi-instrument-triangle"
                 ></v-select>
+
+
+                 <!-- Instructor Select Below -->
+                <v-text-field  class=" mr-4" width = "260"
+                    :items="items2"
+                    item-title="state2"
+                    label="Instructor"
+                    return-object
+                    single-line
+                    filled
+                    readonly
+                    append-icon="mdi-school-outline"
+                ></v-text-field>
+
+
+                <!-- mdi-human-male-board -->
+                <v-autocomplete width = "260"
+                    :items="items2"
+                    label="Accompanist"
+                    return-object
+                    single-line
+                    filled
+                    append-icon="mdi-account-outline"
+                ></v-autocomplete>     
                 </div>
             </div>
 
@@ -585,6 +619,7 @@
         edit_dialog: false,
         delete_dialog: false,
         title: "",
+        //valid:true,
         user: {},
         role: {},
         message: "Search, View or Edit  Event Sessions",
