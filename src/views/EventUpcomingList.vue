@@ -2,20 +2,7 @@
     <div>
       <v-img src="../assets/church-window-1.jpg" max-height="100" />
       <v-container>
-        <!-- <v-toolbar>
-          <v-toolbar-title>My Repertoire</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-title>{{this.message}}</v-toolbar-title> 
-        </v-toolbar> -->
         <br />
-        <!-- <h3>Voice/Instrument: {{ instrumentId }} 
-        <v-select class="dropdown"
-          :items="items"
-          filled 
-          label="Select Voice/Instrument"
-          ></v-select>
-        </h3> 
-        <h4>Instructor: {{ accompanistId }}</h4> -->
         <br /><br />
         <v-card>
           <v-card-title>
@@ -35,26 +22,192 @@
           <v-data-table
             :headers="headers"
             :search="search"
-            :items="eventSessions"
+            :items="events"
             :items-per-page="50"
           >
             <template v-slot:[`item.actions`]="{ item }">
               <div>
+
+                <v-dialog
+                  v-model="edit_dialog"
+                  persistent
+                  max-width="800"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <!-- <div class="d-flex justify-end"> -->
+                    <v-icon color="primary" v-bind="attrs" v-on="on" small class="mx-4">
+                    mdi-pencil
+                    </v-icon>
+                  <!-- </div> -->
+                  </template>
+                  <v-card>
+                    <v-card-title   >
+                      <v-toolbar id="navbar-maroon">
+                      <span class="text-h5">Edit Event Session</span>
+                    </v-toolbar>
+                    </v-card-title>
+                    <v-card-text>
+                      <v-container>
+
+                    <v-form ref="form" v-model="valid" lazy validation>
+                  <!-- Select Hearing Date Below -->
+                    <v-select 
+                      class="mt-6"
+                      :items="eventSession"
+                      label="Select Available Event Dates"
+                      @change="selectButton"
+                      v-model="selected"
+                      item-title="date"
+                      return-object
+                      single-line
+                      filled
+                      disabled
+                      append-icon="mdi-calendar-today"
+                  ></v-select>
+
+
+                  <!-- Accompanist Select Below -->
+                  <v-select 
+                    :items="selected2"
+                    item-title="Accompanist"
+                    item-value=""
+                    label="Select Accompanist"
+                    @change="selectButton"
+                    v-model="selected2"
+                    return-object
+                    single-line
+                    filled
+                    append-icon="mdi-account-outline"
+                ></v-select>
+
+                <div style="text-align: center;">
+                <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+                <v-select class=" mr-4"  width = "360" 
+                    item-title="Time Slot"
+                    item-value=""
+                    label="Select Time Slot"
+                    return-object
+                    single-line
+                    filled
+                    append-icon="mdi-clock-outline"
+                ></v-select>
+
+                <v-select class=" mr-0"  width = "360" 
+                item-title="Time Slot"
+                item-value=""
+                label="Select Time Slot"
+                return-object
+                single-line
+                filled
+                append-icon="mdi-clock-outline"
+              ></v-select>
+
+                </div></div>
+
+                    <!-- Instructor Select Below -->
+                <div style="text-align: center;">
+                <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+                
+                <v-text-field class=" mr-4"  width = "260"
+                    :items="items2"
+                    item-title="state2"
+                    label="Select Instructor"
+                    return-object
+                    single-line
+                    filled
+                    readonly
+                    append-icon="mdi-school-outline"
+                ></v-text-field>
+                <!-- mdi-human-male-board -->
+                <v-select class=" mr-4" width = "260"
+                    :items="items2"
+                    label="Select Duration"
+                    return-object
+                    single-line
+                    filled
+                    append-icon="mdi-timer-sand"
+                ></v-select>     
+
+                <!--  Instrument Select Below -->
+                <v-select
+                  width = "260"
+                    v-model="select"
+                    :items="items4"
+                    item-title="Instrument"
+                    item-value=""
+                    label="Select Voice/Instrument"
+                    return-object
+                    single-line
+                    filled
+                    append-icon="mdi-instrument-triangle"
+                ></v-select>
+                </div>
+            </div>
+
+                <v-select 
+                    item-title="song"
+                    label="Select Piece"
+                    return-object
+                    single-line
+                    filled
+                    append-icon="mdi-file-music-outline"
+                ></v-select>
+            
+                      </v-form>
+                      </v-container>
+                      <!-- <small>*indicates required field</small> -->
+                    </v-card-text>
+                    <v-card-actions>
+                      <router-link to="/addaccompanist" tag="v-btn">
+                        <v-btn color="primary" class="mr-4">
+                          Add Accompanist
+                        </v-btn>
+                      </router-link>
+                      <router-link to="/addsongrepertoire" tag="v-btn">
+                        <v-btn color="primary">
+                          Add Piece
+                        </v-btn>
+                      </router-link>
+                  
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="primary"
+                        class="mr-2"
+                        @click="editEventSession()"
+                      >
+                        Save
+                      </v-btn>
+                      <v-btn
+                        color="primary"
+                        
+                        @click="edit_dialog = false"
+                      >
+                        Close
+                      </v-btn>
+                    
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+
+
                 <v-icon small class="mx-4" @click="editEventSession(item)">
                   mdi-pencil
                 </v-icon>
                 <v-icon small class="mx-4" @click="viewEventSession(item)">
                   mdi-format-list-bulleted-type
                 </v-icon>
-                <!-- <v-icon small class="mx-4" @click="deleteSong(item)">
+                <v-icon v-if="getRoleType()" small class="mx-4" @click="deleteSong(item)">
                   mdi-trash-can
-                </v-icon> -->
+                </v-icon>
               </div>
             </template>
           </v-data-table>
         </v-card>
         <br>
       </v-container>
+
+
+      <!--here-->
       
     <v-row justify="center">
     <v-dialog
@@ -192,7 +345,7 @@
           <v-btn
             color="primary"
             class="mr-2"
-            @click="updateEventSession()"
+            @click="editEventSession()"
           >
             Save
           </v-btn>
@@ -412,8 +565,9 @@
   </template>
   
   <script>
-  //import eventServices from "../services/eventServices";
-  import eventSessionServices from "../services/eventSessionServices";
+  import EventServices from "../services/eventServices";
+  import EventSessionServices from "../services/eventSessionServices";
+  import RoleServices from "../services/roleServices";
   import Utils from "@/config/utils.js";
 
   export default {
@@ -423,6 +577,7 @@
         search: "",
         events: [],
         eventSessions:[],
+        eventSession:[],
         currentEvent: null,
         currentEventSession: null,
         currentIndex: -1,
@@ -431,29 +586,91 @@
         delete_dialog: false,
         title: "",
         user: {},
-        message: "Search, Edit or Cancel Event Sessions",
+        role: {},
+        message: "Search, View or Edit  Event Sessions",
         headers: [
-          { text: "Event Session Id", value: "id" },
-          { text: "Student Id", value: "date" },
-          { text: "Instructor Id", value: "date" },
-          { text: "Accompanist Id", value: "date" },
-          { text: "Event Id", value: "date" },
-          { text: "Start Time", value: "startTime"},
-          { text: "End Time", value: "endTime"},
+          { text: "Event", value: "eventType" },
+          { text: "Date", value: "date" },
+          { text: "Start Time", value: "startTime" },
+          { text: "End Time", value: "endTime" },
+          { text: "Actions", value: "actions", sortable: false }
+          // { text: "Event Id", value: "date" },
+          // { text: "Start Time", value: "startTime"},
+          // { text: "End Time", value: "endTime"},
           //{ text: "Duration", value: "duration"},
           //{ text: "Event Type", value: "eventType"},
           //{ text: "Is Ready", value: "isReady"}
         ],
-        //items:['Instrument 1', 'Instrument 2', 'Instrument 3']
       };
     },
-    mounted() {
-      this.user = Utils.getStore("user");
-      this.retrieveEventSessions();
-    },
-   
+    async created(){   
+      this.user = Utils.getStore("user"); 
+      console.log('user');
+      console.log(this.user.userId);
+      await this.retrieveRole();
+      await this.retrieveEvents();
+      await this.retrieveEventSessions();
+    },   
     methods: {
-      updateEventSession() {
+      async retrieveRole() {
+          await RoleServices.getRoleForUser(this.user.userId)
+            .then((response) => {
+              this.role = response.data[0];
+              console.log('role');
+              console.log(this.role.id);
+            })
+            .catch((e) => {
+              this.message = e.response.data.message;
+            });
+        },
+        async retrieveEventSessions() {
+          await EventSessionServices.get(1)
+            .then((response) => {
+              this.eventSession = response.data;
+            })
+            .catch((e) => {
+              this.message = e.response.data.message;
+            });
+
+          await EventSessionServices.getAllForUser(this.role.id)
+            .then((response) => {
+              this.eventSessions = response.data;
+            })
+            .catch((e) => {
+              this.message = e.response.data.message;
+            });
+      },
+      async retrieveEvents() {
+        if (this.role.roleType == "Student"){
+          await EventSessionServices.getAllForUser(this.role.id)
+          .then((response) => {
+            this.eventSessions = response.data;
+
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+          }
+      else{
+        await EventServices.getAll()
+          .then((response) => {
+            this.events = response.data;
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+          }
+      },
+      getRoleType() {
+         console.log(this.role.roleType)
+            if (this.role.roleType == "Admin"){
+              return true
+            }
+            else{
+              return false
+            }
+        },
+      editEventSession() {
         // this.$router.push({ name: "edit", params: { id: eventSession.id } });
         this.edit_dialog = false;
       },
@@ -461,19 +678,10 @@
         this.$router.push({ name: "view", params: { id: eventSession.id } });
       },
       deleteEventSession(eventSession) {
-        eventSessionServices.delete(eventSession.id)
+        EventSessionServices.delete(eventSession.id)
           .then(() => {
             this.edit_dialog = false;
             this.retrieveEventSessions();
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
-      retrieveEventSessions() {
-        eventSessionServices.getAllForUser(this.user.userId)
-          .then((response) => {
-            this.eventSessions = response.data;
           })
           .catch((e) => {
             this.message = e.response.data.message;
@@ -489,7 +697,7 @@
         this.currentIndex = eventSession ? index : -1;
       },
       removeAllEventSessions() {
-        eventSessionServices.deleteAll()
+        EventSessionServices.deleteAll()
           .then((response) => {
             console.log(response.data);
             this.refreshList();
