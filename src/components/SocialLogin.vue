@@ -1,7 +1,7 @@
 <template>
   <div class="signup-buttons">
     <v-row justify="center">
-      <div display="flex" id="parent_id"></div>
+      <div  display="flex" id="parent_id"></div>
     </v-row>
   </div>
 </template>
@@ -9,7 +9,6 @@
 <script>
 import AuthServices from "@/services/authServices";
 import Utils from "@/config/utils.js";
-
 export default {
   name: "login_signup_social",
   data() {
@@ -43,6 +42,8 @@ export default {
           size: "large",
           text: "signup_with",
           width: 400,
+          logo_alignment: "center",
+
         }
       );
     },
