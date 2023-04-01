@@ -15,6 +15,7 @@
       <v-card>
         <v-card-title>
         {{ "All Roles" }}
+        <v-icon class="ml-2">mdi-account-group</v-icon>
           <v-spacer></v-spacer>
           <v-menu>
             <template v-slot:activator="{ on, attrs }">

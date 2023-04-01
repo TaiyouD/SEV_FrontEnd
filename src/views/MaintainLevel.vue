@@ -14,6 +14,7 @@
       <v-card>
         <v-card-title>
           {{ "All Levels" }}
+          <v-icon class="ml-1">mdi-signal</v-icon>
           <v-spacer></v-spacer>
         </v-card-title>
         <v-card-text>

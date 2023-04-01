@@ -15,6 +15,7 @@
       <v-card>
         <v-card-title>
           {{ "All Instruments" }}
+          <v-icon class="ml-1">mdi-piano</v-icon>
           <v-spacer></v-spacer>
           <v-btn class="mx-2" color="success" @click="addInstrument(id)">Add Instrument</v-btn>
         </v-card-title>

@@ -15,6 +15,7 @@
       <v-card>
         <v-card-title>
           {{ "All Composers" }}
+          <v-icon class="ml-1">mdi-account-music</v-icon>
           <v-spacer></v-spacer>
           <v-btn class="mx-2" color="success" @click="addComposer(id)">Add Composer</v-btn>
         </v-card-title>
