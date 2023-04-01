@@ -193,7 +193,7 @@
       </v-menu>
     </div>
     
-      <v-icon @click.stop="drawer = !drawer" id="navbar-maroon">{{ icons.mdiDotsVertical }}</v-icon>
+      <v-icon large rge @click.stop="drawer = !drawer" id="navbar-maroon">{{ icons.mdiDotsVertical }}</v-icon>
     </v-app-bar>
     
     <v-navigation-drawer app v-if="user != null " v-model="drawer" temporary right>
@@ -223,7 +223,7 @@
       </v-list-item>
       
       <v-list dense nav>
-        <v-list-item link @click="$router.push({ path: '/repertoire' })">
+        <v-list-item link @click="$router.push({ path: '/maintainlevel' })">
           <v-list-item-icon>
             <v-icon>mdi-receipt</v-icon>
           </v-list-item-icon>
