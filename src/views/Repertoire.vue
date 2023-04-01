@@ -3,6 +3,9 @@
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
+          <v-btn v-if="display" icon to="/viewstudents">
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
           <v-toolbar-title>My Repertoire</v-toolbar-title>
           <!-- <v-spacer></v-spacer>
           <v-toolbar-title>{{this.message}}</v-toolbar-title> -->
@@ -78,9 +81,10 @@
 
   export default {
     name: "repertoire-list",
-    props: [],
+    props: ["roleId"],
     data() {
       return {
+        display: false,
         view_dialog: false,
         instrumentRole: {
           id: null,
@@ -94,6 +98,7 @@
         selected: [],
         search: "",
         role:{},
+        tempRole:{},
         instructorRole:{
           user:{
             fName:"",
@@ -121,6 +126,8 @@
    },
     async created() {
       this.user = Utils.getStore("user");
+      console.log("first prop")
+      console.log(this.roleId)
       await this.retrieveRole();
       await this.retrieveInstrumentRoles();
       await this.retrieveSongs();
@@ -148,15 +155,35 @@
       async retrieveRole() {
         await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
-            this.role = response.data[0];
+            this.tempRole = response.data[0];
             /*this.roleId2 = this.role.map(function(el) {
                 return el.id;});*/
-            console.log('role');
-            console.log(this.role);
+            console.log('tempRole');
+            console.log(this.tempRole);
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
+          await this.conditionRole();
+      },
+      async conditionRole(){
+        if (this.tempRole.roleType != "Student"){
+          console.log("props")
+          console.log(this.roleId)
+          const more = await RoleServices.get(this.roleId);
+          this.role = more.data;
+          this.display=true
+          console.log("first role")
+          console.log(more.data)
+        }
+        else{
+          this.role = this.tempRole;
+          console.log("second role")
+          console.log(this.role)
+          this.display=false
+        }
+        console.log("new role")
+        console.log(this.role)
       },
       async retrieveInstrumentRoles() {
         /*var roleId2 = this.role.map(function(el) {

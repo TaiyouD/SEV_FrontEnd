@@ -1,6 +1,9 @@
 import apiClient from "@/services/services.js";
 
 export default { 
+  getAll() {
+    return apiClient.get("/instrumentrole");
+  },
   getAllForUser(userId) {
     return apiClient.get(`/instrumentrole/userPerf/${userId}`);
   },

@@ -36,6 +36,7 @@ import ProfileFaculty from "./views/ProfileFaculty.vue";
 import ProfileStudent from "./views/ProfileStudent.vue";
 import Repertoire from "./views/Repertoire.vue";
 import SignupEvent from "./views/SignupEvent.vue";
+import ViewStudents from "./views/ViewStudentInstructor.vue";
 
 
 import TutorialsList from "./views/TutorialsList.vue";
@@ -230,6 +231,11 @@ const router = new Router({
       path: "/signupevents",
       name: "signupevents",
       component: SignupEvent,
+    },
+    {
+      path: "/viewstudents",
+      name: "viewstudents",
+      component: ViewStudents
     },
     {
       path: "/tutorials",
