@@ -34,19 +34,21 @@
           </v-btn>
         </template>
       </v-menu>
-      <!-- <v-menu offset-y :close-on-click="true" >
+      <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" >
             My Events
           </v-btn>
         </template>
         <v-list>
-            <v-list-item exact :to="{ name: 'eventupcoming' }" text>My Upcoming Events</v-list-item>
+            <v-list-item exact :to="{ name: 'eventupcoming' }" text>Upcoming Events</v-list-item>
             <v-divider></v-divider>
-            <v-list-item exact :to="{ name: 'eventpast' }" text>My Past Events</v-list-item>
-        </v-list>
-      </v-menu>    -->
-      <v-menu offset-y :close-on-click="true" >
+            <v-list-item exact :to="{ name: 'eventevaluation' }" text>Currrent Events</v-list-item>
+            <v-divider></v-divider>
+            <v-list-item exact :to="{ name: 'eventpast' }" text>Past Events</v-list-item>
+          </v-list>
+      </v-menu>   
+      <!-- <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'eventupcoming' }" >
             Upcoming Events
@@ -66,8 +68,14 @@
             Past Events
           </v-btn>
         </template>
+      </v-menu> -->
+      <v-menu offset-y :close-on-click="true" v-if="role.roleType == 'Faculty' && role.roleType == 'Accompanist'">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'addavailability' }" >
+            Add Availability
+          </v-btn>
+        </template>
       </v-menu>
-
       <v-menu offset-y :close-on-click="true" v-if="role.facultyType == 'Instructor'">
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'eventpast' }" >

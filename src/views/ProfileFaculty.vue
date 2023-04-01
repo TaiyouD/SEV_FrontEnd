@@ -166,8 +166,8 @@
       // }
     },
     methods: {
-      retrieveRole() {
-        roleServices.getRoleForUser(this.user.userId)
+      async retrieveRole() {
+        await roleServices.getRoleForUser(this.user.userId)
         .then((response) => {
           this.role = response.data[0];
           console.log(this.role);
