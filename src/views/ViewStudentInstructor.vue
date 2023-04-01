@@ -34,72 +34,142 @@
             <div>
 
               <!-- Dialog for editing a student -->
-            <v-dialog v-model="editDialog" max-width="600">
+            <v-dialog v-model="editDialog" persistent max-width="800">
+
+              <template v-slot:activator="{ on, attrs }">
+                <!-- <div class="d-flex justify-end"> -->
+                <v-icon color="primary" v-bind="attrs" v-on="on" small class="mx-4" @click="editStudent(item)" >
+                mdi-pencil
+                </v-icon>
+              <!-- </div> -->
+              </template>
+
               <v-card>
-                <v-card-title>Edit Student</v-card-title>
+                <v-card-title>
+                <v-toolbar id="navbar-maroon">
+                  <span class="text-h5">Edit Student</span>
+                </v-toolbar>
+              </v-card-title>
                 <v-card-text>
                   <v-container>
+
+                  <div style="text-align: center;">
+                  <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+
                     <!-- Name input field -->
                     <v-row>
                       <v-col>
-                        <v-text-field
-                          v-model="editedStudent.fName"
+                        <v-text-field class=" mr-4"  width = "380" 
+                          v-model="editedStudent.user.fName"
                           label="First Name"
-                          required
+                          disabled
+                          append-icon="mdi-account"
                         ></v-text-field>
                       </v-col>
                       <v-col>
-                        <v-text-field
-                          v-model="editedStudent.lName"
+                        <v-text-field class=" mr-4"  width = "390" 
+                          v-model="editedStudent.user.lName"
                           label="Last Name"
-                          required
+                          disabled
+                          append-icon="mdi-account"
                         ></v-text-field>
                       </v-col>
                     </v-row>
-                    
+                    </div></div>
+
+                  <div style="text-align: center;">
+                  <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
                     <!-- Email input field -->
                     <v-row>
                       <v-col>
-                        <v-text-field
-                          v-model="editedStudent.email"
+                        <v-text-field class=" mr-4"  width = "380" 
+                          v-model="editedStudent.user.email"
                           label="Email"
-                          required
+                          disabled
+                          append-icon="mdi-email"
+                        ></v-text-field>
+                      </v-col>
+
+                    <!-- Student ID input field -->
+                      <v-col>
+                        <v-text-field class=" mr-4"  width = "390" 
+                          v-model="editedStudent.studentId"
+                          label="Student ID"
+                          disabled
+                          append-icon="mdi-badge-account-horizontal"
                         ></v-text-field>
                       </v-col>
                     </v-row>
 
-                    <!-- Level input field -->
+                    </div></div>
+
+
+                  <div style="text-align: center;">
+                  <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+
+
+                  <!-- Major input field -->
                     <v-row>
+                    <v-col>
+                      <v-text-field class=" mr-4" width = "380"
+                        v-model="editedStudent.studentMajor"
+                        label="Major"
+                        disabled
+                        append-icon="mdi-school"
+                      ></v-text-field>
+                    </v-col>
+
+
+                    <!-- Classification input field -->
                       <v-col>
-                        <v-text-field
-                          v-model="editedStudent.level"
-                          label="Level"
-                          required
+                        <v-text-field class=" mr-4" width = "390"
+                          v-model="editedStudent.studentClassification"
+                          label="Classification"
+                          disabled
+                          append-icon="mdi-book-open-page-variant"
                         ></v-text-field>
-                      </v-col>
+                      </v-col>              
                     </v-row>
 
-                    <!-- Major input field -->
+                    </div></div>
+
+                    <div style="text-align: center;">
+                    <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+
+                    <!-- Semester input field -->
                     <v-row>
+                    <v-col>
+                      <v-text-field class=" mr-4" width = "260"
+                      v-model="editedStudent.studentSemester"
+                      label="Semester"
+                      disabled
+                      append-icon="mdi-book"
+                      ></v-text-field>
+                    </v-col>                    
+                    
+                      <!-- Level input field -->
                       <v-col>
-                        <v-text-field
-                          v-model="editedStudent.major"
-                          label="Major"
-                          required
+                        <v-text-field class=" mr-4"  width = "250"
+                        v-model="editedStudent.studentLevel"
+                        label="Level"
+                        required
+                        append-icon="mdi-signal"
                         ></v-text-field>
                       </v-col>
-                    </v-row>
 
                     <!-- Private hours input field -->
-                    <v-row>
                       <v-col>
-                        <v-text-field
-                          v-model="editedStudent.privateHours"
-                          label="Private Hours"
+                        <v-text-field class="mr-4"  width = "250"
+                          v-model="editedStudent.studentPrivateHours"
+                          label="Enter Private Lesson Hours"
                           required
+                          append-icon="mdi-account-music"
                         ></v-text-field>
                       </v-col>
                     </v-row>
+
+                    </div></div>
+
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
@@ -109,15 +179,6 @@
               </v-card>
             </v-dialog>
 
-
-
-
-
-
-
-              <v-icon small class="mx-4" @click="editStudent(item)">
-                mdi-pencil
-              </v-icon>
 
               <v-icon small class="mx-4" @click="deleteStudent(item)">
                 mdi-trash-can
@@ -153,7 +214,14 @@ export default {
   props: [],
   data() {
     return {
-      view_dialog: false,
+      editDialog: false, 
+      editedStudent: {
+        user:{
+          fName:"",
+          lName:"",
+          email:""
+        }
+      }, 
       instrumentRole:[],
       selected: [],
       search: "",
@@ -246,8 +314,21 @@ export default {
         console.log(this.studentInfo);
         console.log(parsedobj);
     },
-    editStudent(song) {
-      this.$router.push({ name: "edit", params: { id: song.id } }); //ter isso? ou criar pág pra isso
+    // editStudent(song) {
+    //   this.$router.push({ name: "edit", params: { id: song.id } }); //ter isso? ou criar pág pra isso
+    // },
+    editStudent(student) {
+      // Set the edited student data to the clicked student
+      console.log("student")
+      console.log(student.data)
+      this.editedStudent = { ...student.data };
+      // Show the edit dialog
+      this.editDialog = true;
+    },
+    saveStudent() {
+      // TODO: Save the edited student data
+      // Hide the edit dialog
+      this.editDialog = false;
     },
      viewStudent() {
        //this.$router.push({ name: "view", params: { id: song.id } });// mesmo de cima
