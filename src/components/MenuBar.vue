@@ -81,8 +81,8 @@
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" v-bind="attrs" v-on="on" 
-          exact :to="{ name: 'addevent' }" text>
-            Create Event
+          exact :to="{ name: 'maintainevent' }" text>
+            Events
           </v-btn>
         </template>
       </v-menu>

@@ -15,6 +15,7 @@
         <v-card>
           <v-card-title>
             {{ "All Pieces" }}
+            <v-icon class="ml-1">mdi-playlist-music</v-icon>
             <v-spacer></v-spacer>
             <v-btn class="mx-2" color="success" @click="addSong(id)">Add Piece</v-btn>
           </v-card-title>

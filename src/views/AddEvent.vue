@@ -167,7 +167,7 @@
           });
       },
       cancel() {
-        this.$router.push({name: "maintainevent"});
+        this.$router.go(-1);
       },
     },
   };

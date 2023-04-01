@@ -4,9 +4,7 @@
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
-          <v-btn icon to="/maintain">
-            <v-icon>mdi-arrow-left</v-icon>
-          </v-btn>
+          <v-icon class="mr-8">align_vertical_top</v-icon>
           <v-toolbar-title>Event View</v-toolbar-title>
           <v-spacer></v-spacer>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
@@ -15,6 +13,7 @@
         <v-card>
           <v-card-title>
             {{ "All Events" }}
+            <v-icon class="ml-1">mdi-calendar-check</v-icon>
             <v-spacer></v-spacer>
             <v-menu>
             <template v-slot:activator="{ on, attrs }">
@@ -25,6 +24,20 @@
             </template>
             <v-list>
               <v-list-item v-for="event in eventsList" :key="event" @click="filterEvents(event)">
+                <v-list-item-title>{{ event }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
+          <v-menu>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on" color="Burnt orange" class="ml-2">
+                {{ selectedDate || "All Dates" }}
+                <v-icon>mdi-menu-down</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-for="event in eventsDate" :key="event" @click="filterDates(event)">
                 <v-list-item-title>{{ event }}</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -71,6 +84,10 @@
         filteredEvents: [],
         eventsList: ["All Events", "Junior", "Jury", "Recital", "Scholarship", "Senior"],
         selectedEvent: null,
+        filteredDates: [],
+        eventsDate: ["All Dates", "Current Events", "Past Events", "Upcoming Events"],
+        selectedDate: null,
+        selectedFilter: null,
         message: "Add, Edit or Delete Events",
         headers: [
           { text: "Event Type", value: "eventType", sortable: false },
@@ -92,6 +109,7 @@
           .then((response) => {
               this.events = response.data;
               this.filteredEvents = response.data;
+              this.filteredDates = response.data;
               resolve();
           })
           .catch((e) => {
@@ -105,15 +123,45 @@
         const formattedTime = date.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'});
         return formattedTime;
       },
-      filterEvents(event) {
-      if (event === "All Events") {
-        this.selectedEvent = null;
-        this.filteredEvents = this.events;
-      } else {
-        this.selectedEvent = event;
-        this.filteredEvents = this.events.filter((e) => e.eventType === event);
-      }
-    },
+      filterEvents(filter) {
+        this.selectedEvent = filter;
+        this.selectedFilter = filter;
+        this.filterData();
+      },
+      filterDates(filter) {
+        this.selectedDate = filter;
+        this.selectedFilter = filter;
+        this.filterData();
+      },
+      filterData() {
+        let filteredData = this.events;
+
+        if (this.selectedEvent && this.selectedEvent !== "All Events") {
+          filteredData = filteredData.filter(event => event.eventType === this.selectedEvent);
+        }
+
+        if (this.selectedDate && this.selectedDate !== "All Dates") {
+          if (this.selectedDate === "Current Events") {
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
+            const today = new Date(now.getTime() - timezoneOffset).toDateString();
+            filteredData = filteredData.filter(event => new Date(event.date).toDateString() === today);
+          } else if (this.selectedDate === "Past Events") {
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
+            const today = new Date(now.getTime() - timezoneOffset).toDateString();
+            filteredData = filteredData.filter(event => new Date(event.date) < new Date(today));
+          } else if (this.selectedDate === "Upcoming Events") {
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
+            const today = new Date(now.getTime() - timezoneOffset).toDateString();
+            filteredData = filteredData.filter(event => new Date(event.date) > new Date(today + " 23:59:59")); // Need to include" 23:59:59" to not show the current date
+          }
+        }
+
+        this.filteredEvents = filteredData;
+        this.filteredDates = filteredData;
+      },
       addEvent() {
         this.$router.push({ name: "addevent", params: { EventId: this.id } });
       },
@@ -121,20 +169,16 @@
         this.$router.push({ name: "editevent", params: { id: event.id } });
       },
       deleteEvent(event) {
-        if (confirm(`Are you sure you want to delete this ${event.eventType} Event?`)) {
-          EventServices.delete(event.id)
-            .then(() => {
-              const index = this.events.indexOf(event);
-              this.events.splice(index, 1);
-              this.message = `${event.eventType} Event Deleted Successfully.`;
-
-              // Remove the deleted event from filteredEvents as well
-              this.filteredEvents = this.events.filter(e => e.eventType === this.selectedEvent || !this.selectedEvent);
-            })
-            .catch((e) => {
-              this.message = e.response.data.message;
-            });
-        }
+        EventServices.delete(event.id)
+          .then(() => {
+            const index = this.events.findIndex(e => e.id === event.id);
+            this.events.splice(index, 1);
+            this.filterData();
+            this.message = "Event was deleted successfully!";
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
       },
     },
   };
