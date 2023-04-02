@@ -119,7 +119,7 @@ methods: {
       .then((response) => {
         this.composer.id = response.data.id;
         console.log("add " + response.data);
-        if (this.role.roleType == "Student" || this.role.faculty == "Instructor"){
+        if (this.role.roleType == "Student" || this.role.facultyType == "Instructor"){
               this.$router.push({name: "addsong"});
             }
         else{
@@ -131,7 +131,7 @@ methods: {
       });
     },
     cancel() {
-      if (this.role.roleType == "Student" || this.role.faculty == "Instructor"){
+      if (this.role.roleType == "Student" || this.role.facultyType == "Instructor"){
               this.$router.push({name: "addsong"});
             }
         else{
