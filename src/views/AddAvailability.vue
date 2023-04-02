@@ -6,7 +6,7 @@
           <v-toolbar-title>Add Availability</v-toolbar-title>
         </v-toolbar>
 
-        <v-card
+        <!-- <v-card
           class="mx-auto center"
           max-width="800"
         >
@@ -14,63 +14,61 @@
             <h3 class="mb-6 text--primary">{{ message }}</h3>
             <v-form ref="form" v-model="valid" lazy validation>
 
-              <v-text-field class=" mr-4" width = "260"
+              <v-text-field class=" mt-4" 
                   
                   label="Name"
                   return-object
                   filled
                   disabled
                   append-icon="mdi-account-box-outline"
-                >{{ name }}</v-text-field>
+                >{{ name }}
+              </v-text-field>
         
 
 
             <div style="text-align: center;">
               <div class=" mt-4 d-flex flex-row bg-surface-variant" max-width = "780" >
 
-                  <!-- Date Below -->
+                 
                 <v-text-field class=" mr-4" width = "260"
-                  item-text=""
+                  
                   label="Event Date"
                   return-object
   
                   filled
                   disabled
                   append-icon="mdi-calendar-today"
-                >{{event.eventDate}}</v-text-field >
+                ></v-text-field >
 
-                <!--  Event Type Below -->
+                
                 <v-text-field class=" mr-4" width = "260"
-                  v-model="select"
-                  item-title=""
-                  item-value=""
                   label="Event Type"
                   return-object
                   single-line
                   filled
                   disabled
                   append-icon="mdi-instrument-triangle"
-                >{{event.date}}</v-text-field>
+                ></v-text-field>
 
-                <!--Event Time Slot-->
-                <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+               
+                 :item-text="item => `${events.startTime} ${events.endTime}`" 
                 <v-text-field width = "260"
-                  item-text=""
                   label="Event Duration"
                   return-object
                   single-line
                   filled
                   disabled
                   append-icon="mdi-timer-sand"
-                >{{ event_duration }}</v-text-field>     
+                ></v-text-field>     
                 </div>
             </div>
             <div style="text-align: center;">
               <div class=" mt-4 d-flex flex-row bg-surface-variant" max-width = "780" >
-                <!--  Event Type Below -->
+                
+                v-model="availability.startTime"
+                  id="startTime" 
                 <v-select class=" mr-4" width = "260"
-                  v-model="availability.startTime"
-                  id="startTime"
+                  
                   label="Available Start Time"
                   return-object
                   single-line
@@ -78,11 +76,12 @@
                   append-icon="mdi-clock-in"
                 ></v-select>
 
-                <!--Event Time Slot-->
-                <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+               
+               :item-text="item => `${events.startTime} ${events.endTime}`"
+                v-model="availability.endTime"
+                  id="endTime" 
                 <v-select width = "260"
-                  v-model="availability.endTime"
-                  id="endTime"
+                  
                   label="Available End Time"
                   return-object
                   single-line
@@ -107,51 +106,130 @@
       
             <v-btn color="error" class="ma-2" @click="cancel()"> Cancel </v-btn>
           </v-card-actions>
-        </v-card>
-        <!-- <v-form ref="form" v-model="valid" lazy validation>
-          <v-autocomplete
-          v-model="select"
-          :search-input.sync="search"
-          :loading="loading"
-          :items="song"
-          item-text="title"
-          class="mr-4"
-          density="comfortable"
-          hide-no-data
-          hide-details
-          label="Title"
-          single-line
-          return-object
-          required
-          ></v-autocomplete>
-          <br>
-        <router-link to="/addsong" >
-        <v-btn color="primary" class="mr-4">
-            Missing Piece?
-        </v-btn>
-        </router-link>
-        <br><br>
-    
-        <v-text-field
-        v-model="repertoireSong.semester"
-        id="semester"
-        :counter="15"
-        label="Current Semester. Example: Spring 2023"
-        required
-        ></v-text-field> -->
-      <!-- <div class="mt-6">
-          <v-btn
-            :disabled="!valid"
-            color="success"
-            class="mr-4"
-            @click="saveAvailability()"
-          >
-            Save
-          </v-btn>
-    
-          <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
-        </v-form>
-      </div> -->
+        </v-card> -->
+        <v-dialog
+          v-model="delete_dialog"
+          persistent
+          max-width="800"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon
+              color="grey"
+              dark
+              v-bind="attrs"
+              v-on="on"
+              small 
+              class="mx-4"
+            >
+            mdi-calendar-plus-outline
+            </v-icon>
+          </template>
+          <v-card>
+            <v-card-title>
+              <v-toolbar id="navbar-maroon">
+              <span class="text-h5">Add Availability</span>
+              </v-toolbar>
+            </v-card-title>
+            <v-card-text>
+                <h3 class="mt-2 ">{{ message }}</h3>
+                <v-form ref="form" v-model="valid" lazy validation>
+
+                  <v-text-field class=" mt-2" 
+                      
+                      label="Name"
+                      return-object
+                      filled
+                      disabled
+                      append-icon="mdi-account-box-outline"
+                    >{{ name }}
+                  </v-text-field>
+            
+
+
+                <div style="text-align: center;">
+                  <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
+
+                      <!-- Date Below -->
+                    <v-text-field class=" mr-4" width = "260"
+                      
+                      label="Event Date"
+                      return-object
+      
+                      filled
+                      disabled
+                      append-icon="mdi-calendar-today"
+                    ></v-text-field >
+
+                    <!--  Event Type Below -->
+                    <v-text-field class=" mr-4" width = "260"
+                      label="Event Type"
+                      return-object
+                      single-line
+                      filled
+                      disabled
+                      append-icon="mdi-instrument-triangle"
+                    ></v-text-field>
+
+                    <!--Event Time Slot-->
+                    <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+                    <v-text-field width = "260"
+                      label="Event Duration"
+                      return-object
+                      single-line
+                      filled
+                      disabled
+                      append-icon="mdi-timer-sand"
+                    ></v-text-field>     
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                  <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
+                    <!--  Event Type Below -->
+                    <!-- v-model="availability.startTime"
+                      id="startTime" -->
+                    <v-select class=" mr-4" width = "260"
+                      
+                      label="Available Start Time"
+                      return-object
+                      single-line
+                      filled
+                      append-icon="mdi-clock-in"
+                    ></v-select>
+
+                    <!--Event Time Slot-->
+                    <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+                    <!-- v-model="availability.endTime"
+                      id="endTime" -->
+                    <v-select width = "260"
+                      
+                      label="Available End Time"
+                      return-object
+                      single-line
+                      filled
+                      append-icon="mdi-clock-out"
+                    ></v-select>     
+                    </div>
+                </div>
+              </v-form>
+              </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                @click="addAvailability()"
+              >
+                Save
+              </v-btn>
+              <v-btn
+                color="primary"
+                @click=" delete_dialog = false"
+              >
+                Cancel
+              </v-btn>
+            
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-container>
     </div>
     </template>
@@ -182,6 +260,7 @@
         test_EndTime: [],
         event_duration: "",
         times: [],
+        delete_dialog: false,
       };
     },
     mounted() {
