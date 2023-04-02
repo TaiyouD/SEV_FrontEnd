@@ -186,9 +186,6 @@
         console.log(this.role)
       },
       async retrieveInstrumentRoles() {
-        /*var roleId2 = this.role.map(function(el) {
-            return el.id;});
-          console.log('role');   */ 
         await instrumentRoleServices.getAllForUser(this.role.id)
           .then((response) => {
             this.instrumentRole = response.data;

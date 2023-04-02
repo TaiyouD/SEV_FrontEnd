@@ -24,7 +24,7 @@
         <v-card-text>
           <b>{{ message }}</b>
         </v-card-text>
-        <v-data-table
+        <v-data-table 
           :headers="headers"
           :search="search"
           :items="studentInfo"
@@ -34,7 +34,7 @@
             <div>
 
               <!-- Dialog for editing a student -->
-            <v-dialog v-model="editDialog" persistent max-width="800">
+            <v-dialog v-model="editDialog" persistent max-width="800" :retain-focus="false">
 
               <template v-slot:activator="{ on, attrs }">
                 <!-- <div class="d-flex justify-end"> -->
@@ -150,7 +150,7 @@
                       <!-- Level input field -->
                       <v-col>
                         <v-text-field class=" mr-4"  width = "250"
-                        v-model="editedStudent.studentLevel"
+                        v-model="editedStudent.level.levelNumber"
                         label="Level"
                         required
                         append-icon="mdi-signal"
@@ -173,8 +173,9 @@
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn color="primary" @click="saveStudent">Save</v-btn>
-                  <v-btn @click="editDialog = false">Cancel</v-btn>
+                 <v-spacer></v-spacer>
+                  <v-btn color="primary" class="mx-2" @click="saveStudent(item)">Save</v-btn>
+                  <v-btn color="error" class="mx-2" @click="editDialog = false">Cancel</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -220,6 +221,9 @@ export default {
           fName:"",
           lName:"",
           email:""
+        },
+        level:{
+          levelNumber:""
         }
       }, 
       instrumentRole:[],
@@ -229,16 +233,16 @@ export default {
       // instructorRole:[],
       studentRole:[],
       studentInfo:[],
-      currentRepertoire: null,
+      currentStudent: null,
       currentIndex: -1,
       user: {},
       message: "Search, Delete, or View Students Information",
       headers: [
-        { text: "First Name", value: "data.user.fName" },
-        { text: "Last Name", value: "data.user.lName" },
-        { text: "Email", value: "data.user.email"},
-        { text: "Lessons Hours", value: "data.studentPrivateHours"},
-        { text: "Repertoire", value: "repertoire"},
+        { text: "First Name", value: "user.fName" },
+        { text: "Last Name", value: "user.lName" },
+        { text: "Email", value: "user.email"},
+        { text: "Lessons Hours", value: "studentPrivateHours"},
+        { text: "Repertoire", value: "repertoire", sortable: false},
         { text: "Actions", value: "actions", sortable: false }
       ]
     };
@@ -248,6 +252,7 @@ export default {
     await this.retrieveRole();
     // await this.retrieveInstructorInstrumentRoles();
     await this.retrieveStudentsforInstructor();
+    await this.makeHoursZero();
   },
   methods: {
     async retrieveRole() {
@@ -307,37 +312,54 @@ export default {
     async retrieveStudentsInfo() {
       for (let i = 0; i < this.studentRole.length; i++) {
           const role = await RoleServices.get(this.studentRole[i]);
-          this.studentInfo.push(role);
+          this.studentInfo.push(role.data);
         }
         console.log('studentInfo');
-        var parsedobj = JSON.parse(JSON.stringify(this.studentInfo))
+        // var parsedobj = JSON.parse(JSON.stringify(this.studentInfo))
         console.log(this.studentInfo);
-        console.log(parsedobj);
+        // console.log(parsedobj);
     },
-    // editStudent(song) {
-    //   this.$router.push({ name: "edit", params: { id: song.id } }); //ter isso? ou criar pág pra isso
-    // },
+    async makeHoursZero(){
+      for (let i = 0; i < this.studentInfo.length; i++) {
+          const role = await RoleServices.get(this.studentInfo[i].id);
+          if(role.data.studentPrivateHours == null){
+            this.studentInfo[i].studentPrivateHours = 0;
+          }          
+        }
+    },
     editStudent(student) {
       // Set the edited student data to the clicked student
       console.log("student")
-      console.log(student.data)
-      this.editedStudent = { ...student.data };
+      console.log(student)
+      this.editedStudent = { ...student };
+      if (student.studentPrivateHours == null)
+      {
+        this.editedStudent.studentPrivateHours = 0;
+      }
       // Show the edit dialog
       this.editDialog = true;
     },
     saveStudent() {
-      // TODO: Save the edited student data
+      RoleServices.update(this.editedStudent.id, this.editedStudent)
+          .then(() => {
+            this.message = 'The Student was updated successfully!';
+          })
+          .catch(e => {
+            this.message = e.response.data.message;
+          });
       // Hide the edit dialog
       this.editDialog = false;
+      window.location.reload(); //change
+      //this.updateStudent(this.editedStudent);
     },
-     viewStudent() {
-       //this.$router.push({ name: "view", params: { id: song.id } });// mesmo de cima
-        this.edit_dialog = false;
-      },
+    // updateStudent(student) {
+    // const index = this.studentInfo.findIndex((s) => s.studentId === student.studentId);
+    // this.studentInfo.splice(index, 1, student);
+    // },
     deleteStudent(student) {
-      instrumentRoleServices.delete(student.id) //delete just instructorId?
+      instrumentRoleServices.delete(student.id) //change to delete only instructorId?
         .then(() => {
-          this.retrieveStudents();
+          this.retrieveStudentsInfo();
         })
         .catch((e) => {
           this.message = e.response.data.message;
@@ -345,17 +367,16 @@ export default {
     },
     viewRepertoire(item) {
       console.log("here")
-      console.log(item.data.id)
-       this.$router.push({ name: "repertoire", params: { roleId: item.data.id } });
+      console.log(item.id)
+       this.$router.push({ name: "repertoire", params: { roleId: item.id } });
       },
 
     refreshList() {
-      this.retrieveStudents();
-      this.currentSong = null;
+      this.retrieveStudentsInfo();
       this.currentIndex = -1;
     },
     setActiveSong(song, index) {
-      this.currentSong = song;
+      this.currentStudent = song;
       this.currentIndex = song ? index : -1;
     },
     removeAllStudents() {
