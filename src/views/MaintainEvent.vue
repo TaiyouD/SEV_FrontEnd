@@ -4,7 +4,9 @@
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
-          <v-icon class="mr-8">align_vertical_top</v-icon>
+          <v-btn icon to="/maintain">
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
           <v-toolbar-title>Event View</v-toolbar-title>
           <v-spacer></v-spacer>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
@@ -85,7 +87,7 @@
         eventsList: ["All Events", "Junior", "Jury", "Recital", "Scholarship", "Senior"],
         selectedEvent: null,
         filteredDates: [],
-        eventsDate: ["All Dates", "Current Events", "Past Events", "Upcoming Events"],
+        eventsDate: ["All Dates", "Current", "Past", "Upcoming "],
         selectedDate: null,
         selectedFilter: null,
         message: "Add, Edit or Delete Events",
@@ -141,17 +143,17 @@
         }
 
         if (this.selectedDate && this.selectedDate !== "All Dates") {
-          if (this.selectedDate === "Current Events") {
+          if (this.selectedDate === "Current") {
             const now = new Date();
             const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
             const today = new Date(now.getTime() - timezoneOffset).toDateString();
             filteredData = filteredData.filter(event => new Date(event.date).toDateString() === today);
-          } else if (this.selectedDate === "Past Events") {
+          } else if (this.selectedDate === "Past") {
             const now = new Date();
             const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
             const today = new Date(now.getTime() - timezoneOffset).toDateString();
             filteredData = filteredData.filter(event => new Date(event.date) < new Date(today));
-          } else if (this.selectedDate === "Upcoming Events") {
+          } else if (this.selectedDate === "Upcoming ") {
             const now = new Date();
             const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
             const today = new Date(now.getTime() - timezoneOffset).toDateString();

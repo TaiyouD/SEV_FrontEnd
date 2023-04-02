@@ -57,7 +57,7 @@
 export default {
   data: () => ({
     cards: [
-      { title: "Availability", path: "/maintainavailability", icon: "mdi-clock-outline" },
+      { title: "Events", path: "/maintainevent", icon: "mdi-calendar-check" },
       { title: "Roles", path: "/maintainrole", icon: "mdi-account-group" },
       { title: "Pieces", path: "/maintainsong", icon: "mdi-playlist-music" },
       { title: "Composers", path: "/maintaincomposer", icon: "mdi-account-music" },
