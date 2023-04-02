@@ -53,7 +53,7 @@
     </template>
   </v-data-table>
 
-  <v-dialog v-if="selectedEventType === 'Recital'" v-model="recitalDialogVisible">
+  <v-dialog v-if="selectedEventType === 'Recital'" v-model="recitalDialogVisible" max-width = "800">
     <v-card>
         <v-card-title>
     <div style="float: center; margin:auto;">
@@ -74,25 +74,14 @@
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
     <v-select style="padding-right: 30px; width: 100px;"
-        :items="start"
+        :items="availableTimeslots"
         v-model="selectedStartTime"
-        item-title="Time Slot"
-        item-value=""
         label="Select Start Time"
         return-object
         single-line
         filled
     ></v-select>
-    <v-select style="width: 100px;"
-        :items="end"
-        v-model="selectedEndTime"
-        item-title="Time Slot"
-        item-value=""
-        label="Select End Time"
-        return-object
-        single-line
-        filled
-    ></v-select>
+    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
     </div>
     </div>
 
@@ -111,7 +100,9 @@
     ></v-select>
 
   <v-select style="padding-top: 8px;"
-        item-title="date"
+        :items ="userSongs"
+        item-title="Piece Slot"
+        item-value=""
         label="Select Piece"
         return-object
         single-line
@@ -163,41 +154,19 @@
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
     <v-select style="padding-right: 30px; width: 100px;"
-        :items="start"
+        :items="availableTimeslots"
         v-model="selectedStartTime"
-        @change = filteredEndTimes
-        item-title="Time Slot"
-        item-value=""
         label="Select Start Time"
         return-object
         single-line
         filled
+        @change ="updateText"
     ></v-select>
-    <v-select style="width: 100px;"
-        :items="filteredEnd"
-        v-model="selectedEndTime"
-        item-title="Time Slot"
-        item-value=""
-        label="Select End Time"
-        return-object
-        single-line
-        filled
-    ></v-select>
+    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
     </div>
     </div>
-        <!-- Instructor Select Below -->
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 100px;"
-    
-        :items="listOfRoles"
-        item-title="state2"
-        label="Select Instructor"
-        return-object
-        single-line
-        filled
-     ></v-select>
-                
 
                     <!--  Instrument Select Below -->
     <v-select   style="width: 100px;"
@@ -211,7 +180,8 @@
     </div>
 </div>
   <v-select style="padding-top: 8px;"
-        item-title="date"
+        :items = userSongs
+        item-title
         label="Select Piece"
         return-object
         single-line
@@ -264,40 +234,19 @@
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
     <v-select style="padding-right: 30px; width: 100px;"
-        :items="start"
+    :items="availableTimeslots"
         v-model="selectedStartTime"
-        item-title="Time Slot"
-        item-value=""
         label="Select Start Time"
         return-object
         single-line
         filled
+        @change ="updateText"
     ></v-select>
-    <v-select style="width: 100px;"
-        :items="end"
-        v-model="selectedEndTime"
-        item-title="Time Slot"
-        item-value=""
-        label="Select End Time"
-        return-object
-        single-line
-        filled
-    ></v-select>
+    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
     </div>
     </div>
-        <!-- Instructor Select Below -->
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 100px;"
-    
-        :items="listOfRoles"
-        item-title="state2"
-        label="Select Instructor"
-        return-object
-        single-line
-        filled
-     ></v-select>
-                
 
                     <!--  Instrument Select Below -->
     <v-select   style="width: 100px;"
@@ -365,39 +314,19 @@
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
     <v-select style="padding-right: 30px; width: 100px;"
-        :items="start"
+    :items="availableTimeslots"
         v-model="selectedStartTime"
-        item-title="Time Slot"
-        item-value=""
         label="Select Start Time"
         return-object
         single-line
         filled
+        @change ="updateText"
     ></v-select>
-    <v-select style="width: 100px;"
-        :items="end"
-        v-model="selectedEndTime"
-        item-title="Time Slot"
-        item-value=""
-        label="Select End Time"
-        return-object
-        single-line
-        filled
-    ></v-select>
+    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
     </div>
     </div>
-        <!-- Instructor Select Below -->
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 100px;"
-    
-        :items="listOfRoles"
-        item-title="state2"
-        label="Select Instructor"
-        return-object
-        single-line
-        filled
-     ></v-select>
                     <!--  Instrument Select Below -->
     <v-select   style="width: 100px;"
         item-title="Instrument"
@@ -466,40 +395,20 @@
     ></v-select>
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 100px;"
-        :items="start"
+    <v-select style="padding-right: 30px; width: 50px;"
+    :items="availableTimeslots"
         v-model="selectedStartTime"
-        item-title="Time Slot"
-        item-value=""
         label="Select Start Time"
         return-object
         single-line
         filled
+        @change ="updateText"
     ></v-select>
-    <v-select style="width: 100px;"
-        :items="end"
-        v-model="selectedEndTime"
-        item-title="Time Slot"
-        item-value=""
-        label="Select End Time"
-        return-object
-        single-line
-        filled
-    ></v-select>
+    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
     </div>
     </div>
-        <!-- Instructor Select Below -->
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 100px;"
-    
-        :items="listOfRoles"
-        item-title="state2"
-        label="Select Instructor"
-        return-object
-        single-line
-        filled
-     ></v-select>
                     <!--  Instrument Select Below -->
     <v-select   style="width: 100px;"
         item-title="Instrument"
@@ -556,13 +465,14 @@
   
   <script>
   import eventServices from "../services/eventServices";
-  import eventSessionServices from "../services/eventServices";
+  import eventSessionServices from "../services/eventSessionServices";
   import roleServices from "../services/rolesServices";
   import availabilityServices from "../services/availability";
   import userServices from "../services/userServices";
   import Utils from "@/config/utils.js"
-  //import popup from '../components/popup'
-  //import timeslot from '../components/time-slot.vue'
+  import RepertoireSongServices from "../services/repertoireSongServices";
+  import songService from "../services/songServices"
+ 
 
   export default {
     name: "events-list",
@@ -573,8 +483,10 @@
     data() {
       return {
         listOfEvents: [], //Change this later --- this is the events
-        listOfEventsSession: [],
+        eventsSession: [],
         listOfRoles: [],
+        roleForUser: {},
+        userSongs: [],
         accompanist: null,
         accompanists: [],
         availableAccompanists: [],
@@ -589,9 +501,9 @@
           { text: "Title", value: "title" },
           { text: "Date", value: "date" },
         ],
+      EndTime: '',
+
       start: [],
-      end: [],
-      filteredEnd: [],
       dialogVisible: false,
       recitalDialogVisible: true,
       seniorDialogVisible: true,
@@ -610,28 +522,106 @@
     async created() {
       this.user = Utils.getStore("user"); // This util grabs the specific users' role information
       await this.retrieveRoles();
+      await this.retrieveRoleForUser();
       await this.retrieveEvents();
-      await this.retrieveEventSessions();
+      //await this.retrieveEventSessions();
       await this.retrieveUsers();
       await this.retrieveAvailabilities();
+      await this.userRepertoire();
+      await this.retrieveSongs();
       await this.getAccompanist();
     },
-    watch:{
-      selectedStartTime: function(){
-        this.filderedEnd = this.end.filter(endTime => endTime >= this.selectedStartTime);
-      }
+    // watch:{
+    //   selectedStartTime: function(){
+    //     this.EndText = null
+    //   },
+    //   showSelectedDialog: function(){
+    //     this.EndText = null;
+    //   }
 
-    },
+    // },
     methods: {
+      updateText(){
+        const index = this.start.indexOf(this.selectedStartTime)
+        console.log(this.roleForUser.studentMajor)
+        console.log("student private hours", this.roleForUser.studentPrivateHours)
+        if(this.roleForUser.studentMajor === "Music" && this.roleForUser.studentPrivateHours === 2){
+          
+          if(index !== -1 && index + 1 <= this.start.length) {
+            const nextTime = this.start[index];
+            const date = new Date (`1/1/2000 ${nextTime}`);
+            date.setMinutes(date.getMinutes() + 15);
+            const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.EndTime = `${formattedTime}`
+          } else{
+            this.EndTime = ""
+          }
+      }
+      else if (this.roleForUser.studentMajor === "Music" && this.roleForUser.studentPrivateHours === 1){
+        if(index !== -1 && index + 1 <= this.start.length) {
+            const nextTime = this.start[index];
+            const date = new Date (`1/1/2000 ${nextTime}`);
+            date.setMinutes(date.getMinutes() + 10);
+            const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.EndTime = `${formattedTime}`
+          } else{
+            this.EndTime = ""
+          }}
+        else if (this.roleForUser.studentMajor !== "Music" && this.roleForUser.studentPrivateHours === 2){
+          if(index !== -1 && index + 1 <= this.start.length) {
+            const nextTime = this.start[index];
+            const date = new Date (`1/1/2000 ${nextTime}`);
+            date.setMinutes(date.getMinutes() +10);
+            const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.EndTime = `${formattedTime}`
+          } else{
+            this.EndTime = ""
+          }
+        }
+        else if (this.roleForUser.studentMajor !== "Music" && this.roleForUser.studentPrivateHours === 1){
+          if(index !== -1 && index + 1 <= this.start.length) {
+            const nextTime = this.start[index];
+            const date = new Date (`1/1/2000 ${nextTime}`);
+            date.setMinutes(date.getMinutes() +5);
+            const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.EndTime = `${formattedTime}`
+          } else{
+            this.EndTime = ""
+          }
+        }
+      },
+      async retrieveRoleForUser(){
+        await roleServices.getRoleForUser(this.user.userId)
+        .then((response) => {
+          this.roleForUser = response.data[0];
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        })
+      },
+      async userRepertoire(){
+        await RepertoireSongServices.getAllForUser(this.roleForUser.id)
+        .then((response) => {
+          this.userSongs = response.data;
+          console.log('song')
+          console.log(this.userSongs)
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        })
+      },
+      async retrieveSongs(){
+        await songService.getAll()
+        .then((response) => {
+          this.songs = response.data;
+          ///console.log("All songs", this.songs)
+        })
+      },
       async retrieveEvents() {
-        console.log(this.user.userId)
-        const temp = await roleServices.get(this.user.userId)
-        console.log(temp)
         await eventServices.getAll()
           .then((response) => {
-          if (temp.incomingStudentPassword !== ""){
+          if (this.roleForUser.studentClassification === "Incoming Student"){
             this.listOfEvents = response.data.filter(event =>  event.isReady !== false && event.eventType === "Scholarship")
-          console.log("Test")
           }
           else{
             this.listOfEvents = response.data.filter(event => event.isReady !== false && event.eventType !== "Scholarship");
@@ -641,10 +631,30 @@
             this.message = e.response.data.message;
           });
       },
-      async retrieveEventSessions() {
+      async retrieveEventSessions(item) {
         await eventSessionServices.getAll()
           .then((response) => {
-            this.listOfEventsSession = response.data;
+            // Filter out events that don't have the specified item Id
+            this.eventsSession = response.data.filter(event => event.eventId === item.id);
+
+            this.eventsSession.forEach(event =>{
+              const startTimeStr = event.startTime
+              const endTimeStr = event.endTime
+              
+              const [startHour, startMinute] = startTimeStr.split (':')
+              const [endHour, endMinute] = endTimeStr.split(':')
+              const startDate = new Date();
+              startDate.setHours(parseInt(startHour), parseInt(startMinute), 0, 0);
+              //startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+              const endDate = new Date();
+              endDate.setHours(parseInt(endHour), parseInt(endMinute), 0, 0);
+              event.startTime = new Date(startDate);
+              console.log(event.startTime)
+              event.endTime= new Date(endDate);
+
+            })
+            //console.log("This should show the event session for a particular event")
+            //console.log("eventsSession", this.eventsSession)
             
           })
           .catch((e) => {
@@ -712,13 +722,16 @@
         },
 
     async showSelectedDialog(item) {
+      this.EndTime = null
+      //Functioncall for retrieving event session
+      await this.retrieveEventSessions(item)
+
       // Function call for getting the available accompanists depending on the specific events
       const availabilities = this.getAvailablitiesForEvent(item)
       this.availableAccompanists = this.getAvailableAccompanists(availabilities)
 
       // Function call for getting the start time and end time for each specific events 
       this.start = await this.availableStartTime(item) 
-      this.end = await this.availableEndTime(item)
 
       // These makes sure that the dialog boxes that pops up show the right dialog boxes. f
       this.selectedEventType = item.eventType;
@@ -740,35 +753,23 @@
     },
 
     async availableStartTime(item){
-      const startTimes=[];
-      const startTimeStr = item.startTime
-      const endTimeStr = item.endTime
-
-      const [startHour, startMinute] = startTimeStr.split (':')
-      const [endHour, endMinute] = endTimeStr.split(':')
-      const startDate = new Date();
-      startDate.setHours(parseInt(startHour), parseInt(startMinute), 0, 0);
-      const endDate = new Date();
-
-
-      endDate.setHours(parseInt(endHour), parseInt(endMinute), 0, 0);
-      const startTime = new Date(startDate);
-      console.log(startTime)
-      const endTime= new Date(endDate);
-
-      console.log(item.duration)
       
-      while (startTime <= endTime){
-        startTimes.push(startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
-        startTime.setMinutes(startTime.getMinutes() + 5);
-      }
-      console.log(startTimes)
-      return startTimes;
-  },
-  async availableEndTime(item){
       const startTimes=[];
       const startTimeStr = item.startTime
       const endTimeStr = item.endTime
+
+
+      const takenSlots = [];
+      this.eventsSession.forEach(event => {
+        const startSession = new Date (event.startTime)
+        const endSession = new Date(event.endTime)
+        for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
+          //startTimes.push(startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+          takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+        }
+      })
+      const uniqueTimes = [...new Set(takenSlots)]
+      console.log("TakenSlots" , uniqueTimes)
 
       const [startHour, startMinute] = startTimeStr.split (':')
       const [endHour, endMinute] = endTimeStr.split(':')
@@ -777,30 +778,43 @@
       const endDate = new Date();
       endDate.setHours(parseInt(endHour), parseInt(endMinute), 0, 0);
       const startTime = new Date(startDate);
-      console.log(startTime)
       const endTime= new Date(endDate);
-      while (startTime <= endTime){
-        startTimes.push(startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+      
+
+      let timeslots = [];
+      while (startTime <= endTime){ // While the start time is less than or equal to the end time given to us
+        let timeslot = {
+        time: startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+        available: false//!this.eventsSession.includes(timeString)
+        }
+        //startTimes.push(startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+        timeslots.push(timeslot);
         startTime.setMinutes(startTime.getMinutes() + 5);
       }
-      console.log("This should show an array of startTimes")
+      uniqueTimes.forEach(uniquetime =>{
+        // console.log(uniquetime)
+        timeslots.forEach(timeslot =>{
+          if(timeslot.time === uniquetime){
+            timeslot.available = true;
+            //console.log("testing", timeslot)
+            }
+      })})
       console.log(startTimes)
-      return startTimes;
+
+      // Return the timeslots filtered by whats already taken up and whats not
+      return timeslots.filter((slot) => slot.available === false).map((slot) => slot.time);
+  },
   },
 
-    async filteredEndTimes(){
-      this.selectedEndTime = null;
-      let startFound = false;
-      for (let i = 0; i < this.start.length; i++){
-        if (this.start[i] === this.selectedStartTime){
-          startFound = true;
-        }
-        if (startFound){
-          this.filteredEnd.push(this.end[i])
-        }
-      }
-    },
-  },};
+
+computed: {
+  availableTimeslots(){
+    this.start.filter((slot) => slot.available === false).map((slot) => slot.time)
+    console.log(this.start)
+    return this.start
+}
+}
+};
   </script>
   
 
