@@ -1,5 +1,6 @@
 <template>
     <div>
+      <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
           <v-toolbar-title>New Accompanist</v-toolbar-title>
@@ -42,7 +43,8 @@
   </template>
 
 <script>
-import AccompanistServices from "../services/composerServices";
+
+import RoleServices from "../services/roleServices";
 
 export default {
   name: "addaccompanist",
@@ -52,21 +54,30 @@ export default {
       user: {
         id: null,
         firstName:"",
-        lastName:""      },
+        lastName:"",
+        isApproved: false
+      },
+      role: {
+        id: null,
+        roleType: "Accompanist",
+        isApproved: false
+      },
       message: "Enter data and click save.",
     };
   },
 
   methods: {
     saveAccompanist() {
-        //check if accompanist first and last name exists
+        //send notification to admin
       var data = {
-        firstName: this.user.firstName,
-        lastName: this.user.lastName
+        //firstName: this.user.firstName,
+        //lastName: this.user.lastName,
+        roleType: this.role.roleType,
+        isApproved: this.role.isApproved
       };
-      AccompanistServices.create(data)
+      RoleServices.create(data)
         .then((response) => {
-          this.user.id = response.data.id;
+          this.role.id = response.data.id;
           console.log("add " + response.data);
           this.$router.push({ name: "signupevents" });
         })
