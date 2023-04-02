@@ -35,20 +35,17 @@
           <p class="text-subtitle-1 mt-1">
             {{user.email}}
           </p>
-          <div v-if="user != null && role != null">
+          <div v-if="user != null && user.studentClassification != null">
           <p class="text-subtitle-1 mt-1">
-            Student ID: {{ role.studentId }}
+            Classification: {{ user.studentClassification }}
           </p>
           <p class="text-subtitle-1 mt-1">
-            Classification: {{ role.studentClassification }}
-          </p>
-          <p class="text-subtitle-1 mt-1">
-            Semester: {{ role.studentSemester }}
+            Semester: {{ user.studentSemseter }}
           </p>
           <p class="text-subtitle-1 mt-1" >
-            Major: {{ role.studentMajor }} 
+            Major:{{ user.studentMajor }} 
           </p>
-          <!-- <div v-if="user.studentInstrument != null">
+          <div v-if="user.studentInstrument != null">
           <p class="text-subtitle-1 mt-1">
             Instrument: {{ user.studentInstrument }}
           </p>
@@ -57,12 +54,12 @@
           <p class="text-subtitle-1 mt-1">
             Vocalist Type: {{ user.studentVocalType }}
           </p>
-          </div> -->
+          </div>
           <p class="text-subtitle-1 mt-1">
-            Level: {{ role.studentLevel }}
+            Level: {{ user.studentLevel }}
           </p>
           </div>
-          <!-- <div v-else>
+          <div v-else>
           <p class="text-subtitle-1 mt-1">
             Classification: temp info
           </p>
@@ -81,7 +78,7 @@
           <p class="text-subtitle-1 mt-1">
             Level: temp info
           </p>
-          </div> -->
+          </div>
           <v-divider class="my-3"></v-divider>
           <v-btn color="primary"  text @click="logout()"> Logout </v-btn>
         </div>
@@ -124,31 +121,28 @@
  <script>
 import Utils from "@/config/utils.js";
 import AuthServices from "@/services/authServices";
-import roleServices from "@/services/roleServices";
 
 export default {
-  name: "profile-student",
+  name: "App",
   data: () => ({
     user: {},
-    role: {},
     title: "Music Department",
     initials: "",
     name: "",
     firstName: "",
     lastName: "",
-    // studentClassification: "",
-    // studentSemester: "",
-    // studentMajor: "",
-    // studentInstrument: "",
-    // studentVocalType: "",
-    // studentLevel: "",
+    studentClassification: "",
+    studentSemester: "",
+    studentMajor: "",
+    studentInstrument: "",
+    studentVocalType: "",
+    studentLevel: "",
   }),
   async created() {
     this.resetMenu();
   },
   async mounted() {
     this.resetMenu();
-    this.retrieveRole();
   },
   computed: {
     // _link() {
@@ -156,16 +150,6 @@ export default {
     // }
   },
   methods: {
-    retrieveRole() {
-      roleServices.getRoleForUser(this.user.userId)
-      .then((response) => {
-        this.role = response.data[0];
-        console.log(this.role.id);
-      })
-      .catch((e) => {
-        this.message = e.response.data.message;
-      });
-    },
     resetMenu() {
       this.user = null;
       // ensures that their name gets set properly from store

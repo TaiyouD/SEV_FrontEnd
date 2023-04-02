@@ -1,144 +1,90 @@
 <template>
-<div>
-  <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
-  <v-container>
-    <v-toolbar>
-      <v-toolbar-title>Add Piece to Repertoire</v-toolbar-title>
-    </v-toolbar>
-    <br />
-    <h4>{{ message }}</h4>
-    <br />
-    <v-form ref="form" v-model="valid" lazy validation>
-      <v-autocomplete
-      v-model="select"
-      :search-input.sync="search"
-      :loading="loading"
-      :items="song"
-      item-text="title"
-      class="mr-4"
-      density="comfortable"
-      hide-no-data
-      hide-details
-      label="Title"
-      single-line
-      return-object
-      required
-      ></v-autocomplete>
-      <br>
-    <router-link to="/addsong" >
-    <v-btn color="primary" class="mr-4">
-        Missing Piece?
-    </v-btn>
-    </router-link>
-    <br><br>
-
-    <v-text-field
-    v-model="repertoireSong.semester"
-    id="semester"
-    :counter="15"
-    label="Current Semester. Example: Spring 2023"
-    required
-    ></v-text-field>
-
-      <v-btn
-        :disabled="!valid"
-        color="success"
-        class="mr-4"
-        @click="saveSongRepertoire()"
-      >
-        Save
+  <div>
+    <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
+    <v-container>
+      <v-toolbar>
+        <v-toolbar-title>Add Song</v-toolbar-title>
+      </v-toolbar>
+      <br />
+      <h4>{{ message }}</h4>
+      <br />
+      <v-form ref="form" v-model="valid" lazy validation>
+        <v-text-field
+          v-model="song.title"
+          id="title"
+          :counter="50"
+          label="Title"
+          required
+        ></v-text-field>
+        <v-select 
+        :items="selected"
+        item-title="Composer"
+        item-value=""
+        label="Select Composer"
+        v-model="selected"
+        return-object
+        single-line
+        filled
+    ></v-select>
+    <router-link to="/addcomposer" tag="v-btn">
+      <v-btn color="success" class="mr-4">
+          Missing Composers?
       </v-btn>
+      </router-link>
+      <br><br>
 
-      <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
-    </v-form>
-  </v-container>
-</div>
+
+        <v-btn
+          :disabled="!valid"
+          color="success"
+          class="mr-4"
+          @click="saveSong()"
+        >
+          Save
+        </v-btn>
+
+        <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+      </v-form>
+    </v-container>
+  </div>
 </template>
 
 <script>
-import SongServices from "../services/songServices";
-import RepertoireSongServices from "../services/repertoireSongServices";
-import Utils from "@/config/utils.js";
-import RoleServices from "../services/roleServices";
+import LessonServices from "../services/lessonServices";
 export default {
-name: "add-piece-repertoire",
-data() {
-  return {
-    valid: true,
-    loading: false,
-    search: null,
-    select: null,
-    repertoireSong: {
-      id: null,
-      semester: ""
-    },
-    message: "Enter data and click save",
-    song: [],
-    user:{},
-    role:{}
-  };
-},
-mounted() {
-  this.user = Utils.getStore("user");
-},
-async created(){
-  const result = await SongServices.getAll();
-  this.song = result.data;
-  await this.retrieveRole();
-},/*
-watch: {
-    search (val) {
-      val && val !== this.select && this.querySelections(val)
-    }
-  },*/
-methods: {
-  getSongs(){
-    return SongServices.getAll();
-  },/*
-  querySelections (v) {
-        console.log("song2");
-        console.log(this.song[this.select.id-1].title);
-        this.loading = true
-        console.log(this.select.title);
-        // Simulated ajax query
-        setTimeout(() => {
-          this.select = this.song.title.filter(e => {
-            return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
-          })
-          this.loading = false
-        }, 500)
-  },*/
-  async retrieveRole() {
-      await RoleServices.getRoleForUser(this.user.userId)
+  name: "add-song",
+  props: ["composerId"],
+  data() {
+    return {
+      valid: true,
+      song: {
+        id: null,
+        title: "",
+        selected: []
+      },
+      message: "Enter data and click save",
+    };
+  },
+  methods: {
+    saveSong() {
+      var data = {
+        title: this.song.title,
+        composerId: this.composerId
+      };
+      LessonServices.createSong(this.composerId, data)
         .then((response) => {
-          this.role = response.data[0];
-          console.log('role');
-          console.log(this.role.id);
+          this.song.id = response.data.id;
+
+          this.$router.push({ name: "view", params: { id: this.composerId } });
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
     },
-  saveSongRepertoire() {
-    var data = {
-      semester: this.repertoireSong.semester,
-      songId: this.select.id,
-      studentId: this.role.id
-    };
-    RepertoireSongServices.create(data)
-      .then((response) => {
-        this.repertoireSong.id = response.data.id;
-        console.log("add " + response.data);
-        this.$router.push({ name: "repertoire"});
-      })
-      .catch((e) => {
-        this.message = e.response.data.message;
-      });
+    cancel() {
+      this.$router.push({ name: "view", params: { id: this.composerId } });
+    },
   },
-  cancel() {
-    this.$router.push({ name: "repertoire"});
-  },
-},
 };
 </script>
 <style></style>

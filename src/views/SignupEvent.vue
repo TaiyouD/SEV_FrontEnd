@@ -37,7 +37,31 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
+              class="text-center"
+            >
+              Today
+            </template>
+          </template>
 
+          <template >
+            <div
+              class="text-center"
+            >
+            </div>
+          </template>
+        </v-calendar>
+
+        <v-calendar 
+        v-else-if="selected === '2023-4-15'"
+        start = 2023-4-15
+        color="primary"
+        type="day"
+        :events = events2
+        >
+        <template v-slot:day-header="{ present }">
+            <template
+              v-if="present"
+              class="text-center"
             >
               Today
             </template>
@@ -62,6 +86,7 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
+              class="text-center"
             >
               Today
             </template>
@@ -208,6 +233,31 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
+              class="text-center"
+            >
+              Today
+            </template>
+          </template>
+
+          <template >
+            <div
+              class="text-center"
+            >
+            </div>
+          </template>
+        </v-calendar>
+
+        <v-calendar 
+        v-else-if="selected === '2023-4-15'"
+        start = 2023-4-15
+        color="primary"
+        type="day"
+        :events = events2
+        >
+        <template v-slot:day-header="{ present }">
+            <template
+              v-if="present"
+              class="text-center"
             >
               Today
             </template>
@@ -232,6 +282,7 @@
         <template v-slot:day-header="{ present }">
             <template
               v-if="present"
+              class="text-center"
             >
               Today
             </template>

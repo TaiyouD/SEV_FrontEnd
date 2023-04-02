@@ -4,6 +4,9 @@ export default {
   getAll() {
     return apiClient.get("/songs");
   },
+  getAllForUser(userId) {
+    return apiClient.get("/songs/user/" + userId);
+  },
   get(id) {
     return apiClient.get(`/songs/${id}`);
   },

@@ -1,4 +1,4 @@
-# OC Music Department Website - Frontend - t4
+# tutorial-frontend-vue2
 
 ## Project setup
 ```
