@@ -142,6 +142,17 @@
                   </v-list-item-content>
                 </v-list-item>
                 </div>
+                <div v-else-if="role.roleType == 'Incoming Student'">
+                <v-list-item link @click="$router.push({ path:'/profileincomingstudent' })">
+                  <v-list-item-icon>
+                    <v-icon>mdi-account-box</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>Profile</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                </div>
                 <!-- <div v-else-if="role.roleType == 'Accompanist' && role.facultyType == null">
                 <v-list-item link @click="$router.push({ path:'/profilestudent' })">
                   <v-list-item-icon>
