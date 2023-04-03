@@ -202,13 +202,13 @@
             </v-avatar>
           </v-btn>
         </template>
-        <v-card>
+        <!-- <v-card>
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-btn depressed rounded exact :to="{ name: 'login' }" text> Login </v-btn>
             </div>
           </v-list-item-content>
-        </v-card> 
+        </v-card>  -->
       </v-menu>
     </div>
     

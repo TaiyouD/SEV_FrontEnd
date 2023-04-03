@@ -1,7 +1,7 @@
 
 <template>
 <div>
-  <v-img height=667 width="100%" cover src="../assets/music-background.jpg">
+  <v-img height=1100 cover src="../assets/music-background.jpg">
     <br><br><br><br><br><br><br><br><br><br>
     <SocialLogin/>
     <br>
