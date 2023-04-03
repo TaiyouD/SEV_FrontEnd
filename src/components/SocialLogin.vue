@@ -43,7 +43,6 @@ export default {
           text: "signup_with",
           width: 400,
           logo_alignment: "center",
-
         }
       );
     },
