@@ -43,10 +43,10 @@
             Classification: {{ role.studentClassification }}
           </p>
           <p class="text-subtitle-1 mt-1">
-            Semester: {{ role.studentSemseter }}
+            Semester: {{ role.studentSemester }}
           </p>
           <p class="text-subtitle-1 mt-1" >
-            Major:{{ role.studentMajor }} 
+            Major: {{ role.studentMajor }} 
           </p>
           <!-- <div v-if="user.studentInstrument != null">
           <p class="text-subtitle-1 mt-1">
