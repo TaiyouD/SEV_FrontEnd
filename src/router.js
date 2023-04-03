@@ -29,6 +29,7 @@ import Maintain from "./views/Maintain.vue";
 import MaintainAvailability from "./views/MaintainAvailability.vue";
 import MaintainComposers from "./views/MaintainComposer.vue";
 import MaintainEvents from "./views/MaintainEvent.vue";
+import MaintainEventSessions from "./views/MaintainEventSession.vue";
 import MaintainInstruments from "./views/MaintainInstrument.vue";
 import MaintainLevels from "./views/MaintainLevel.vue";
 import MaintainRoles from "./views/MaintainRole.vue";
@@ -38,6 +39,7 @@ import ProfileFaculty from "./views/ProfileFaculty.vue";
 import ProfileStudent from "./views/ProfileStudent.vue";
 import Repertoire from "./views/Repertoire.vue";
 import SignupEvent from "./views/SignupEvent.vue";
+import ViewStudents from "./views/ViewStudentInstructor.vue";
 
 
 import TutorialsList from "./views/TutorialsList.vue";
@@ -190,6 +192,11 @@ const router = new Router({
       component: MaintainEvents
     },
     {
+      path: "/maintaineventsession",
+      name: "maintaineventsession",
+      component: MaintainEventSessions
+    },
+    {
       path: "/maintaininstrument",
       name: "maintaininstrument",
       component: MaintainInstruments
@@ -237,6 +244,11 @@ const router = new Router({
       path: "/signupevents",
       name: "signupevents",
       component: SignupEvent,
+    },
+    {
+      path: "/viewstudents",
+      name: "viewstudents",
+      component: ViewStudents
     },
     {
       path: "/tutorials",
