@@ -121,7 +121,7 @@
                 
                   <td>
                                   <!--Dialog to Edit Event Session-->
-                  <v-dialog persistent max-width="800" :retain-focus="false">
+                  <v-dialog v-model="display_dialog" persistent max-width="800" :retain-focus="false">
                     <template v-slot:activator="{ on, attrs }">
                       <div class="d-flex justify-end">
                         <v-icon color="primary" v-bind="attrs" v-on="on">mdi-pencil</v-icon>
@@ -294,7 +294,7 @@
                         <v-btn color="primary" class="mr-2" @click="editEventSession()">
                           Save
                         </v-btn>
-                        <v-btn color="primary" @click="display_dialog == false">
+                        <v-btn color="primary" @click="display_dialog = false">
                           Close
                         </v-btn>
                       
