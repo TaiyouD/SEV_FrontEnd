@@ -24,13 +24,6 @@
           <v-card-title>
             Select Upcoming Event
             <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
           </v-card-title>
           <v-card-text>
             <b>{{ message }}</b>
@@ -46,20 +39,28 @@
       <tr>
         <td @click="showSelectedDialog(item)">{{ item.eventType }} </td>
         <td @click="showSelectedDialog(item)">{{ item.date }} </td>
-        <!-- <td @click="showSelectedDialog(item)">{{ item.startTime }} </td>
-        <td @click="showSelectedDialog(item)">{{ item.endTime }} </td> -->
+        <td @click="showSelectedDialog(item)">{{ item.startTime }} </td>
+        <td @click="showSelectedDialog(item)">{{ item.endTime }} </td>
       </tr>
     </template>
   </v-data-table>
   <v-dialog v-if="selectedEventType === 'Recital'" v-model="recitalDialogVisible" max-width = "800">
     <v-card>
         <v-card-title>
-    <div style="float: center; margin:auto;">
-    <div style="display: inline-block; text-align: center;">
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Recital Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+        <v-container>
+        <v-card-text>
+
+          <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
 
         <!-- ===============Timeslot ==================== -->
-        Recital Sign Up 
-      <v-select 
+        <v-row>
+          <v-col>
+      <v-select  class=" mr-4"  width = "380" 
         :items= "availableAccompanists"
         v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
@@ -68,37 +69,38 @@
         single-line
         filled
     ></v-select>
-
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 100px;"
+    <v-select class ="mr-4" width = "390"
         :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
         return-object
         single-line
         filled
+        @change ="updateText"
     ></v-select>
-    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
+    </v-col>
+  </v-row>
+    <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
     </div>
     </div>
-
-      <v-card-text>
-        <v-checkbox v-model = "showTextField" label = "Duet?"/>
-        <v-text-field v-if="showTextField" label = "Partner's Name"/>
-      </v-card-text>
                     <!--  Instrument Select Below -->
-    <v-select
+                    <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+      <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
         item-title="Instrument"
-        v-model="selectedInstrument"
-        item-value=""
+        item-value = "instrument"
+        item-text="instrument.type"
         label="Select Voice or Instrument"
         return-object
         single-line
         filled
     ></v-select>
 
-    <v-select style="padding-top: 8px;"
+    <v-select  class=" mr-4"  width = "380" 
         :items = userSongs
         v-model="selectedSongs"
         item-text = "song.title"
@@ -110,11 +112,18 @@
         single-line
         filled
      ></v-select>
-
+    </v-col>
+  </v-row>
+</div>
+    </div>
+    <v-card-text>
+        <v-checkbox v-model = "showTextField" label = "Duet Or Ensemble?"/>
+        <v-text-field v-if="showTextField" label = "Other Member's Name"/>
+      </v-card-text>
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -129,22 +138,30 @@
   </router-link>
 </div>
 </div>
-
-    </div>
-    </div>
     <!-- ============End of button============== -->
-
-        </v-card-title>
+    </v-card-text>
+    </v-container>
       </v-card>
+
+
+      
   </v-dialog>
-  <v-dialog v-if="selectedEventType === 'Senior'" v-model="seniorDialogVisible" style ="width: 80%;">
+  <v-dialog v-if="selectedEventType === 'Senior'" v-model="seniorDialogVisible" max-width="800">
     <v-card>
-    <v-card-title>
-    <div style="float: center; margin:auto;">
-    <div style="display: inline-block; text-align: center;">
+      <v-card-title>
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Senior Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+
+        <v-card-text>
+        <v-container> 
+      <div style="text-align: center;">
+      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
         <!-- ===============Timeslot ==================== -->
-          Senior Sign Up
-      <v-select 
+        <v-row>
+          <v-col>
+      <v-select class ="mr-4" width = "380"
         :items=availableAccompanists
         v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
@@ -153,10 +170,9 @@
         single-line
         filled
     >
+    
   </v-select>
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 100px;"
+    <v-select class ="mr-4" width = "390"
         :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
@@ -165,14 +181,18 @@
         filled
         @change ="updateText"
     ></v-select>
-    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
-    </div>
+  </v-col>
+  </v-row>
+    <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
+
+  </div>
     </div>
     <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-
+      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
                     <!--  Instrument Select Below -->
-    <v-select   style="width: 100px;"
+        <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
         :items = "instrumentRole"
         v-model = "selectedInstrument"
         item-title="Instrument"
@@ -183,13 +203,10 @@
         single-line
         filled
     ></v-select>
-    </div>
-</div>
 
-    <!-- Song for 'Senior' -->
-  <v-select style="padding-top: 8px;"
+    <v-select  class=" mr-4"  width = "380" 
         :items = userSongs
-        v-model = "selectedSongs"
+        v-model="selectedSongs"
         item-text = "song.title"
         item-value = "song" 
         label="Select Piece"
@@ -199,11 +216,15 @@
         single-line
         filled
      ></v-select>
+    </v-col>
+  </v-row>
+    </div>
+</div>
 
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -219,23 +240,30 @@
 </div>
 </div>
 
-    </div>
-    </div>
     <!-- ============End of button============== -->
+ </v-container>
+  </v-card-text>
+    </v-card>
+      </v-dialog>
 
-        </v-card-title>
-      </v-card>
-  </v-dialog>
-
-  <v-dialog v-if="selectedEventType === 'Junior'" v-model="juniorDialogVisible">
+  <v-dialog v-if="selectedEventType === 'Junior'" v-model="juniorDialogVisible" max-width = "800">
     <v-card>
-    <v-card-title>
-    <div style="float: center; margin:auto;">
-    <div style="display: inline-block; text-align: center;">
+        <v-card-title>
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Junior Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+        <v-container>
+        <v-card-text>
+
+          <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+
         <!-- ===============Timeslot ==================== -->
-          Junior Sign Up
-      <v-select 
-        :items=availableAccompanists
+        <v-row>
+          <v-col>
+      <v-select  class=" mr-4"  width = "380" 
+        :items= "availableAccompanists"
         v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
@@ -243,10 +271,8 @@
         single-line
         filled
     ></v-select>
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 100px;"
-    :items="availableTimeslots"
+    <v-select class ="mr-4" width = "390"
+        :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
         return-object
@@ -254,14 +280,17 @@
         filled
         @change ="updateText"
     ></v-select>
-    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
+    </v-col>
+  </v-row>
+  <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
     </div>
     </div>
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-
                     <!--  Instrument Select Below -->
-                    <v-select   style="width: 100px;"
+                    <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+      <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
         :items = "instrumentRole"
         v-model = "selectedInstrument"
         item-title="Instrument"
@@ -272,11 +301,10 @@
         single-line
         filled
     ></v-select>
-    </div>
-</div>
-  <v-select style="padding-top: 8px;"
+
+    <v-select  class=" mr-4"  width = "380" 
         :items = userSongs
-        v-model = "selectedSongs"
+        v-model="selectedSongs"
         item-text = "song.title"
         item-value = "song" 
         label="Select Piece"
@@ -286,10 +314,14 @@
         single-line
         filled
      ></v-select>
+    </v-col>
+  </v-row>
+</div>
+    </div>
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -304,36 +336,40 @@
   </router-link>
 </div>
 </div>
-
-    </div>
-    </div>
     <!-- ============End of button============== -->
-
-        </v-card-title>
+    </v-card-text>
+    </v-container>
       </v-card>
   </v-dialog>
 
 
-  <v-dialog v-if="selectedEventType === 'Jury'" v-model="juryDialogVisible">
+  <v-dialog v-if="selectedEventType === 'Jury'" v-model="juryDialogVisible" max-width = "800">
     <v-card>
-    <v-card-title>
-    <div style="float: center; margin:auto;">
-    <div style="display: inline-block; text-align: center;">
+        <v-card-title>
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Jury Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+        <v-container>
+        <v-card-text>
+
+          <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+
         <!-- ===============Timeslot ==================== -->
-          Jury Sign Up
-      <v-select 
-        :items=availableAccompanists
-        v-model = "accompanist"
+        <v-row>
+          <v-col>
+      <v-select  class=" mr-4"  width = "380" 
+        :items= "availableAccompanists"
+        v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
         filled
     ></v-select>
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 100px;"
-    :items="availableTimeslots"
+    <v-select class ="mr-4" width = "390"
+        :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
         return-object
@@ -341,13 +377,17 @@
         filled
         @change ="updateText"
     ></v-select>
-    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
+    </v-col>
+  </v-row>
+  <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
     </div>
     </div>
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
                     <!--  Instrument Select Below -->
-                    <v-select   style="width: 100px;"
+                    <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+      <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
         :items = "instrumentRole"
         v-model = "selectedInstrument"
         item-title="Instrument"
@@ -358,11 +398,10 @@
         single-line
         filled
     ></v-select>
-    </div>
-</div>
-  <v-select style="padding-top: 8px;"
+
+    <v-select  class=" mr-4"  width = "380" 
         :items = userSongs
-        v-model = "selectedSongs"
+        v-model="selectedSongs"
         item-text = "song.title"
         item-value = "song" 
         label="Select Piece"
@@ -372,10 +411,19 @@
         single-line
         filled
      ></v-select>
+    </v-col>
+  </v-row>
+</div>
+    </div>
+    <v-card-text>
+        <v-checkbox v-model = "showTextField" label = "Duet Or Ensemble?"/>
+        <v-text-field v-if="showTextField" label = "Other Member's Name"/>
+      </v-card-text>
+
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -390,12 +438,9 @@
   </router-link>
 </div>
 </div>
-
-    </div>
-    </div>
     <!-- ============End of button============== -->
-
-        </v-card-title>
+    </v-card-text>
+    </v-container>
       </v-card>
   </v-dialog>
 
@@ -403,26 +448,34 @@
 
 
   <!-- This is supposed to be just 10 minutes duration. Automatically set this -->
-  <v-dialog v-if="selectedEventType === 'Scholarship'" v-model="scholarshipDialogVisible"> 
+  <v-dialog v-if="selectedEventType === 'Scholarship'" v-model="scholarshipDialogVisible" max-width = "800"> 
     <v-card>
-    <v-card-title>
-    <div style="float: center; margin:auto;">
-    <div style="display: inline-block; text-align: center;">
+      <v-card-title>
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Scholarship Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+
+        <v-card-text>
+        <v-container> 
+      <div style="text-align: center;">
+      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
         <!-- ===============Timeslot ==================== -->
-          Scholarship Sign Up
-      <v-select 
+        <v-row>
+          <v-col>
+      <v-select class ="mr-4" width = "380"
         :items=availableAccompanists
-        v-model = "accompanist"
+        v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
         filled
-    ></v-select>
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 50px;"
-    :items="availableTimeslots"
+    >
+    
+  </v-select>
+    <v-select class ="mr-4" width = "390"
+        :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
         return-object
@@ -430,13 +483,18 @@
         filled
         @change ="updateText"
     ></v-select>
-    <p> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p>
-    </div>
+  </v-col>
+  </v-row>
+    <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
+
+  </div>
     </div>
     <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
+      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
                     <!--  Instrument Select Below -->
-                    <v-select   style="width: 100px;"
+        <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
         :items = "instrumentRole"
         v-model = "selectedInstrument"
         item-title="Instrument"
@@ -447,11 +505,10 @@
         single-line
         filled
     ></v-select>
-    </div>
-</div>
-  <v-select style="padding-top: 8px;"
+
+    <v-select  class=" mr-4"  width = "380" 
         :items = userSongs
-        v-model = "selectedSongs"
+        v-model="selectedSongs"
         item-text = "song.title"
         item-value = "song" 
         label="Select Piece"
@@ -461,11 +518,15 @@
         single-line
         filled
      ></v-select>
+    </v-col>
+  </v-row>
+    </div>
+</div>
 
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -481,12 +542,10 @@
 </div>
 </div>
 
-    </div>
-    </div>
     <!-- ============End of button============== -->
-
-        </v-card-title>
-      </v-card>
+ </v-container>
+  </v-card-text>
+    </v-card>
   </v-dialog>
         </v-card>
       </v-container>
@@ -507,6 +566,7 @@
   import RepertoireSongServices from "../services/repertoireSongServices";
   import songService from "../services/songServices"
   import instrumentRoleServices from "../services/instrumentRoleServices";
+  import eventSongServices from "../services/eventSongservice"
 
   export default {
     name: "events-list",
@@ -540,6 +600,8 @@
         headers: [
           { text: "Title", value: "title" },
           { text: "Date", value: "date" },
+          { text: "Start Time", value:"startTime"},
+          { text: "End Time", value:"endTime"},
         ],
       EndTime: '',
 
@@ -590,6 +652,9 @@
           console.log(this.selectedInstrument.privateInstructorId)
           console.log(this.selectedStartTime)
           console.log(this.selectedEndTime)
+          console.log(this.selectedSongs)
+          let eventSessionId;
+          const selectedSongs = this.selectedSongs
           const data ={
             eventId: this.selectedEvent.id,
             accompanistId: this.selectedAccompanist.id,
@@ -603,11 +668,34 @@
           .then((response) => {
 
             console.log('Success!', response.data);
+            eventSessionId = response.data.id,
+          console.log(eventSessionId)
+
           })
           .catch((error) => {
             console.log('Error:', error);
           });
-          
+
+          const eventSongs = selectedSongs.map((song) => {
+            return{
+              eventsessionId: eventSessionId,
+              repertoireSongId: song.id,
+            }
+          })
+          for (let i = 0; i < eventSongs.length; i++){
+            
+          console.log("eventsongs data", eventSongs[i])
+          eventSongServices.create(eventSongs[i])
+            .then((response) => {
+              console.log('Success', response.data);
+            })
+            .catch ((error) => {
+              console.log('Error for creating eventSongs:', error)
+            })
+          }
+          // this.$forceUpdate();
+          //this.$router.go(0);
+  
       },
       async retrieveInstrumentRoles() {
         await instrumentRoleServices.getAllForUser(this.roleForUser.id)
@@ -705,12 +793,12 @@
         await eventServices.getAll()
           .then((response) => {
           if (this.roleForUser.studentClassification === "Incoming Student"){
-            this.listOfEvents = response.data.filter(event =>  event.isReady !== false)
+            this.listOfEvents = response.data.filter(event =>  event.isReady !== false && event.eventType !== "Scholarship")
            
           }
           else{
-            this.listOfEvents = response.data.filter(event => event.isReady !== false && event.eventType !== "Scholarship");
-            console.log("stuff", this.listOfEvents)
+            this.listOfEvents = response.data.filter(event => event.isReady !== false);
+            console.log("I dont know why this activates in RetrieveEvents", this.listOfEvents)
           }} 
           )
           .catch((e) => {
@@ -784,7 +872,11 @@
         this.currentIndex = event ? index : -1;
       },
       showDialog(item){
-        
+        this.selectedAccompanist = null;
+        this.selectedInstrument = null;
+        this.selectedSongs = null;
+        this.selectedStartTime = null;
+        this.selectedEndTime = null;
         const event = this.listOfEvents.find((e) => e.id === item.eventID);
         this.selectedEvent = event;
       },
@@ -810,6 +902,11 @@
 
     async showSelectedDialog(item) {
         console.log("testing this", item)
+        this.selectedAccompanist = null;
+        this.selectedInstrument = null;
+        this.selectedSongs = null;
+        this.selectedStartTime = null;
+        this.selectedEndTime = null;
         this.selectedEvent = item
       this.EndTime = null
       //Functioncall for retrieving event session
