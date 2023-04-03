@@ -3,9 +3,10 @@
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
-        <v-btn icon to="/maintainevent">
+        <v-btn v-if="isAdmin || isFaculty" icon to="/maintain">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
+        <v-icon v-if="isStudent" class="mr-8">align_vertical_top</v-icon>
         <v-toolbar-title>My Event Sessions</v-toolbar-title>
         <v-spacer></v-spacer>
           <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
@@ -408,6 +409,7 @@ export default {
             this.message = e.response.data.message;
         });
     },
+    
 
     convertTime(time) {
       const date = new Date(`1/1/2000 ${time}`);
