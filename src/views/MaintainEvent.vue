@@ -3,10 +3,10 @@
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
-        <v-btn v-if="display" icon to="/maintain">
+        <v-btn v-if="isAdmin" icon to="/maintain">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <v-icon v-if="showAll" class="mr-8">align_vertical_top</v-icon>
+        <v-icon v-if="displayIcon" class="mr-8">align_vertical_top</v-icon>
         <v-toolbar-title>Event View</v-toolbar-title>
         <v-spacer></v-spacer>
           <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
@@ -44,7 +44,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-          <v-btn v-if="display" class="mx-2" color="success" @click="addEvent(id)">Create Event</v-btn>
+          <v-btn v-if="isAdmin" class="mx-2" color="success" @click="addEvent(id)">Create Event</v-btn>
         </v-card-title>
         <v-card-text>
           <b>{{ message }}</b>
@@ -60,18 +60,15 @@
               <td>{{ item.isReady ? '&#10003;' : '' }}</td> <!-- change so only admin can see the "ready" column -->
               <td>
                 <div class="d-flex justify-end">
-                  <v-icon v-if="display" color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
-                  <v-icon v-if="display" color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
+                  <v-icon v-if="isAdmin" color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
+                  <v-icon v-if="isAdmin" color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
                 </div>
 
-                <v-dialog
-                v-model="edit_dialog"
-                persistent
-                max-width="800"
-              >
+              <!--Dialog to Edit Event Session-->
+                <v-dialog v-model="edit_dialog" persistent max-width="800" :retain-focus="false">
                 <template v-slot:activator="{ on, attrs }">
                   <div class="d-flex justify-end">
-                    <v-icon v-if="show" color="primary" v-bind="attrs" v-on="on">mdi-pencil</v-icon>
+                    <v-icon v-if="vEditEventSession" color="primary" v-bind="attrs" v-on="on">mdi-pencil</v-icon>
                  </div>
                 </template>
                 <v-card>
@@ -238,24 +235,126 @@
                     </router-link>
                 
                     <v-spacer></v-spacer>
-                    <v-btn
-                      color="primary"
-                      class="mr-2"
-                      @click="editEventSession()"
-                    >
+                    <v-btn color="primary" class="mr-2" @click="editEventSession()">
                       Save
                     </v-btn>
-                    <v-btn
-                      color="primary"
-                      
-                      @click="edit_dialog = false"
-                    >
+                    <v-btn color="primary" @click=" display_dialog = false">
                       Close
                     </v-btn>
                   
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+
+              <!--Dialog Availability Faculty and Accompanist-->
+
+              <v-dialog v-if="vAddAvailability" v-model="display_dialog" persistent max-width="800" :retain-focus="false">
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon color="grey" dark v-bind="attrs" v-on="on" small class="mx-4" @click="addAvailability(item)">
+                mdi-calendar-plus-outline
+                </v-icon>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <v-toolbar id="navbar-maroon">
+                  <span class="text-h5">Add Availability</span>
+                  </v-toolbar>
+                </v-card-title>
+                <v-card-text>
+                    <h3 class="mt-2 ">{{ message }}</h3>
+                    <v-form ref="form" v-model="valid" lazy validation>
+    
+                      <v-text-field class=" mt-2" 
+                          
+                          label="Name"
+                          return-object
+                          filled
+                          disabled
+                          append-icon="mdi-account-box-outline"
+                        >{{ name }}
+                      </v-text-field>
+                
+    
+    
+                    <div style="text-align: center;">
+                      <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
+    
+                          <!-- Date Below -->
+                        <v-text-field class=" mr-4" width = "260"
+                          
+                          label="Event Date"
+                          return-object
+          
+                          filled
+                          disabled
+                          append-icon="mdi-calendar-today"
+                        ></v-text-field >
+    
+                        <!--  Event Type Below -->
+                        <v-text-field class=" mr-4" width = "260"
+                          label="Event Type"
+                          return-object
+                          single-line
+                          filled
+                          disabled
+                          append-icon="mdi-instrument-triangle"
+                        ></v-text-field>
+    
+                        <!--Event Time Slot-->
+                        <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+                        <v-text-field width = "260"
+                          label="Event Duration"
+                          return-object
+                          single-line
+                          filled
+                          disabled
+                          append-icon="mdi-timer-sand"
+                        ></v-text-field>     
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                      <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
+                        <!--  Event Type Below -->
+                        <!-- v-model="availability.startTime"
+                          id="startTime" -->
+                        <v-select class=" mr-4" width = "260"
+                          
+                          label="Available Start Time"
+                          return-object
+                          single-line
+                          filled
+                          append-icon="mdi-clock-in"
+                        ></v-select>
+    
+                        <!--Event Time Slot-->
+                        <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+                        <!-- v-model="availability.endTime"
+                          id="endTime" -->
+                        <v-select width = "260"
+                          
+                          label="Available End Time"
+                          return-object
+                          single-line
+                          filled
+                          append-icon="mdi-clock-out"
+                        ></v-select>     
+                        </div>
+                    </div>
+                  </v-form>
+                  </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" @click="saveAvailability(item)">
+                    Save
+                  </v-btn>
+                  <v-btn color="primary" @click=" display_dialog = false">
+                    Cancel
+                  </v-btn>
+                
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
 
 
               </td>
@@ -272,6 +371,7 @@
 import EventServices from "../services/eventServices";
 import Utils from "@/config/utils.js";
 import RoleServices from "../services/roleServices";
+import AvailabilityServices from "../services/roleServices";
 
 export default {
   name: "maintainevent",
@@ -281,9 +381,11 @@ export default {
       user:{},
       role:{},
       tempRole:{},
-      display:false,
-      show:false,
-      showAll:false,
+      display_dialog: false,
+      isAdmin:false,
+      vEditEventSession:false,
+      displayIcon:false,
+      vAddAvailability:false,
       search: "",
       events: [],
       filteredEvents: [],
@@ -392,11 +494,10 @@ export default {
           .then((response) => {
             this.role = response.data[0];
             if (response.data[0].roleType == "Admin"){
-              this.display=true
+              this.isAdmin=true
             }
             else{
-              this.showAll=true
-              this.display=false
+              this.displayIcon=true
             }
           })
           .catch((e) => {
@@ -405,12 +506,45 @@ export default {
       },
     dateCondition(){
       if(this.selectedDate == "Upcoming " && this.role.roleType != "Admin"){
-          this.show = true
+          this.vEditEventSession = true
       }
       else{
-        this.show = false
+        this.vEditEventSession = false
       }
-    }
+      if (this.role.roleType == "Faculty" || (this.role.roleType == "Accompanist" && this.role.roleType != null)){
+        this.vAddAvailability=true
+      }
+      else{
+        this.vAddAvailability=false
+      }
+    },
+    addAvailability(availability) { //change
+      // Set the edited student data to the clicked student
+      console.log("event")
+      console.log(availability)
+      this.editedStudent = { ...availability };
+      // Show the edit dialog
+      this.display_dialog = true;
+    },
+    saveAvailability(item) { //change
+        var data = {
+          facultyId: this.role.id,
+          accompanistId: this.role.id,
+          eventId: item.id,
+          startTime: this.availability.startTime,
+          endTime: this.availability.endTime
+        };
+        AvailabilityServices.create(data)
+          .then((response) => {
+            this.repertoireSong.id = response.data.id;
+            console.log("add " + response.data);
+            this.$router.push({ name: "eventupcoming"});
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+        this.display_dialog = false;
+      },
 
   },
 };
