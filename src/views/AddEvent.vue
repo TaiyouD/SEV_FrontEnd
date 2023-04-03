@@ -104,7 +104,8 @@
             id="duration"
             :items="[{ text: '5 Minutes', value: '5' },
                      { text: '10 Minutes', value: '10' },
-                     { text: '15 Minutes', value: '15' }]"
+                     { text: '15 Minutes', value: '15' },
+                     { text: ' Unknown', value: '0' }]"
             label="Duration"
             required
           ></v-select>
