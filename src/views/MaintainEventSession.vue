@@ -65,7 +65,7 @@ import RoleServices from "../services/roleServices";
 import instrumentRoleServices from "../services/instrumentRoleServices";
 
 export default {
-  name: "repertoire-list",
+  name: "maintaineventsession",
   props: ["eventId"],
   data() {
     return {

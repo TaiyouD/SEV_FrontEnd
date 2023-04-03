@@ -49,7 +49,7 @@
         <v-card-text>
           <b>{{ message }}</b>
         </v-card-text>
-        <v-data-table :headers="headers" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
+        <v-data-table v-if="isAdmin" :headers="headersAdmin" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
           <template #item="{ item }">
             <tr>
               <td>{{ item.eventType }}</td>
@@ -57,12 +57,149 @@
               <td>{{ convertTime(item.startTime) }}</td>
               <td>{{ convertTime(item.endTime) }}</td>
               <td>{{ item.duration }}</td>
-              <td>{{ item.isReady ? '&#10003;' : '' }}</td> <!-- change so only admin can see the "ready" column -->
+              <td>{{ item.isReady ? '&#10003;' : '' }}</td> 
               <td>
                 <div class="d-flex justify-end">
-                  <v-icon v-if="isAdmin" color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
-                  <v-icon v-if="isAdmin" color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
+                  <v-icon color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
+                  <v-icon color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
                 </div>
+              </td>
+            </tr>
+            </template>
+          </v-data-table>
+
+          <v-data-table v-if="isFaculty" :headers="headersFaculty" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
+            <template #item="{ item }">
+              <tr>
+                <td>{{ item.eventType }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ convertTime(item.startTime) }}</td>
+                <td>{{ convertTime(item.endTime) }}</td>
+                <td>{{ item.duration }}</td>
+           
+                <td>  
+                  <template item-value="availability">
+                    <!--Dialog Availability Faculty and Accompanist-->
+
+              <v-dialog v-if="vAddAvailability" v-model="display_dialog" persistent max-width="800" :retain-focus="false">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon color="grey" dark v-bind="attrs" v-on="on" class="mx-4" @click="addAvailability(item)">
+                  mdi-calendar-plus-outline
+                  </v-icon>
+                </template>
+                <v-card>
+                  <v-card-title>
+                    <v-toolbar id="navbar-maroon">
+                    <span class="text-h5">Add Availability</span>
+                    </v-toolbar>
+                  </v-card-title>
+                  <v-card-text>
+                      <h3 class="mt-2 ">{{ message }}</h3>
+                      <v-form ref="form" v-model="valid" lazy validation>
+      
+                        <v-text-field class=" mt-2" 
+                            
+                            label="Name"
+                            return-object
+                            filled
+                            disabled
+                            append-icon="mdi-account-box-outline"
+                          >{{ name }}
+                        </v-text-field>
+                  
+      
+      
+                      <div style="text-align: center;">
+                        <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
+      
+                            <!-- Date Below -->
+                          <v-text-field class=" mr-4" width = "260"
+                            
+                            label="Event Date"
+                            return-object
+            
+                            filled
+                            disabled
+                            append-icon="mdi-calendar-today"
+                          ></v-text-field >
+      
+                          <!--  Event Type Below -->
+                          <v-text-field class=" mr-4" width = "260"
+                            label="Event Type"
+                            return-object
+                            single-line
+                            filled
+                            disabled
+                            append-icon="mdi-instrument-triangle"
+                          ></v-text-field>
+      
+                          <!--Event Time Slot-->
+                          <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+                          <v-text-field width = "260"
+                            label="Event Duration"
+                            return-object
+                            single-line
+                            filled
+                            disabled
+                            append-icon="mdi-timer-sand"
+                          ></v-text-field>     
+                          </div>
+                      </div>
+                      <div style="text-align: center;">
+                        <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
+                          <!--  Event Type Below -->
+                          <!-- v-model="availability.startTime"
+                            id="startTime" -->
+                          <v-select class=" mr-4" width = "260"
+                            
+                            label="Available Start Time"
+                            return-object
+                            single-line
+                            filled
+                            append-icon="mdi-clock-in"
+                          ></v-select>
+      
+                          <!--Event Time Slot-->
+                          <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+                          <!-- v-model="availability.endTime"
+                            id="endTime" -->
+                          <v-select width = "260"
+                            
+                            label="Available End Time"
+                            return-object
+                            single-line
+                            filled
+                            append-icon="mdi-clock-out"
+                          ></v-select>     
+                          </div>
+                      </div>
+                    </v-form>
+                    </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" @click="saveAvailability(item)">
+                      Save
+                    </v-btn>
+                    <v-btn color="primary" @click=" display_dialog = false">
+                      Cancel
+                    </v-btn>
+                  
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+                  </template>
+                </td>
+              
+                <td>
+                  <template item-value="eventsession">
+                  <v-icon color="primary" @click="viewEventSessions(item)">mdi-table-eye</v-icon>
+                  </template>
+              </td>
+
+
+              </tr>
+              </template>
+            </v-data-table>
 
               <!--Dialog to Edit Event Session-->
                 <v-dialog v-model="edit_dialog" persistent max-width="800" :retain-focus="false">
@@ -246,121 +383,6 @@
                 </v-card>
               </v-dialog>
 
-              <!--Dialog Availability Faculty and Accompanist-->
-
-              <v-dialog v-if="vAddAvailability" v-model="display_dialog" persistent max-width="800" :retain-focus="false">
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon color="grey" dark v-bind="attrs" v-on="on" small class="mx-4" @click="addAvailability(item)">
-                mdi-calendar-plus-outline
-                </v-icon>
-              </template>
-              <v-card>
-                <v-card-title>
-                  <v-toolbar id="navbar-maroon">
-                  <span class="text-h5">Add Availability</span>
-                  </v-toolbar>
-                </v-card-title>
-                <v-card-text>
-                    <h3 class="mt-2 ">{{ message }}</h3>
-                    <v-form ref="form" v-model="valid" lazy validation>
-    
-                      <v-text-field class=" mt-2" 
-                          
-                          label="Name"
-                          return-object
-                          filled
-                          disabled
-                          append-icon="mdi-account-box-outline"
-                        >{{ name }}
-                      </v-text-field>
-                
-    
-    
-                    <div style="text-align: center;">
-                      <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
-    
-                          <!-- Date Below -->
-                        <v-text-field class=" mr-4" width = "260"
-                          
-                          label="Event Date"
-                          return-object
-          
-                          filled
-                          disabled
-                          append-icon="mdi-calendar-today"
-                        ></v-text-field >
-    
-                        <!--  Event Type Below -->
-                        <v-text-field class=" mr-4" width = "260"
-                          label="Event Type"
-                          return-object
-                          single-line
-                          filled
-                          disabled
-                          append-icon="mdi-instrument-triangle"
-                        ></v-text-field>
-    
-                        <!--Event Time Slot-->
-                        <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
-                        <v-text-field width = "260"
-                          label="Event Duration"
-                          return-object
-                          single-line
-                          filled
-                          disabled
-                          append-icon="mdi-timer-sand"
-                        ></v-text-field>     
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                      <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
-                        <!--  Event Type Below -->
-                        <!-- v-model="availability.startTime"
-                          id="startTime" -->
-                        <v-select class=" mr-4" width = "260"
-                          
-                          label="Available Start Time"
-                          return-object
-                          single-line
-                          filled
-                          append-icon="mdi-clock-in"
-                        ></v-select>
-    
-                        <!--Event Time Slot-->
-                        <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
-                        <!-- v-model="availability.endTime"
-                          id="endTime" -->
-                        <v-select width = "260"
-                          
-                          label="Available End Time"
-                          return-object
-                          single-line
-                          filled
-                          append-icon="mdi-clock-out"
-                        ></v-select>     
-                        </div>
-                    </div>
-                  </v-form>
-                  </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary" @click="saveAvailability(item)">
-                    Save
-                  </v-btn>
-                  <v-btn color="primary" @click=" display_dialog = false">
-                    Cancel
-                  </v-btn>
-                
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-
-
-
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
       </v-card>
     </v-container>
   </div>
@@ -383,6 +405,7 @@ export default {
       tempRole:{},
       display_dialog: false,
       isAdmin:false,
+      isFaculty:false,
       vEditEventSession:false,
       displayIcon:false,
       vAddAvailability:false,
@@ -396,13 +419,22 @@ export default {
       selectedDate: null,
       selectedFilter: null,
       message: "Add, Edit or Delete Events",
-      headers: [
+      headersAdmin: [
         { text: "Event Type", value: "eventType", sortable: false },
         { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
         { text: "Duration", value: "duration", sortable: false },
         { text: "Ready", value: "isReady", sortable: false },
+      ],
+      headersFaculty: [
+        { text: "Event Type", value: "eventType", sortable: false },
+        { text: "Date", value: "date", sortable: false },
+        { text: "Start Time", value: "startTime", sortable: false },
+        { text: "End Time", value: "endTime", sortable: false },
+        { text: "Duration", value: "duration", sortable: false },
+        { text: "Availability", value: "availability", sortable: false },
+        { text: "Event Sessions", value: "eventsession", sortable: false },
       ],
     };
   },
@@ -499,24 +531,30 @@ export default {
             else{
               this.displayIcon=true
             }
+            if (response.data[0].roleType == "Faculty" || (this.role.roleType == "Accompanist" && this.role.roleType != null)){
+              this.isFaculty=true
+            }
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
     dateCondition(){
-      if(this.selectedDate == "Upcoming " && this.role.roleType != "Admin"){
-          this.vEditEventSession = true
-      }
-      else{
-        this.vEditEventSession = false
-      }
-      if (this.role.roleType == "Faculty" || (this.role.roleType == "Accompanist" && this.role.roleType != null)){
+      // if(this.selectedDate == "Upcoming " && this.role.roleType != "Admin"){
+      //     this.vEditEventSession = true
+      // }
+      // else{
+      //   this.vEditEventSession = false
+      // }
+      if (this.selectedDate == "Upcoming "){
         this.vAddAvailability=true
       }
       else{
         this.vAddAvailability=false
       }
+    },
+    viewEventSessions(event){
+      this.$router.push({ name: "maitaineventsession", params: { eventId: event.id } });
     },
     addAvailability(availability) { //change
       // Set the edited student data to the clicked student
