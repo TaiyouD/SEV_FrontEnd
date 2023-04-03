@@ -34,19 +34,19 @@
           </v-btn>
         </template>
       </v-menu>
-      <!-- <v-menu offset-y :close-on-click="true" >
+      <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" >
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintainevent' }">
             My Events
           </v-btn>
         </template>
-        <v-list>
+        <!-- <v-list>
             <v-list-item exact :to="{ name: 'eventupcoming' }" text>My Upcoming Events</v-list-item>
             <v-divider></v-divider>
             <v-list-item exact :to="{ name: 'eventpast' }" text>My Past Events</v-list-item>
-        </v-list>
-      </v-menu>    -->
-      <v-menu offset-y :close-on-click="true" >
+        </v-list> -->
+      </v-menu>   
+      <!-- <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'eventupcoming' }" >
             Upcoming Events
@@ -66,7 +66,7 @@
             Past Events
           </v-btn>
         </template>
-      </v-menu>
+      </v-menu> -->
 
       <v-menu offset-y :close-on-click="true" v-if="role.facultyType == 'Instructor'">
         <template v-slot:activator="{ on, attrs }">
@@ -143,6 +143,17 @@
                   </v-list-item-content>
                 </v-list-item>
                 </div>
+                <div v-else-if="role.roleType == 'Incoming Student'">
+                <v-list-item link @click="$router.push({ path:'/profileincomingstudent' })">
+                  <v-list-item-icon>
+                    <v-icon>mdi-account-box</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>Profile</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                </div>
                 <!-- <div v-else-if="role.roleType == 'Accompanist' && role.facultyType == null">
                 <v-list-item link @click="$router.push({ path:'/profilestudent' })">
                   <v-list-item-icon>
@@ -194,7 +205,7 @@
       </v-menu>
     </div>
     
-      <v-icon @click.stop="drawer = !drawer" id="navbar-maroon">{{ icons.mdiDotsVertical }}</v-icon>
+      <v-icon large rge @click.stop="drawer = !drawer" id="navbar-maroon">{{ icons.mdiDotsVertical }}</v-icon>
     </v-app-bar>
     
     <v-navigation-drawer app v-if="user != null " v-model="drawer" temporary right>
@@ -224,7 +235,7 @@
       </v-list-item>
       
       <v-list dense nav>
-        <v-list-item link @click="$router.push({ path: '/repertoire' })">
+        <v-list-item link @click="$router.push({ path: '/maintainlevel' })">
           <v-list-item-icon>
             <v-icon>mdi-receipt</v-icon>
           </v-list-item-icon>

@@ -33,7 +33,7 @@ import MaintainInstruments from "./views/MaintainInstrument.vue";
 import MaintainLevels from "./views/MaintainLevel.vue";
 import MaintainRoles from "./views/MaintainRole.vue";
 import MaintainSongs from "./views/MaintainSong.vue";
-import ProfileAdmin from "./views/ProfileAdmin.vue";
+import ProfileIncomingStudent from "./views/ProfileIncomingStudent.vue";
 import ProfileFaculty from "./views/ProfileFaculty.vue";
 import ProfileStudent from "./views/ProfileStudent.vue";
 import Repertoire from "./views/Repertoire.vue";
@@ -210,9 +210,9 @@ const router = new Router({
       component: MaintainSongs
     },
     {
-      path: "/profileadmin",
-      name: "profileadmin",
-      component: ProfileAdmin,
+      path: "/profileincomingstudent",
+      name: "profileincomingstudent",
+      component: ProfileIncomingStudent,
       props: true,
     },
     {
