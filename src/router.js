@@ -39,7 +39,7 @@ import ProfileFaculty from "./views/ProfileFaculty.vue";
 import ProfileStudent from "./views/ProfileStudent.vue";
 import Repertoire from "./views/Repertoire.vue";
 import SignupEvent from "./views/SignupEvent.vue";
-import ViewStudents from "./views/ViewStudentInstructor.vue";
+import ViewStudents from "./views/ViewStudentsInstructor.vue";
 
 
 import TutorialsList from "./views/TutorialsList.vue";
