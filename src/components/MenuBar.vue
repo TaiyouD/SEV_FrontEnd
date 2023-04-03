@@ -132,8 +132,8 @@
 
                 </v-list-item>
                 </div>
-                <div v-else-if="role.roleType == 'Faculty' || 'Admin' || (role.roleType == 'Accompanist' && role.facultyType != null)">
-                <v-list-item link @click="$router.push({ path:'/profilefaculty' })">
+                <div v-else-if="role.roleType == 'Incoming Student'">
+                <v-list-item link @click="$router.push({ path:'/profileincomingstudent' })">
                   <v-list-item-icon>
                     <v-icon>mdi-account-box</v-icon>
                   </v-list-item-icon>
@@ -143,8 +143,8 @@
                   </v-list-item-content>
                 </v-list-item>
                 </div>
-                <div v-else-if="role.roleType == 'Incoming Student'">
-                <v-list-item link @click="$router.push({ path:'/profileincomingstudent' })">
+                <div v-else-if="role.roleType == 'Faculty' || 'Admin' || (role.roleType == 'Accompanist' && role.facultyType != null)">
+                <v-list-item link @click="$router.push({ path:'/profilefaculty' })">
                   <v-list-item-icon>
                     <v-icon>mdi-account-box</v-icon>
                   </v-list-item-icon>
@@ -177,7 +177,7 @@
                 </v-list-item>
                 </div> -->
               </v-list>
-              <v-divider class="my-1"></v-divider>
+              <v-divider class="my-2"></v-divider>
               <v-btn depressed rounded text @click="logout()"> Logout </v-btn>
             </div>
           </v-list-item-content>
