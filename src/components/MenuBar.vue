@@ -25,9 +25,8 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
-    <v-toolbar-items v-if="user != null && (role.roleType != 'Admin')">
-      <v-menu offset-y :close-on-click="true" 
-      v-if="role.roleType == 'Student' || role.roleType == 'Incoming Student'">
+    <v-toolbar-items v-if="user != null && (role.roleType == 'Student' || role.roleType == 'Incoming Student')">
+      <v-menu offset-y :close-on-click="true">
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'signupevents' }">
             Sign Up
@@ -36,7 +35,7 @@
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintainevent' }">
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintaineventsession' }">
             Events
           </v-btn>
         </template>
@@ -45,7 +44,8 @@
             <v-divider></v-divider>
             <v-list-item exact :to="{ name: 'eventpast' }" text>My Past Events</v-list-item>
         </v-list> -->
-      </v-menu>   
+      </v-menu>
+    </v-toolbar-items>   
       <!-- <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'eventupcoming' }" >
@@ -67,8 +67,15 @@
           </v-btn>
         </template>
       </v-menu> -->
-
-      <v-menu offset-y :close-on-click="true" v-if="role.facultyType == 'Instructor'">
+      <v-toolbar-items v-if="user != null && (role.facultyType == 'Instructor')">
+        <v-menu offset-y :close-on-click="true" >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintainevent' }">
+              Events
+            </v-btn>
+          </template>
+        </v-menu>
+      <v-menu offset-y :close-on-click="true">
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'viewstudents' }" >
             View Students
@@ -205,7 +212,7 @@
       </v-menu>
     </div>
     
-      <v-icon large rge @click.stop="drawer = !drawer" id="navbar-maroon">{{ icons.mdiDotsVertical }}</v-icon>
+      <v-icon v-if="user != null" large rge @click.stop="drawer = !drawer" id="navbar-maroon">{{ icons.mdiDotsVertical }}</v-icon>
     </v-app-bar>
     
     <v-navigation-drawer app v-if="user != null " v-model="drawer" temporary right>
