@@ -142,7 +142,8 @@
           date: '',
           startTime: '',
           endTime: '',
-          duration: ''
+          duration: '',
+          isReady: false
         },
         message: "Enter Data and Click Save.",
       };
@@ -154,7 +155,8 @@
           date: this.event.date,
           startTime: this.event.startTime,
           endTime: this.event.endTime,
-          duration: this.event.duration
+          duration: this.event.duration,
+          isReady: this.event.isReady
         };
         EventServices.create(data)
           .then((response) => {
