@@ -80,6 +80,7 @@ export default {
   async mounted() {
     this.resetMenu();
     this.retrieveRole();
+    this.retrieveLevels();
   },
   methods: {
     retrieveRole() {
