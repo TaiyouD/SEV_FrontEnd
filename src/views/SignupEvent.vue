@@ -1,5 +1,4 @@
 <template>
-  
     <div>
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
         <v-container>
@@ -17,7 +16,6 @@
         </v-row>
         </div>
         </v-container>
-
   <div>
     <div class="wrapper">
     <h2>Available Time Slots</h2>
@@ -52,7 +50,6 @@
       </tr>
     </template>
   </v-data-table>
-
   <v-dialog v-if="selectedEventType === 'Recital'" v-model="recitalDialogVisible" max-width = "800">
     <v-card>
         <v-card-title>
@@ -64,7 +61,7 @@
       <v-select 
         :items= "availableAccompanists"
         v-model = "selectedAccompanist"
-        item-text= "fName"
+        :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
@@ -145,12 +142,13 @@
       <v-select 
         :items=availableAccompanists
         v-model = "accompanist"
-        item-text= "fName"
+        :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
         filled
-    ></v-select>
+    >
+  </v-select>
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
     <v-select style="padding-right: 30px; width: 100px;"
@@ -170,8 +168,10 @@
 
                     <!--  Instrument Select Below -->
     <v-select   style="width: 100px;"
+        :items = "instrumentRole"
         item-title="Instrument"
-        item-value=""
+        item-value = "instrument"
+        item-text="instrument.type"
         label="Select Voice or Instrument"
         return-object
         single-line
@@ -179,9 +179,12 @@
     ></v-select>
     </div>
 </div>
+
+    <!-- Song for 'Senior' -->
   <v-select style="padding-top: 8px;"
         :items = userSongs
-        item-title
+        item-text = "song.title"
+        item-value = "song" 
         label="Select Piece"
         return-object
         single-line
@@ -225,7 +228,7 @@
       <v-select 
         :items=availableAccompanists
         v-model = "accompanist"
-        item-text= "fName"
+        :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
@@ -305,7 +308,7 @@
       <v-select 
         :items=availableAccompanists
         v-model = "accompanist"
-        item-text= "fName"
+        :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
@@ -387,7 +390,7 @@
       <v-select 
         :items=availableAccompanists
         v-model = "accompanist"
-        item-text= "fName"
+        :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
@@ -472,7 +475,7 @@
   import Utils from "@/config/utils.js"
   import RepertoireSongServices from "../services/repertoireSongServices";
   import songService from "../services/songServices"
- 
+  import instrumentRoleServices from "../services/instrumentRoleServices";
 
   export default {
     name: "events-list",
@@ -482,6 +485,15 @@
     },
     data() {
       return {
+        instrumentRole: {
+          id: null,
+          instrument:{
+            type: ""
+          },
+          song: {},
+          privateInstructorId: "",
+          accompanistId: ""
+        },
         listOfEvents: [], //Change this later --- this is the events
         eventsSession: [],
         listOfRoles: [],
@@ -530,6 +542,7 @@
       await this.userRepertoire();
       await this.retrieveSongs();
       await this.getAccompanist();
+      await this.retrieveInstrumentRoles();
     },
     // watch:{
     //   selectedStartTime: function(){
@@ -541,6 +554,18 @@
 
     // },
     methods: {
+      async retrieveInstrumentRoles() {
+        await instrumentRoleServices.getAllForUser(this.roleForUser.id)
+          .then((response) => {
+            console.log(response.data);
+            this.instrumentRole = response.data;
+            console.log('instrumentRole');
+            console.log(this.instrumentRole);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
       updateText(){
         const index = this.start.indexOf(this.selectedStartTime)
         console.log(this.roleForUser.studentMajor)
@@ -718,6 +743,7 @@
         getAvailableAccompanists(availabilities){
           const accompanistsIds = availabilities.map((availability) => availability.accompanistId);
           const uniqueIds = [...new Set(accompanistsIds)]
+          console.log(this.accompanists)
           return this.accompanists.filter((accompanist) => uniqueIds.includes(accompanist.id));
         },
 

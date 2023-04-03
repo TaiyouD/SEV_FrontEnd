@@ -1,11 +1,11 @@
 {
-  "name": "tutorial-frontend-vue2",
+  "name": "performance-frontend-vue2",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --openssl-legacy-provider",
-    "build": "vue-cli-service build", 
-    "lint": "vue-cli-service lint", 
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
     "bundle": "mv .env dist"
   },
   "dependencies": {
@@ -27,7 +27,7 @@
     "@vue/cli-plugin-eslint": "~4.5.13",
     "@vue/cli-service": "~4.5.13",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
+    "eslint": "^7.5.0",
     "eslint-plugin-vue": "^6.2.2",
     "material-design-icons-iconfont": "^6.7.0",
     "sass": "~1.32.0",
@@ -48,7 +48,9 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "vue/multi-word-component-names": "off"
+    }
   },
   "browserslist": [
     "> 1%",
