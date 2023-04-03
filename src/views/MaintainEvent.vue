@@ -56,8 +56,14 @@
               <td>{{ item.date }}</td>
               <td>{{ convertTime(item.startTime) }}</td>
               <td>{{ convertTime(item.endTime) }}</td>
-              <td>{{ item.duration }}</td>
               <td>{{ item.isReady ? '&#10003;' : '' }}</td> 
+
+              <td>
+                <template item-value="students">
+                <v-icon color="primary" class="mx-4">mdi-account-group</v-icon>
+                </template>
+            </td>
+
               <td>
                 <div class="d-flex justify-end">
                   <v-icon color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
@@ -75,22 +81,20 @@
                 <td>{{ item.date }}</td>
                 <td>{{ convertTime(item.startTime) }}</td>
                 <td>{{ convertTime(item.endTime) }}</td>
-                <td>{{ item.duration }}</td>
            
                 <td>  
                   <template item-value="availability">
                     <!--Dialog Availability Faculty and Accompanist-->
+                  
+                    <v-icon v-if="vAddAvailability" color="primary" dark class="mx-4" @click="displayDialog()">
+                      mdi-calendar-plus-outline
+                      </v-icon>
 
-              <v-dialog v-if="vAddAvailability" v-model="display_dialog" persistent max-width="800" :retain-focus="false">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon color="grey" dark v-bind="attrs" v-on="on" class="mx-4" @click="addAvailability(item)">
-                  mdi-calendar-plus-outline
-                  </v-icon>
-                </template>
+              <v-dialog v-model="display_dialog" persistent max-width="800" :retain-focus="false">
                 <v-card>
                   <v-card-title>
                     <v-toolbar id="navbar-maroon">
-                    <span class="text-h5">Add Availability</span>
+                    <span class="text-h5">Edit Availability</span>
                     </v-toolbar>
                   </v-card-title>
                   <v-card-text>
@@ -189,200 +193,21 @@
               </v-dialog>
                   </template>
                 </td>
-              
+
+                <td>
+                  <template item-value="students">
+                  <v-icon color="primary" class="mx-4">mdi-account-group</v-icon>
+                  </template>
+                </td>
+            
                 <td>
                   <template item-value="eventsession">
-                  <v-icon color="primary" @click="viewEventSessions(item)">mdi-table-eye</v-icon>
+                  <v-icon color="primary" class="mx-4" @click="viewEventSessions(item)">mdi-table-eye</v-icon>
                   </template>
               </td>
-
-
               </tr>
               </template>
             </v-data-table>
-
-              <!--Dialog to Edit Event Session-->
-                <v-dialog v-model="edit_dialog" persistent max-width="800" :retain-focus="false">
-                <template v-slot:activator="{ on, attrs }">
-                  <div class="d-flex justify-end">
-                    <v-icon v-if="vEditEventSession" color="primary" v-bind="attrs" v-on="on">mdi-pencil</v-icon>
-                 </div>
-                </template>
-                <v-card>
-                  <v-card-title   >
-                    <v-toolbar id="navbar-maroon">
-                    <span class="text-h5">Edit Event Session</span>
-                  </v-toolbar>
-                  </v-card-title>
-                  <v-card-text>
-                    <v-container>
-
-                  <v-form ref="form" v-model="valid" lazy validation>
-
-                <!-- Select Hearing Date Below -->
-                  <!-- <v-text-field
-                    class="mt-6"
-                    item-text="events.eventType"
-                    label="Event Type"
-                    single-line
-                    filled
-                    disabled
-                    readonly
-                    append-icon="mdi-calendar-today"
-                ></v-text-field> -->
-
-                <div style="text-align: center;">
-                <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-  
-                  <!--  Event Type Below -->
-                  <v-text-field class=" mr-4" width = "260"
-                      v-model="select"
-                      item-title=""
-                      item-value=""
-                      label="Event Type"
-                      return-object
-                      single-line
-                      filled
-                      disabled
-                      append-icon="mdi-instrument-triangle"
-                  ></v-text-field>
-  
-  
-                   <!-- Date Below -->
-                  <v-text-field  class=" mr-4" width = "260"
-                      item-text=""
-                      label="Event Date"
-                      return-object
-                      single-line
-                      filled
-                      disabled
-                      readonly
-                      append-icon="mdi-calendar-today"
-                  ></v-text-field>
-  
-  
-                  <!-- mdi-human-male-board -->
-
-                  <!--Event Time Slot-->
-                  <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
-                  <v-text-field width = "260"
-                      item-text=""
-                      label="Event Duration"
-                      return-object
-                      single-line
-                      filled
-                      disabled
-                      append-icon="mdi-timer-sand"
-                  ></v-text-field>     
-                  </div>
-              </div>
-
-
-              <div style="text-align: center;">
-              <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-              <v-select class=" mr-4"  width = "360" 
-                  item-title="Time Slot"
-                  item-value=""
-                  label="Select Start Time"
-                  return-object
-                  single-line
-                  filled
-                  append-icon="mdi-clock-outline"
-              ></v-select>
-
-              <v-text-field class=" mr-0"  width = "360" 
-              item-title="Time Slot"
-              item-value=""
-              label="End Time"
-              return-object
-              single-line
-              filled
-              readonly
-              append-icon="mdi-clock-outline"
-            ></v-text-field>
-
-              </div></div>
-
-
-              <div style="text-align: center;">
-              <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-
-              <!--  Instrument Select Below -->
-              <v-select class=" mr-4" width = "260"
-                  v-model="select"
-                  :items="items4"
-                  item-title="Instrument"
-                  item-value=""
-                  label="Select Voice/Instrument"
-                  return-object
-                  single-line
-                  filled
-                  append-icon="mdi-instrument-triangle"
-              ></v-select>
-
-
-               <!-- Instructor Select Below -->
-              <v-text-field  class=" mr-4" width = "260"
-                  :items="items2"
-                  item-title="state2"
-                  label="Instructor"
-                  return-object
-                  single-line
-                  filled
-                  readonly
-                  append-icon="mdi-school-outline"
-              ></v-text-field>
-
-
-              <!-- mdi-human-male-board -->
-              <v-autocomplete width = "260"
-                  :items="items2"
-                  label="Accompanist"
-                  return-object
-                  single-line
-                  filled
-                  append-icon="mdi-account-outline"
-              ></v-autocomplete>     
-              </div>
-          </div>
-
-              <v-select 
-                  item-title="song"
-                  label="Select Piece"
-                  return-object
-                  single-line
-                  filled
-                  append-icon="mdi-file-music-outline"
-              ></v-select>
-          
-                    </v-form>
-                    </v-container>
-                    <!-- <small>*indicates required field</small> -->
-                  </v-card-text>
-                  <v-card-actions>
-                    <router-link to="/addaccompanist" tag="v-btn">
-                      <v-btn color="primary" class="mr-4">
-                        Add Accompanist
-                      </v-btn>
-                    </router-link>
-                    <router-link to="/addsongrepertoire" tag="v-btn">
-                      <v-btn color="primary">
-                        Add Piece
-                      </v-btn>
-                    </router-link>
-                
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" class="mr-2" @click="editEventSession()">
-                      Save
-                    </v-btn>
-                    <v-btn color="primary" @click=" display_dialog = false">
-                      Close
-                    </v-btn>
-                  
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-
       </v-card>
     </v-container>
   </div>
@@ -424,16 +249,16 @@ export default {
         { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
-        { text: "Duration", value: "duration", sortable: false },
         { text: "Ready", value: "isReady", sortable: false },
+        { text: "Students", value: "students", sortable: false },
       ],
       headersFaculty: [
         { text: "Event Type", value: "eventType", sortable: false },
         { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
-        { text: "Duration", value: "duration", sortable: false },
-        { text: "Availability", value: "availability", sortable: false },
+        { text: "Availability", value: "availability", sortable: false }, //not display this
+        { text: "Students", value: "students", sortable: false },
         { text: "Event Sessions", value: "eventsession", sortable: false },
       ],
     };
@@ -554,7 +379,10 @@ export default {
       }
     },
     viewEventSessions(event){
-      this.$router.push({ name: "maitaineventsession", params: { eventId: event.id } });
+      this.$router.push({ name: "maintaineventsession", params: { eventId: event.id } });
+    },
+    displayDialog(){
+      this.display_dialog = true;
     },
     addAvailability(availability) { //change
       // Set the edited student data to the clicked student
@@ -586,4 +414,4 @@ export default {
 
   },
 };
-</script> 
+</script>
