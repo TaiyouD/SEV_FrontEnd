@@ -1,4 +1,5 @@
 
+
 import Vue from "vue";
 import Router from "vue-router";
 
@@ -25,6 +26,7 @@ import EventPastList from "./views/EventPastList.vue";
 import EventUpcomingList from "./views/EventUpcomingList.vue";
 import EventView from "./views/EventView.vue";
 import Maintain from "./views/Maintain.vue";
+import MaintainAvailability from "./views/MaintainAvailability.vue";
 import MaintainComposers from "./views/MaintainComposer.vue";
 import MaintainEvents from "./views/MaintainEvent.vue";
 import MaintainInstruments from "./views/MaintainInstrument.vue";
@@ -171,6 +173,11 @@ const router = new Router({
       path: "/maintain",
       name: "maintain",
       component: Maintain
+    },
+    {
+      path: "/maintainavailability",
+      name: "maintainavailability",
+      component: MaintainAvailability
     },
     {
       path: "/maintaincomposer",
