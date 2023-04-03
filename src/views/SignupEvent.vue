@@ -560,7 +560,7 @@
   import eventServices from "../services/eventServices";
   import eventSessionServices from "../services/eventSessionServices";
   import roleServices from "../services/rolesServices";
-  import availabilityServices from "../services/availability";
+  import availabilityServices from "../services/availabilityServices";
   import userServices from "../services/userServices";
   import Utils from "@/config/utils.js"
   import RepertoireSongServices from "../services/repertoireSongServices";
@@ -694,7 +694,7 @@
             })
           }
           // this.$forceUpdate();
-          //this.$router.go(0);
+          this.$router.go(0);
   
       },
       async retrieveInstrumentRoles() {
