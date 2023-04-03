@@ -115,7 +115,7 @@
    
                   <td>
                     <template item-value="critique">
-                    <v-icon color="primary" class="mx-4" @click="maintainCritique(item)">mdi-list-box-outline</v-icon>
+                    <v-icon color="primary" v-if="vAddCritique" class="mx-4" @click="maintainCritique(item)">mdi-list-box-outline</v-icon>
                     </template>
                   </td>
                 
@@ -313,10 +313,10 @@
 
 <script>
 
-import EventServices from "../services/eventServices";
+import EventServices from "../services/eventServices.js";
 import Utils from "@/config/utils.js";
-import RoleServices from "../services/roleServices";
-import AvailabilityServices from "../services/roleServices";
+import RoleServices from "../services/roleServices.js";
+import AvailabilityServices from "../services/availabilityServices.js";
 
 export default {
   name: "maintaineventsession",
@@ -333,6 +333,7 @@ export default {
       isStudent:false,
       vEditEventSession:false,
       vAddAvailability:false,
+      vAddCritique:false,
       search: "",
       events: [],
       filteredEvents: [],
@@ -487,17 +488,17 @@ export default {
           });
       },
     dateCondition(){
-      // if(this.selectedDate == "Upcoming " && this.role.roleType != "Admin"){
-      //     this.vEditEventSession = true
-      // }
-      // else{
-      //   this.vEditEventSession = false
-      // }
-      if (this.selectedDate == "Upcoming "){
+      if (this.selectedDate == "Upcoming "){ //find a better solution to display right on "All Events"
         this.vAddAvailability=true
+        this.vAddCritique=false
+      }
+      else if(this.selectedDate == "All Events" || this.selectedDate == null){
+        this.vAddAvailability=false
+        this.vAddCritique=false
       }
       else{
         this.vAddAvailability=false
+        this.vAddCritique=true
       }
     },
     viewEventSessions(event){

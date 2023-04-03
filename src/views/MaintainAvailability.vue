@@ -4,7 +4,7 @@
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
-          <v-btn icon to="/maintain">
+          <v-btn icon to="/maintainevent">
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
           <v-toolbar-title>Availability View</v-toolbar-title>
@@ -44,11 +44,11 @@
   
   <script>
   
-  import AvailabilityServices from "../services/availabilityServices";
+  import AvailabilityServices from "../services/availabilityServices.js";
   
   export default {
     name: "maintainavailability",
-    props: ["id"],
+    props: ["eventId"],
     data() {
       return {
         search: "",

@@ -56,6 +56,13 @@
               <td>{{ item.date }}</td>
               <td>{{ convertTime(item.startTime) }}</td>
               <td>{{ convertTime(item.endTime) }}</td>
+
+              <td>
+                <template item-value="availability">
+                <v-icon v-if="vAddAvailability" color="primary" class="mx-4" @click="goToMaintainAvailability(item)">mdi-calendar-plus-outline</v-icon>
+                </template>
+            </td>
+              
               <td>{{ item.isReady ? '&#10003;' : '' }}</td> 
 
               <td>
@@ -215,10 +222,10 @@
 
 <script>
 
-import EventServices from "../services/eventServices";
+import EventServices from "../services/eventServices.js";
 import Utils from "@/config/utils.js";
-import RoleServices from "../services/roleServices";
-import AvailabilityServices from "../services/roleServices";
+import RoleServices from "../services/roleServices.js";
+import AvailabilityServices from "../services/availabilityServices.js";
 
 export default {
   name: "maintainevent",
@@ -249,6 +256,7 @@ export default {
         { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
+        { text: "Availability", value: "availability", sortable: false }, //not display this unless is upcoming
         { text: "Ready", value: "isReady", sortable: false },
         { text: "Students", value: "students", sortable: false },
       ],
@@ -257,9 +265,9 @@ export default {
         { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
-        { text: "Availability", value: "availability", sortable: false }, //not display this
+        { text: "Availability", value: "availability", sortable: false }, //not display this unless is upcoming
         { text: "Students", value: "students", sortable: false },
-        { text: "Event Sessions", value: "eventsession", sortable: false },
+        { text: "Event Sessions", value: "eventsession", sortable: false }
       ],
     };
   },
@@ -383,6 +391,9 @@ export default {
     },
     displayDialog(){
       this.display_dialog = true;
+    },
+    goToMaintainAvailability(event){
+      this.$router.push({ name: "maintainavailability", params: { eventId: event.id } });
     },
     addAvailability(availability) { //change
       // Set the edited student data to the clicked student

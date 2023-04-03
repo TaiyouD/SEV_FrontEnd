@@ -180,7 +180,8 @@ const router = new Router({
     {
       path: "/maintainavailability",
       name: "maintainavailability",
-      component: MaintainAvailability
+      component: MaintainAvailability,
+      props: true
     },
     {
       path: "/maintaincomposer",
