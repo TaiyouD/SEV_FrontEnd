@@ -126,7 +126,7 @@
                             v-model="editedStudent.studentClassification"
                             label="Classification"
                             disabled
-                            append-icon="mdi-book-open-page-variant"
+                            append-icon="mdi-bag-personal"
                           ></v-text-field>
                         </v-col>              
                       </v-row>
@@ -143,7 +143,7 @@
                         v-model="editedStudent.studentSemester"
                         label="Semester"
                         disabled
-                        append-icon="mdi-book"
+                        append-icon="mdi-book-open-page-variant"
                         ></v-text-field>
                       </v-col>                    
                       

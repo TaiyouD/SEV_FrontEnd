@@ -4,6 +4,9 @@ export default {
   getAllForUser(userId) {
     return apiClient.get(`/instrumentrole/userPerf/${userId}`);
   },
+  getAll() {
+    return apiClient.get(`/instrumentrole/`);
+  },
   get(id) {
     return apiClient.get(`/instrumentrole/${id}`);
   },
