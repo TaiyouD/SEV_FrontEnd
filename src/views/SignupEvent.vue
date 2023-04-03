@@ -38,6 +38,7 @@
           <v-data-table 
               :headers="headers" 
               :items="listOfEvents"
+              v-model="selectedEvent"
               @click:row="showDialog"> 
 
 
@@ -89,6 +90,7 @@
                     <!--  Instrument Select Below -->
     <v-select
         item-title="Instrument"
+        v-model="selectedInstrument"
         item-value=""
         label="Select Voice or Instrument"
         return-object
@@ -96,11 +98,14 @@
         filled
     ></v-select>
 
-  <v-select style="padding-top: 8px;"
-        :items ="userSongs"
-        item-title="Piece Slot"
-        item-value=""
+    <v-select style="padding-top: 8px;"
+        :items = userSongs
+        v-model="selectedSongs"
+        item-text = "song.title"
+        item-value = "song" 
         label="Select Piece"
+        multiple
+        chips
         return-object
         single-line
         filled
@@ -109,7 +114,7 @@
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -141,7 +146,7 @@
           Senior Sign Up
       <v-select 
         :items=availableAccompanists
-        v-model = "accompanist"
+        v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
@@ -169,6 +174,7 @@
                     <!--  Instrument Select Below -->
     <v-select   style="width: 100px;"
         :items = "instrumentRole"
+        v-model = "selectedInstrument"
         item-title="Instrument"
         item-value = "instrument"
         item-text="instrument.type"
@@ -183,9 +189,12 @@
     <!-- Song for 'Senior' -->
   <v-select style="padding-top: 8px;"
         :items = userSongs
+        v-model = "selectedSongs"
         item-text = "song.title"
         item-value = "song" 
         label="Select Piece"
+        multiple
+        chips
         return-object
         single-line
         filled
@@ -194,7 +203,7 @@
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -227,7 +236,7 @@
           Junior Sign Up
       <v-select 
         :items=availableAccompanists
-        v-model = "accompanist"
+        v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
@@ -252,9 +261,12 @@
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
 
                     <!--  Instrument Select Below -->
-    <v-select   style="width: 100px;"
+                    <v-select   style="width: 100px;"
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
         item-title="Instrument"
-        item-value=""
+        item-value = "instrument"
+        item-text="instrument.type"
         label="Select Voice or Instrument"
         return-object
         single-line
@@ -263,17 +275,21 @@
     </div>
 </div>
   <v-select style="padding-top: 8px;"
-        item-title="date"
+        :items = userSongs
+        v-model = "selectedSongs"
+        item-text = "song.title"
+        item-value = "song" 
         label="Select Piece"
+        multiple
+        chips
         return-object
         single-line
         filled
      ></v-select>
-
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -331,9 +347,12 @@
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
                     <!--  Instrument Select Below -->
-    <v-select   style="width: 100px;"
+                    <v-select   style="width: 100px;"
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
         item-title="Instrument"
-        item-value=""
+        item-value = "instrument"
+        item-text="instrument.type"
         label="Select Voice or Instrument"
         return-object
         single-line
@@ -342,17 +361,21 @@
     </div>
 </div>
   <v-select style="padding-top: 8px;"
-        item-title="date"
+        :items = userSongs
+        v-model = "selectedSongs"
+        item-text = "song.title"
+        item-value = "song" 
         label="Select Piece"
+        multiple
+        chips
         return-object
         single-line
         filled
      ></v-select>
-
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -413,9 +436,12 @@
     <div style="text-align: center;">
     <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
                     <!--  Instrument Select Below -->
-    <v-select   style="width: 100px;"
+                    <v-select   style="width: 100px;"
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
         item-title="Instrument"
-        item-value=""
+        item-value = "instrument"
+        item-text="instrument.type"
         label="Select Voice or Instrument"
         return-object
         single-line
@@ -424,8 +450,13 @@
     </div>
 </div>
   <v-select style="padding-top: 8px;"
-        item-title="date"
+        :items = userSongs
+        v-model = "selectedSongs"
+        item-text = "song.title"
+        item-value = "song" 
         label="Select Piece"
+        multiple
+        chips
         return-object
         single-line
         filled
@@ -434,7 +465,7 @@
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -480,8 +511,6 @@
   export default {
     name: "events-list",
     components: {
-      // popup
-      //timeslot
     },
     data() {
       return {
@@ -499,7 +528,6 @@
         listOfRoles: [],
         roleForUser: {},
         userSongs: [],
-        accompanist: null,
         accompanists: [],
         availableAccompanists: [],
         availabilities: [],
@@ -525,6 +553,8 @@
 
       selectedEvent: null,
       selectedAccompanist:null,
+      selectedInstrument: null,
+      selectedSongs: null,
       selectedEventType: null,
       selectedStartTime: null,
       selectedEndTime: null,
@@ -554,6 +584,31 @@
 
     // },
     methods: {
+      async submitForm(){
+          console.log(this.selectedEvent.id)
+          console.log(this.selectedAccompanist.id)
+          console.log(this.selectedInstrument.privateInstructorId)
+          console.log(this.selectedStartTime)
+          console.log(this.selectedEndTime)
+          const data ={
+            eventId: this.selectedEvent.id,
+            accompanistId: this.selectedAccompanist.id,
+            privateInstructorId: this.selectedInstrument.privateInstructorId,
+            startTime: this.selectedStartTime,
+            endTime: this.selectedEndTime,
+            studentId: this.user.userId,
+          }
+          console.log(data)
+        await eventSessionServices.create(data)
+          .then((response) => {
+
+            console.log('Success!', response.data);
+          })
+          .catch((error) => {
+            console.log('Error:', error);
+          });
+          
+      },
       async retrieveInstrumentRoles() {
         await instrumentRoleServices.getAllForUser(this.roleForUser.id)
           .then((response) => {
@@ -568,8 +623,8 @@
       },
       updateText(){
         const index = this.start.indexOf(this.selectedStartTime)
-        console.log(this.roleForUser.studentMajor)
-        console.log("student private hours", this.roleForUser.studentPrivateHours)
+        //console.log(this.roleForUser.studentMajor)
+        //console.log("student private hours", this.roleForUser.studentPrivateHours)
         if(this.roleForUser.studentMajor === "Music" && this.roleForUser.studentPrivateHours === 2){
           
           if(index !== -1 && index + 1 <= this.start.length) {
@@ -577,6 +632,7 @@
             const date = new Date (`1/1/2000 ${nextTime}`);
             date.setMinutes(date.getMinutes() + 15);
             const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.selectedEndTime = formattedTime;
             this.EndTime = `${formattedTime}`
           } else{
             this.EndTime = ""
@@ -588,6 +644,7 @@
             const date = new Date (`1/1/2000 ${nextTime}`);
             date.setMinutes(date.getMinutes() + 10);
             const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.selectedEndTime = formattedTime;
             this.EndTime = `${formattedTime}`
           } else{
             this.EndTime = ""
@@ -598,6 +655,7 @@
             const date = new Date (`1/1/2000 ${nextTime}`);
             date.setMinutes(date.getMinutes() +10);
             const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.selectedEndTime = formattedTime;
             this.EndTime = `${formattedTime}`
           } else{
             this.EndTime = ""
@@ -609,6 +667,7 @@
             const date = new Date (`1/1/2000 ${nextTime}`);
             date.setMinutes(date.getMinutes() +5);
             const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.selectedEndTime = formattedTime;
             this.EndTime = `${formattedTime}`
           } else{
             this.EndTime = ""
@@ -646,11 +705,13 @@
         await eventServices.getAll()
           .then((response) => {
           if (this.roleForUser.studentClassification === "Incoming Student"){
-            this.listOfEvents = response.data.filter(event =>  event.isReady !== false && event.eventType === "Scholarship")
+            this.listOfEvents = response.data.filter(event =>  event.isReady !== false)
+           
           }
           else{
             this.listOfEvents = response.data.filter(event => event.isReady !== false && event.eventType !== "Scholarship");
-        }} 
+            console.log("stuff", this.listOfEvents)
+          }} 
           )
           .catch((e) => {
             this.message = e.response.data.message;
@@ -743,11 +804,13 @@
         getAvailableAccompanists(availabilities){
           const accompanistsIds = availabilities.map((availability) => availability.accompanistId);
           const uniqueIds = [...new Set(accompanistsIds)]
-          console.log(this.accompanists)
+          console.log("List of Accompanists", this.accompanists)
           return this.accompanists.filter((accompanist) => uniqueIds.includes(accompanist.id));
         },
 
     async showSelectedDialog(item) {
+        console.log("testing this", item)
+        this.selectedEvent = item
       this.EndTime = null
       //Functioncall for retrieving event session
       await this.retrieveEventSessions(item)
@@ -755,7 +818,7 @@
       // Function call for getting the available accompanists depending on the specific events
       const availabilities = this.getAvailablitiesForEvent(item)
       this.availableAccompanists = this.getAvailableAccompanists(availabilities)
-
+        console.log("filtered Accompanists", this.availableAccompanists)
       // Function call for getting the start time and end time for each specific events 
       this.start = await this.availableStartTime(item) 
 
