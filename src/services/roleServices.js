@@ -1,6 +1,6 @@
 import apiClient from "@/services/services.js";
 
-export default { 
+export default {
   getRoleForUser(userId) {
     return apiClient.get(`/role/userPerf/${userId}`);
   },

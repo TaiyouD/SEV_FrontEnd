@@ -18,5 +18,5 @@ export default {
   },
   deleteAll() {
     return apiClient.delete(`/level`);
-  },
+  }
 };
