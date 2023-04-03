@@ -37,7 +37,7 @@
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintainevent' }">
-            My Events
+            Events
           </v-btn>
         </template>
         <!-- <v-list>
@@ -70,7 +70,7 @@
 
       <v-menu offset-y :close-on-click="true" v-if="role.facultyType == 'Instructor'">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'eventpast' }" >
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'viewstudents' }" >
             View Students
           </v-btn>
         </template>
