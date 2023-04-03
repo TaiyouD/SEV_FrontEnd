@@ -566,7 +566,7 @@
   import RepertoireSongServices from "../services/repertoireSongServices";
   import songService from "../services/songServices"
   import instrumentRoleServices from "../services/instrumentRoleServices";
-  import eventSongServices from "../services/eventSongservice"
+  import eventSongServices from "../services/eventSongservices"
 
   export default {
     name: "events-list",
