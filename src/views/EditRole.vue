@@ -4,7 +4,7 @@
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
-          <v-toolbar-title>Edit Role</v-toolbar-title>
+          <v-toolbar-title>Edit User</v-toolbar-title>
         </v-toolbar>
         <br />
         <h4>{{ message }}</h4>
@@ -82,6 +82,16 @@
         required
       ></v-text-field>
       <v-select
+        v-model="role.studentPrivateHours"
+            id="studentPrivateHours"
+            label="Student Private Hours"
+            required
+            :items="[{ text: 'None', value: 0 }, 
+                    { text: 'One Hour', value: 1 } , 
+                    { text: 'Two Hours', value: 2 }
+                    ]"
+        ></v-select>
+      <v-select
         v-model="role.studentLevel"
             id="studentLevel"
             label="Student Level"
@@ -151,6 +161,7 @@
           studentClassification: '',
           studentSemester: '',
           studentMajor: '',
+          studentPrivateHours: null,
           isApproved: '',
           studentLevel: null,
         },

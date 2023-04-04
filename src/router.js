@@ -15,6 +15,7 @@ import AddRoles from "./views/AddRole.vue";
 import AddSongs from "./views/AddSong.vue";
 import AddSongRepertoire from "./views/AddSongRepertoire.vue";
 import Critique from "./views/Critique.vue";
+import CritiqueView from "./views/CritiqueView.vue";
 import EditComposers from "./views/EditComposer.vue";
 import EditEvents from "./views/EditEvent.vue";
 import EditInstruments from "./views/EditInstrument.vue";
@@ -35,6 +36,7 @@ import MaintainInstruments from "./views/MaintainInstrument.vue";
 import MaintainLevels from "./views/MaintainLevel.vue";
 import MaintainRoles from "./views/MaintainRole.vue";
 import MaintainSongs from "./views/MaintainSong.vue";
+import NotificationList from "./views/NotificationList.vue";
 import ProfileIncomingStudent from "./views/ProfileIncomingStudent.vue";
 import ProfileFaculty from "./views/ProfileFaculty.vue";
 import ProfileStudent from "./views/ProfileStudent.vue";
@@ -115,6 +117,11 @@ const router = new Router({
       path: "/critique",
       name: "critique",
       component: Critique,
+    },
+    {
+      path: "/critiqueview",
+      name: "critiqueview",
+      component: CritiqueView,
     },
     {
       path: "/editcomposer",
@@ -224,6 +231,11 @@ const router = new Router({
       path: "/maintainsong",
       name: "maintainsong",
       component: MaintainSongs
+    },
+    {
+      path: "/notificationlist",
+      name: "notificationlist",
+      component: NotificationList
     },
     {
       path: "/profileincomingstudent",

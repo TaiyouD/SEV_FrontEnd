@@ -74,15 +74,15 @@
 
               <td>
                 <div class="d-flex justify-end">
-                  <v-icon color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
-                  <v-icon color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
+                  <v-icon v-if="isCurrentUpcoming" color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
+                  <v-icon v-if="isPast" color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
                 </div>
               </td>
             </tr>
             </template>
           </v-data-table>
 
-          <v-data-table v-if="isFaculty" :headers="headersFaculty" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
+          <v-data-table v-if="isFaculty || isAccompanist" :headers="headersFaculty" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
             <template #item="{ item }">
               <tr>
                 <td>{{ item.eventTitle }}</td>
@@ -95,7 +95,7 @@
                   <template item-value="availability">
                     <!--Dialog Availability Faculty and Accompanist-->
                   
-                    <v-icon v-if="vAddAvailability" color="primary" dark class="mx-4" @click="displayDialog()">
+                    <v-icon v-if="vAddAvailability" color="primary" dark class="mx-4" @click="getAvailability(item)">
                       mdi-calendar-plus-outline
                       </v-icon>
 
@@ -109,83 +109,107 @@
                   <v-card-text>
                       <h3 class="mt-2 ">{{ message }}</h3>
                       <v-form ref="form" lazy validation>
+                        <br>
       
-                        <v-text-field class=" mt-2" 
-                            
-                            label="Name"
-                            return-object
+                        <div style="text-align: center;">
+                        <div class=" d-flex flex-row bg-surface-variant" max-width = "780" >
+
+                        <v-text-field class=" mr-4" width = "260"
+                            v-model="editedEvent.eventTitle"
+                            label="Event Title"
                             filled
                             disabled
-                            append-icon="mdi-account-box-outline"
-                          >{{ name }}
+                            append-icon="mdi-book-music-outline">
                         </v-text-field>
-                  
-      
+                      
+                        <!--  Event Type Below -->
+                          <v-text-field class=" mr-4" width = "260"
+                            label="Event Type"
+                            v-model="editedEvent.eventType"
+                            filled
+                            disabled
+                            append-icon="mdi-instrument-triangle"
+                          ></v-text-field>
+                          </div></div>
       
                       <div style="text-align: center;">
                         <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
       
                             <!-- Date Below -->
                           <v-text-field class=" mr-4" width = "260"
-                            
+                            v-model="editedEvent.date"
                             label="Event Date"
-                            return-object
-            
                             filled
                             disabled
                             append-icon="mdi-calendar-today"
                           ></v-text-field >
       
-                          <!--  Event Type Below -->
-                          <v-text-field class=" mr-4" width = "260"
-                            label="Event Type"
-                            return-object
-                            single-line
+                          <!--  Event Start Time Below -->
+                          <v-text-field class=" mr-4" width = "250"
+                            label="Event Start Time"
+                            v-model="editedEvent.startTime"
                             filled
                             disabled
-                            append-icon="mdi-instrument-triangle"
+                            append-icon="mdi-timer-music-outline"
                           ></v-text-field>
       
-                          <!--Event Time Slot-->
+                          <!--Event End Time Slot-->
                           <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
-                          <v-text-field width = "260"
-                            label="Event Duration"
-                            return-object
-                            single-line
+                          <v-text-field width = "250"
+                          v-model="editedEvent.endTime"
+                            label="Event End Time"
                             filled
                             disabled
-                            append-icon="mdi-timer-sand"
-                          ></v-text-field>     
+                            append-icon="mdi-timer-music"> 
+                          </v-text-field>     
                           </div>
                       </div>
                       <div style="text-align: center;">
                         <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
-                          <!--  Event Type Below -->
+                          <!--  Availability Start Time Below -->
                           <!-- v-model="availability.startTime"
                             id="startTime" -->
-                          <v-select class=" mr-4" width = "260"
-                            
+                          <v-text-field class=" mr-4" width = "260"
+                          v-model="availability.startTime"
                             label="Available Start Time"
                             return-object
                             single-line
                             filled
                             append-icon="mdi-clock-in"
-                          ></v-select>
+                          ></v-text-field>
       
                           <!--Event Time Slot-->
                           <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
                           <!-- v-model="availability.endTime"
                             id="endTime" -->
-                          <v-select width = "260"
-                            
+                          <v-text-field width = "260"
+                            v-model="availability.endTime"
                             label="Available End Time"
-                            return-object
                             single-line
                             filled
                             append-icon="mdi-clock-out"
-                          ></v-select>     
+                          ></v-text-field>     
                           </div>
                       </div>
+                        <v-checkbox v-model="showTextField" label="More Availability"/>
+                        <div style="text-align: center;">
+                        <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
+                        <v-text-field v-if="showTextField" class=" mr-4" width="260"
+                        v-model="availability.startTime"
+                          label="Available Start Time"
+                          return-object
+                          single-line
+                          filled
+                          append-icon="mdi-clock-in"
+                        ></v-text-field>
+                        <v-text-field v-if="showTextField" width="260"
+                        v-model="availability.endTime"
+                        label="Available End Time"
+                        single-line
+                        filled
+                        append-icon="mdi-clock-out"
+                      ></v-text-field>    
+                        </div></div>
                     </v-form>
                     </v-card-text>
                   <v-card-actions>
@@ -240,9 +264,27 @@ export default {
       display_dialog: false,
       isAdmin:false,
       isFaculty:false,
+      isAccompanist:false,
       vEditEventSession:false,
       displayIcon:false,
       vAddAvailability:false,
+      isPast:false,
+      isCurrentUpcoming:false,
+      facultyId:null,
+      accompanistId:null,
+      showTextField: false,
+      editedEvent:{
+        eventTitle:"",
+        eventType:"",
+        startTime:"",
+        endTime:""
+      },
+      availabilities:{},
+      availability:[{
+        startTime:"",
+        endTime:""
+      }],
+      found:false,
       search: "",
       events: [],
       filteredEvents: [],
@@ -368,8 +410,11 @@ export default {
             else{
               this.displayIcon=true
             }
-            if (response.data[0].roleType == "Faculty" || (this.role.roleType == "Accompanist" && this.role.roleType != null)){
+            if (response.data[0].roleType == "Faculty"){
               this.isFaculty=true
+            }
+            if (this.role.roleType == "Accompanist" && this.role.roleType != null){
+              this.isAccompanist=true
             }
           })
           .catch((e) => {
@@ -389,15 +434,73 @@ export default {
       else{
         this.vAddAvailability=false
       }
+      if (this.selectedDate == "Upcoming " || this.selectedDate == 'Current'){
+        this.isCurrentUpcoming=true
+      }
+      else{
+        this.isCurrentUpcoming=false
+      }
+      if(this.selectedDate == "Past"){
+        this.isPast = true;
+      }
+      else{
+        this.isPast = false
+      }
     },
     viewEventSessions(event){
       this.$router.push({ name: "maintaineventsession", params: { eventId: event.id } });
+    },
+    async getAvailability(event){
+        // Set the edited student data to the clicked student
+        this.checkRole()
+        console.log("event selected")
+        console.log(event)
+        this.editedEvent = { ...event };
+        await AvailabilityServices.getAll()
+        .then((response) => {
+            const resul = [];
+            this.availabilities = response.data;
+            console.log("availabilities", this.availabilities)
+            for(let i = 0; i < response.data.length; i++){
+              if(response.data[i].eventId == event.id){
+                if (this.isAccompanist){
+                  if (response.data[i].accompanistId == this.role.id){
+                      resul.push(this.availabilities[i]);
+                      this.accompanistId = this.role.id
+                      this.found = true
+                    }
+                  }
+                if (this.isFaculty){
+                  if (response.data[i].facultyId == this.role.id){
+                    resul.push(this.availabilities[i]);
+                    this.facultyId = this.role.id
+                    this.found = true
+                  }
+                }
+              }
+            }
+            if (this.found){
+              this.availability = resul[0];
+            }            
+        })
+        console.log("availability", this.availability)
+        await this.displayDialog();
     },
     displayDialog(){
       this.display_dialog = true;
     },
     goToMaintainAvailability(event){
       this.$router.push({ name: "maintainavailability", params: { eventId: event.id } });
+    },
+    checkRole(){
+      if(this.isFaculty){
+        this.facultyId = this.role.id
+        console.log("faculty Id", this.facultyId)
+      }
+      if(this.isAccompanist){
+        this.accompanistId = this.role.id
+        console.log("accompanist Id", this.accompanistId)
+      }
     },
     addAvailability(availability) { //change
       // Set the edited student data to the clicked student
@@ -408,22 +511,39 @@ export default {
       this.display_dialog = true;
     },
     saveAvailability(item) { //change
+      console.log("item", item)
+      console.log("faculty Id", this.facultyId)      
+      console.log("accompanist Id", this.accompanistId)
+      // console.log('isReady', this.editedEvent.isReady )
+      if(!this.editedEvent.isReady){
         var data = {
-          facultyId: this.role.id,
-          accompanistId: this.role.id,
-          eventId: item.id,
+          facultyId: this.facultyId,
+          accompanistId: this.accompanistId,
+          eventId: item.eventId,
           startTime: this.availability.startTime,
           endTime: this.availability.endTime
         };
-        AvailabilityServices.create(data)
+        AvailabilityServices.create(data) 
           .then((response) => {
-            this.repertoireSong.id = response.data.id;
+            this.availability.id = response.data.id;
             console.log("add " + response.data);
-            this.$router.push({ name: "eventupcoming"});
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
+        //   this.editedEvent.isReady = true;
+        //   console.log('here event',this.editedEvent)
+        // EventServices.update(this.editedDate.id, this.editedDate)
+        }
+        else{
+          AvailabilityServices.update(this.availability.id,this.availability) 
+          .then(() => {
+            this.message = 'The Availability was updated successfully!';
+          })
+          .catch(e => {
+            this.message = e.response.data.message;
+          });
+        }
         this.display_dialog = false;
       },
 

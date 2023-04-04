@@ -12,18 +12,6 @@
           <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       </v-toolbar>
       <br />
-      <div class="line"></div>
-      
-        <br>
-      <div style="display: flex; justify-content: space-between; text-align: center;">
-        <v-spacer><h4>Event Title: {{event.eventTitle}} </h4> </v-spacer>
-        <v-spacer><h4>Event Type: {{event.eventType}} </h4> </v-spacer>
-        <v-spacer><h4>Date: {{event.date}} </h4> </v-spacer>
-        <v-spacer><h4>Time: {{ event.startTime }} - {{event.endTime}}</h4> </v-spacer>
-      </div>
-      <br>
-      <div class="line"></div>
-      <br>
       <v-card>
         <v-card-title>
           {{ "All Events" }}
@@ -114,7 +102,6 @@
       
                       <!--  Event Type Below -->
                       <v-text-field class=" mr-4" width = "260"
-                          v-model="select"
                           item-title=""
                           item-value=""
                           label="Event Type"
@@ -187,8 +174,6 @@
     
                   <!--  Instrument Select Below -->
                   <v-select class=" mr-4" width = "260"
-                      v-model="select"
-                      :items="items4"
                       item-title="Instrument"
                       item-value=""
                       label="Select Voice/Instrument"
@@ -201,7 +186,6 @@
     
                    <!-- Instructor Select Below -->
                   <v-text-field  class=" mr-4" width = "260"
-                      :items="items2"
                       item-title="state2"
                       label="Instructor"
                       return-object
@@ -210,11 +194,11 @@
                       readonly
                       append-icon="mdi-school-outline"
                   ></v-text-field>
+                  
     
-    
+                <!-- Instructor Select Below -->
                   <!-- mdi-human-male-board -->
                   <v-autocomplete width = "260"
-                      :items="items2"
                       label="Accompanist"
                       return-object
                       single-line
@@ -306,13 +290,17 @@ export default {
       selectedFilter: null,
       message: "Add, Edit or Delete Events",
       headersStudent: [
+        { text: "Event Title", value: "eventTitle", sortable: false },
+        { text: "Event Type", value: "eventType", sortable: false },
+        { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
         { text: "Duration", value: "duration", sortable: false },
-        { text: "Faculty", value: "faculty", sortable: false },
-        { text: "Accompanist", value: "accompanist", sortable: false },
+        // { text: "Faculty", value: "faculty", sortable: false },
+        // { text: "Accompanist", value: "accompanist", sortable: false },
         { text: "Critique", value: "critique", sortable: false }        
       ],
+      userSessions: [],
     };
   },
   mounted() {
@@ -321,8 +309,10 @@ export default {
   async created(){
     this.user = Utils.getStore("user");
     await this.retrieveRole();
+    await this.sessions();
     await this.retrieveThisEvent();
     await this.retrieveEventSessions();
+
   },
   methods: {
   retrieveEvents() {
@@ -340,26 +330,43 @@ export default {
         });
     });
     },
-    async retrieveThisEvent() {
-        await EventServices.get(this.eventId)
-        .then((response) => {
-            this.event = response.data;
-        })
-        .catch((e) => {
-            this.message = e.response.data.message;
-        });
-    },
+    // async retrieveThisEvent() {
+    //     await EventServices.get(this.eventId)
+    //     .then((response) => {
+    //         this.event = response.data;
+    //     })
+    //     .catch((e) => {
+    //         this.message = e.response.data.message;
+    //     });
+    // },
     async retrieveEventSessions(){
       await EventSessionServices.getAllForEvent(this.eventId)
         .then((response) => {
             console.log('event session', response.data)
             this.eventsessionsevent = response.data;
+            
         })
         .catch((e) => {
             this.message = e.response.data.message;
         });
       await this.retrieveEventSessionPerRole();
     },
+    async sessions() {
+        await EventSessionServices.getAll()
+        .then((response) => {
+
+            console.log('event session', response.data)
+            let temp = response.data
+            this.userSessions = temp.filter(u => u.studentId === this.user.userId); 
+            console.log("User event session", this.userSessions)
+            console.log("Events", this.events)
+            //this.events = this.events.filter(event =>  event.id === this.userSessions.eventId)
+            console.log("stuff2", this.events)           
+        })
+        .catch((e) => {
+            this.message = e.response.data.message;
+        });
+      },
     retrieveEventSessionPerRole(){
       if (this.role.roleType == "Faculty"){
         for (let i = 0; i < this.eventsessionsevent.length; i++) {
@@ -402,7 +409,8 @@ export default {
     },
     filterData() {
       this.dateCondition();
-      let filteredData = this.events;
+      let filteredData = this.events//.filter(event => event.id === this.eventsessions.eventId);
+      console.log("fiter", this.filteredEvents)
       if (this.selectedEvent && this.selectedEvent !== "All Events") {
         filteredData = filteredData.filter(event => event.eventType === this.selectedEvent);
       }
@@ -432,18 +440,6 @@ export default {
     },
     editEvent(event) {
       this.$router.push({ name: "editevent", params: { id: event.id } });
-    },
-    deleteEvent(event) {
-      EventServices.delete(event.id)
-        .then(() => {
-          const index = this.events.findIndex(e => e.id === event.id);
-          this.events.splice(index, 1);
-          this.filterData();
-          this.message = "Event was deleted successfully!";
-        })
-        .catch((e) => {
-          this.message = e.response.data.message;
-        });
     },
     async retrieveRole() {
         await RoleServices.getRoleForUser(this.user.userId)
@@ -484,11 +480,8 @@ export default {
       this.display_dialog = true;
     },
     maintainCritique(item){
-      if(this.selectedDate == "Upcoming " || this.selectedDate == "Current"){
-        this.$router.push({ name: "add-critique", params: { eventSessionId: item.id } });
-      }
-      else if(this.selectedDate == "Past"){
-        this.$router.push({ name: "view-critique", params: { eventSessionId: item.id } });
+    if(this.selectedDate == "Past"){
+        this.$router.push({ name: "critique", params: { eventSessionId: item.id } });
       }
     },
     addAvailability(availability) { //change
