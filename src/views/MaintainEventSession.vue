@@ -29,38 +29,12 @@
           {{ "All Events" }}
           <v-icon class="ml-1">mdi-calendar-check</v-icon>
           <v-spacer></v-spacer>
-          <v-menu>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" color="red darken-4" dark>
-              <span class="white--text">{{ selectedEvent || "All Events" }}</span>
-              <v-icon>mdi-menu-down</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="event in eventsList" :key="event" @click="filterEvents(event)">
-              <v-list-item-title>{{ event }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-
-        <v-menu>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" color="primary" class="ml-2">
-              {{ selectedDate || "All Dates" }}
-              <v-icon>mdi-menu-down</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="event in eventsDate" :key="event" @click="filterDates(event)">
-              <v-list-item-title>{{ event }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
         </v-card-title>
+          
         <v-card-text>
           <b>{{ message }}</b>
         </v-card-text>
-          <v-data-table v-if="isFaculty" :headers="headersFaculty" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
+          <v-data-table v-if="isFaculty" :headers="headersFaculty" :items="eventsessions" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
             <template #item="{ item }">
               <tr>
 
@@ -69,8 +43,15 @@
                 <td>{{ item.duration }}</td>
            
                 <td>
+                  <template item-value="accompanist">
+                  <v-icon color="primary" class="mx-4">mdi-account-eye</v-icon>
+                  </template>
+                </td>
+           
+                <td>
                   <template item-value="students"> <!--change to view which student is there-->
-                  <v-icon color="primary" class="mx-4">mdi-account</v-icon>
+                  <v-icon color="primary" class="mx-4">mdi-account-eye</v-icon>
+
                   </template>
                 </td>
 
@@ -83,204 +64,176 @@
               </template>
             </v-data-table>
 
-            <v-data-table v-if="isStudent" :headers="headersStudent" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
+            <v-data-table v-if="isAccomp" :headers="headersAccomp" :items="eventsessions" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
               <template #item="{ item }">
                 <tr>
-                  <td>{{ item.eventType }}</td>
-                  <td>{{ item.date }}</td>
+  
                   <td>{{ convertTime(item.startTime) }}</td>
                   <td>{{ convertTime(item.endTime) }}</td>
                   <td>{{ item.duration }}</td>
-   
+
                   <td>
-                    <template item-value="critique">
-                    <v-icon color="primary" v-if="vAddCritique" class="mx-4" @click="maintainCritique(item)">mdi-list-box-outline</v-icon>
+                    <template item-value="faculty">
+                    <v-icon color="primary" class="mx-4">mdi-account-eye</v-icon>
                     </template>
                   </td>
-                
+             
                   <td>
-                                  <!--Dialog to Edit Event Session-->
-                  <v-dialog v-model="display_dialog" persistent max-width="800" :retain-focus="false">
-                    <template v-slot:activator="{ on, attrs }">
-                      <div class="d-flex justify-end">
-                        <v-icon color="primary" v-bind="attrs" v-on="on">mdi-pencil</v-icon>
-                     </div>
-                    </template>
-                    <v-card>
-                      <v-card-title   >
+                    <template item-value="students"> <!--change to view which student is there-->
+                    <v-icon color="primary" class="mx-4">mdi-account-eye</v-icon>
+                    <v-dialog v-model="editDialog" persistent max-width="800" :retain-focus="false">
+  
+                      <template v-slot:activator="{ on, attrs }">
+                        <!-- <div class="d-flex justify-end"> -->
+                        <v-icon color="primary" v-bind="attrs" v-on="on" small class="mx-4" @click="editStudent(item)" >
+                        mdi-pencil
+                        </v-icon>
+                      <!-- </div> -->
+                      </template>
+        
+                      <v-card>
+                        <v-card-title>
                         <v-toolbar id="navbar-maroon">
-                        <span class="text-h5">Edit Event Session</span>
-                      </v-toolbar>
+                          <span class="text-h5">Edit Student</span>
+                        </v-toolbar>
                       </v-card-title>
-                      <v-card-text>
-                        <v-container>
-    
-                      <v-form ref="form" lazy validation>
-    
-                    <!-- Select Hearing Date Below -->
-                      <!-- <v-text-field
-                        class="mt-6"
-                        item-text="events.eventType"
-                        label="Event Type"
-                        single-line
-                        filled
-                        disabled
-                        readonly
-                        append-icon="mdi-calendar-today"
-                    ></v-text-field> -->
-    
-                    <div style="text-align: center;">
-                    <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-      
-                      <!--  Event Type Below -->
-                      <v-text-field class=" mr-4" width = "260"
-                          v-model="select"
-                          item-title=""
-                          item-value=""
-                          label="Event Type"
-                          return-object
-                          single-line
-                          filled
-                          disabled
-                          append-icon="mdi-instrument-triangle"
-                      ></v-text-field>
-      
-      
-                       <!-- Date Below -->
-                      <v-text-field  class=" mr-4" width = "260"
-                          item-text=""
-                          label="Event Date"
-                          return-object
-                          single-line
-                          filled
-                          disabled
-                          readonly
-                          append-icon="mdi-calendar-today"
-                      ></v-text-field>
-      
-      
-                      <!-- mdi-human-male-board -->
-    
-                      <!--Event Time Slot-->
-                      <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
-                      <v-text-field width = "260"
-                          item-text=""
-                          label="Event Duration"
-                          return-object
-                          single-line
-                          filled
-                          disabled
-                          append-icon="mdi-timer-sand"
-                      ></v-text-field>     
-                      </div>
-                  </div>
-    
-    
-                  <div style="text-align: center;">
-                  <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-                  <v-select class=" mr-4"  width = "360" 
-                      item-title="Time Slot"
-                      item-value=""
-                      label="Select Start Time"
-                      return-object
-                      single-line
-                      filled
-                      append-icon="mdi-clock-outline"
-                  ></v-select>
-    
-                  <v-text-field class=" mr-0"  width = "360" 
-                  item-title="Time Slot"
-                  item-value=""
-                  label="End Time"
-                  return-object
-                  single-line
-                  filled
-                  readonly
-                  append-icon="mdi-clock-outline"
-                ></v-text-field>
-    
-                  </div></div>
-    
-    
-                  <div style="text-align: center;">
-                  <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-    
-                  <!--  Instrument Select Below -->
-                  <v-select class=" mr-4" width = "260"
-                      v-model="select"
-                      :items="items4"
-                      item-title="Instrument"
-                      item-value=""
-                      label="Select Voice/Instrument"
-                      return-object
-                      single-line
-                      filled
-                      append-icon="mdi-instrument-triangle"
-                  ></v-select>
-    
-    
-                   <!-- Instructor Select Below -->
-                  <v-text-field  class=" mr-4" width = "260"
-                      :items="items2"
-                      item-title="state2"
-                      label="Instructor"
-                      return-object
-                      single-line
-                      filled
-                      readonly
-                      append-icon="mdi-school-outline"
-                  ></v-text-field>
-    
-    
-                  <!-- mdi-human-male-board -->
-                  <v-autocomplete width = "260"
-                      :items="items2"
-                      label="Accompanist"
-                      return-object
-                      single-line
-                      filled
-                      append-icon="mdi-account-outline"
-                  ></v-autocomplete>     
-                  </div>
-              </div>
-    
-                  <v-select 
-                      item-title="song"
-                      label="Select Piece"
-                      return-object
-                      single-line
-                      filled
-                      append-icon="mdi-file-music-outline"
-                  ></v-select>
-              
-                        </v-form>
-                        </v-container>
-                        <!-- <small>*indicates required field</small> -->
-                      </v-card-text>
-                      <v-card-actions>
-                        <router-link to="/addaccompanist" tag="v-btn">
-                          <v-btn color="primary" class="mr-4">
-                            Add Accompanist
-                          </v-btn>
-                        </router-link>
-                        <router-link to="/addsongrepertoire" tag="v-btn">
-                          <v-btn color="primary">
-                            Add Piece
-                          </v-btn>
-                        </router-link>
-                    
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" class="mr-2" @click="editEventSession()">
-                          Save
-                        </v-btn>
-                        <v-btn color="primary" @click="display_dialog = false">
-                          Close
-                        </v-btn>
-                      
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </td>
+                        <v-card-text>
+                          <v-container>
+        
+                          <div style="text-align: center;">
+                          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+        
+                            <!-- Name input field -->
+                            <v-row>
+                              <v-col>
+                                <v-text-field class=" mr-4"  width = "380" 
+                                  v-model="editedStudent.user.fName"
+                                  label="First Name"
+                                  disabled
+                                  append-icon="mdi-account"
+                                ></v-text-field>
+                              </v-col>
+                              <v-col>
+                                <v-text-field class=" mr-4"  width = "390" 
+                                  v-model="editedStudent.user.lName"
+                                  label="Last Name"
+                                  disabled
+                                  append-icon="mdi-account"
+                                ></v-text-field>
+                              </v-col>
+                            </v-row>
+                            </div></div>
+        
+                          <div style="text-align: center;">
+                          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+                            <!-- Email input field -->
+                            <v-row>
+                              <v-col>
+                                <v-text-field class=" mr-4"  width = "380" 
+                                  v-model="editedStudent.user.email"
+                                  label="Email"
+                                  disabled
+                                  append-icon="mdi-email"
+                                ></v-text-field>
+                              </v-col>
+        
+                            <!-- Student ID input field -->
+                              <v-col>
+                                <v-text-field class=" mr-4"  width = "390" 
+                                  v-model="editedStudent.studentId"
+                                  label="Student ID"
+                                  disabled
+                                  append-icon="mdi-badge-account-horizontal"
+                                ></v-text-field>
+                              </v-col>
+                            </v-row>
+        
+                            </div></div>
+        
+        
+                          <div style="text-align: center;">
+                          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+        
+        
+                          <!-- Major input field -->
+                            <v-row>
+                            <v-col>
+                              <v-text-field class=" mr-4" width = "380"
+                                v-model="editedStudent.studentMajor"
+                                label="Major"
+                                disabled
+                                append-icon="mdi-school"
+                              ></v-text-field>
+                            </v-col>
+        
+        
+                            <!-- Classification input field -->
+                              <v-col>
+                                <v-text-field class=" mr-4" width = "390"
+                                  v-model="editedStudent.studentClassification"
+                                  label="Classification"
+                                  disabled
+                                  append-icon="mdi-bag-personal"
+                                ></v-text-field>
+                              </v-col>              
+                            </v-row>
+        
+                            </div></div>
+        
+                            <div style="text-align: center;">
+                            <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+        
+                            <!-- Semester input field -->
+                            <v-row>
+                            <v-col>
+                              <v-text-field class=" mr-4" width = "260"
+                              v-model="editedStudent.studentSemester"
+                              label="Semester"
+                              disabled
+                              append-icon="mdi-book-open-page-variant"
+                              ></v-text-field>
+                            </v-col>                    
+                            
+                              <!-- Level input field -->
+                              <v-col>
+                                <v-text-field class=" mr-4"  width = "250"
+                                v-model="editedStudent.level.levelNumber"
+                                label="Level"
+                                required
+                                append-icon="mdi-signal"
+                                ></v-text-field>
+                              </v-col>
+        
+                            <!-- Private hours input field -->
+                              <v-col>
+                                <v-text-field class="mr-4"  width = "250"
+                                  v-model="editedStudent.studentPrivateHours"
+                                  label="Enter Private Lesson Hours"
+                                  required
+                                  append-icon="mdi-account-music"
+                                ></v-text-field>
+                              </v-col>
+                            </v-row>
+        
+                            </div></div>
+        
+                          </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                         <v-spacer></v-spacer>
+                          <v-btn color="primary" class="mx-2" @click="saveStudent(item)">Save</v-btn>
+                          <v-btn color="error" class="mx-2" @click="editDialog = false">Cancel</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                    </template>
+                  </td>
+  
+                  <td>
+                    <template item-value="critique">
+                    <v-icon color="primary" class="mx-4" @click="maintainCritique(item)">mdi-list-box-outline</v-icon>
+                    </template>
+                  </td>
                 </tr>
                 </template>
               </v-data-table>
@@ -341,15 +294,7 @@ export default {
         { text: "Faculty", value: "Faculty", sortable: false },
         { text: "Student", value: "student", sortable: false },
         { text: "Critique", value: "critique", sortable: false }
-      ],
-      headersStudent: [
-        { text: "Start Time", value: "startTime", sortable: false },
-        { text: "End Time", value: "endTime", sortable: false },
-        { text: "Duration", value: "duration", sortable: false },
-        { text: "Faculty", value: "faculty", sortable: false },
-        { text: "Accompanist", value: "accompanist", sortable: false },
-        { text: "Critique", value: "critique", sortable: false }        
-      ],
+      ]
     };
   },
   mounted() {
@@ -503,12 +448,13 @@ export default {
       this.display_dialog = true;
     },
     maintainCritique(item){
-      if(this.selectedDate == "Upcoming " || this.selectedDate == "Current"){
-        this.$router.push({ name: "add-critique", params: { eventSessionId: item.id } });
-      }
-      else if(this.selectedDate == "Past"){
-        this.$router.push({ name: "view-critique", params: { eventSessionId: item.id } });
-      }
+      // if(this.selectedDate == "Upcoming " || this.selectedDate == "Current"){
+      //   this.$router.push({ name: "add-critique", params: { eventSessionId: item.id } });
+      // }
+      // else if(this.selectedDate == "Past"){
+      //   this.$router.push({ name: "view-critique", params: { eventSessionId: item.id } });
+      // }
+      this.$router.push({ name: "addcritique", params: { eventSessionId: item.id } });
     },
     addAvailability(availability) { //change
       // Set the edited student data to the clicked student

@@ -514,7 +514,7 @@ export default {
       console.log("item", item)
       console.log("faculty Id", this.facultyId)      
       console.log("accompanist Id", this.accompanistId)
-      this.selectedEvent.isReady = true;
+      // console.log('isReady', this.editedEvent.isReady )
       if(!this.editedEvent.isReady){
         var data = {
           facultyId: this.facultyId,
@@ -531,7 +531,9 @@ export default {
           .catch((e) => {
             this.message = e.response.data.message;
           });
-        EventServices.update(this.selectedDate.id, this.selectedDate)
+        //   this.editedEvent.isReady = true;
+        //   console.log('here event',this.editedEvent)
+        // EventServices.update(this.editedDate.id, this.editedDate)
         }
         else{
           AvailabilityServices.update(this.availability.id,this.availability) 
