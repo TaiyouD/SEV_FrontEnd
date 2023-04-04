@@ -14,7 +14,6 @@
     <v-sheet
     class="mx-auto"
     max-width="1200"
-    v-if="role.roleType == 'Student' || role.roleType == 'Incoming Student'"
   >
   <v-container fluid>
       <v-row dense>
