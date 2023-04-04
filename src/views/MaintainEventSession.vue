@@ -477,9 +477,6 @@ export default {
             if (response.data[0].roleType == "Accompanist"){
               this.isAccomp=true
             }
-            if (response.data[0].roleType == "Student" || response.data[0].roleType == "Incoming Student"){
-              this.isStudent=true
-            }
           })
           .catch((e) => {
             this.message = e.response.data.message;
