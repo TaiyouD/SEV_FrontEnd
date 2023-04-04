@@ -35,6 +35,7 @@ import MaintainInstruments from "./views/MaintainInstrument.vue";
 import MaintainLevels from "./views/MaintainLevel.vue";
 import MaintainRoles from "./views/MaintainRole.vue";
 import MaintainSongs from "./views/MaintainSong.vue";
+import NotificationList from "./views/NotificationList.vue";
 import ProfileIncomingStudent from "./views/ProfileIncomingStudent.vue";
 import ProfileFaculty from "./views/ProfileFaculty.vue";
 import ProfileStudent from "./views/ProfileStudent.vue";
@@ -224,6 +225,11 @@ const router = new Router({
       path: "/maintainsong",
       name: "maintainsong",
       component: MaintainSongs
+    },
+    {
+      path: "/notificationlist",
+      name: "notificationlist",
+      component: NotificationList
     },
     {
       path: "/profileincomingstudent",
