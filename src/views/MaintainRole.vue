@@ -7,20 +7,20 @@
         <v-btn icon to="/maintain">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <v-toolbar-title>Role View</v-toolbar-title>
+        <v-toolbar-title>User View</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       </v-toolbar>
       <br />
       <v-card>
         <v-card-title>
-        {{ "All Roles" }}
+        {{ "All Users" }}
         <v-icon class="ml-2">mdi-account-group</v-icon>
           <v-spacer></v-spacer>
           <v-menu>
             <template v-slot:activator="{ on, attrs }">
               <v-btn v-bind="attrs" v-on="on" color="primary">
-                {{ selectedRole || "All Roles" }}
+                {{ selectedRole || "All Users" }}
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
             </template>
@@ -30,7 +30,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-btn class="mx-2" color="success" @click="addRole(id)">Add Role</v-btn>
+          <v-btn class="mx-2" color="success" @click="addRole(id)">Add User</v-btn>
         </v-card-title>
         <v-card-text>
           <b>{{ message }}</b>
@@ -69,9 +69,9 @@ export default {
       search: "",
       roles: [],
       filteredRoles: [],
-      rolesList: ["All Roles", "Accompanist", "Admin", "Faculty", "Incoming Student", "Student"],
+      rolesList: ["All Users", "Accompanist", "Admin", "Faculty", "Prospective Student", "Student"],
       selectedRole: null,
-      message: "Add, Edit or Delete Roles",
+      message: "Add, Edit or Delete Users",
       headers: [
         { text: "Role", value: "roleType", sortable: false },
         { text: "First Name", value: "fName", sortable: false },
@@ -110,7 +110,7 @@ export default {
         });
     },
     filterRoles(role) {
-      if (role === "All Roles") {
+      if (role === "All Users") {
         this.selectedRole = null;
         this.filteredRoles = this.roles;
       } else {

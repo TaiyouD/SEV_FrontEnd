@@ -30,7 +30,6 @@
               <td>
                 <div class="d-flex justify-end">
                   <v-icon color="primary" @click="editInstrument(item)">mdi-pencil</v-icon>
-                  <v-icon color="error" @click="deleteInstrument(item)">mdi-delete</v-icon>
                 </div>
               </td>
             </tr>
@@ -78,19 +77,6 @@ export default {
     },
     editInstrument(instrument) {
       this.$router.push({ name: "editinstrument", params: { id: instrument.id } });
-    },
-    deleteInstrument(instrument) {
-      if (confirm(`Are you sure you want to delete ${instrument.type}?`)) {
-        InstrumentServices.delete(instrument.id)
-          .then(() => {
-            const index = this.instruments.indexOf(instrument);
-            this.instruments.splice(index, 1);
-            this.message = `${instrument.type} deleted successfully.`;
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      }
     },
   },
 };

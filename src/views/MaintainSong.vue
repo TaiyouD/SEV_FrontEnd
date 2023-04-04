@@ -25,14 +25,13 @@
           <v-data-table :headers="headers" :items="songs" :search="search" :items-per-page="5" :sort-by="['title']" :sort-desc="[false]">
             <template #item="{ item }">
               <tr>
-                <td>{{ item.composer.firstName }} {{ item.composer.lastName }}</td>
                 <td>{{ item.title }}</td>
+                <td>{{ item.composer.firstName }} {{ item.composer.lastName }}</td>
                 <td>{{ item.language }}</td>
                 <td>{{ item.translation ? '&#10003;' : '' }}</td>
                 <td>
                   <div class="d-flex justify-end">
                     <v-icon color="primary" @click="editSong(item)">mdi-pencil</v-icon>
-                    <v-icon color="error" @click="deleteSong(item)">mdi-delete</v-icon>
                   </div>
                 </td>
               </tr>
@@ -56,8 +55,8 @@
         songs: [],
         message: "Add, Edit or Delete Pieces",
         headers: [
-          { text: "Composer", value: "composer", sortable: false },
           { text: "Title", value: "title", sortable: false },
+          { text: "Composer", value: "composer", sortable: false },
           { text: "Language", value: "language", sortable: false },
           { text: "Translation", value: "translation", sortable: false },
         ],
@@ -83,19 +82,6 @@
       },
       editSong(song) {
         this.$router.push({ name: "editsong", params: { id: song.id } });
-      },
-      deleteSong(song) {
-        if (confirm(`Are you sure you want to delete ${song.title}?`)) {
-          SongServices.delete(song.id)
-            .then(() => {
-              const index = this.songs.indexOf(song);
-              this.songs.splice(index, 1);
-              this.message = `${song.title} deleted successfully.`;
-            })
-            .catch((e) => {
-              this.message = e.response.data.message;
-            });
-        }
       },
     },
   };
