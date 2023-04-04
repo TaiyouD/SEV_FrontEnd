@@ -33,7 +33,6 @@
               <td>
                 <div class="d-flex justify-end">
                   <v-icon color="primary" @click="editComposer(item)">mdi-pencil</v-icon>
-                  <v-icon color="error" @click="deleteComposer(item)">mdi-delete</v-icon>
                 </div>
               </td>
             </tr>
@@ -83,19 +82,6 @@ export default {
     },
     editComposer(composer) {
       this.$router.push({ name: "editcomposer", params: { id: composer.id } });
-    },
-    deleteComposer(composer) {
-      if (confirm(`Are you sure you want to delete ${composer.firstName} ${composer.lastName}?`)) {
-        ComposerServices.delete(composer.id)
-          .then(() => {
-            const index = this.composers.indexOf(composer);
-            this.composers.splice(index, 1);
-            this.message = `${composer.firstName} ${composer.lastName} deleted successfully.`;
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      }
     },
   },
 };

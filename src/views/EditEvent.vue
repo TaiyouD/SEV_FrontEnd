@@ -10,6 +10,11 @@
         <h4>{{ message }}</h4>
         <br />
         <v-form ref="form" v-model="valid" lazy validation>
+          <v-text-field
+            v-model="event.eventTitle"
+            id="eventTitle"
+            label="Event Title"
+          ></v-text-field>
           <v-select
             v-model="event.eventType"
             id="eventType"
@@ -41,7 +46,7 @@
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker v-model="event.date" @input="datePicker = false" class="custom-picker-edit"></v-date-picker>
+              <v-date-picker v-model="event.date" class="custom-picker-edit"></v-date-picker>
             </v-menu>
           </v-col>
           <v-col cols="4">
@@ -66,8 +71,9 @@
               <v-time-picker
                 v-model="event.startTime"
                 format="ampm"
-                @input="startTimePicker = false"
                 class="custom-picker-edit"
+                :minutes-step="5"
+                :allowed-minutes="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]"
               ></v-time-picker>
             </v-menu>
           </v-col>
@@ -93,8 +99,9 @@
               <v-time-picker
                 v-model="event.endTime"
                 format="ampm"
-                @input="endTimePicker = false"
                 class="custom-picker-edit"
+                :minutes-step="5"
+                :allowed-minutes="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]"
               ></v-time-picker>
             </v-menu>
           </v-col>
@@ -102,7 +109,8 @@
           <v-select
             v-model="event.duration"
             id="duration"
-            :items="[{ text: '5 Minutes', value: '5' },
+            :items="[{ text: ' Unknown', value: '0' },
+                     { text: '5 Minutes', value: '5' },
                      { text: '10 Minutes', value: '10' },
                      { text: '15 Minutes', value: '15' }]"
             label="Duration"
@@ -138,6 +146,7 @@
   data() {
     return {
       event: {
+        eventTitle: '',
         eventType: '',
         date: '',
         startTime: '',
@@ -146,6 +155,16 @@
       },
       message: '',
       valid: false
+    }
+  },
+  watch: {
+    'event.eventType'(newEventType) {
+      if (newEventType === 'Recital') {
+        this.event.duration = '5';
+      }
+      else if (newEventType === 'Jury') {
+        this.event.duration = '0';
+      }
     }
   },
   mounted() {
