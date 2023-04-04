@@ -332,14 +332,14 @@
         CritiqueServices.createCritique(this.eventsessionId, data)
         .then((response) => {
           this.critique.id = response.data.id;
-          this.$router.push({ name: "view", params: { id: this.eventsessionId } });
+          this.$router.push({ name: "maintaineventsession", params: { eventId: this.eventsessionId.eventId } });
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
     },
     cancel() {
-      this.$router.push({ name: "view", params: { id: this.eventsessionId } });
+      this.$router.push({ name: "maintaineventsession", params: { eventId: this.eventsessionId.eventId } });
     },
     },
   };

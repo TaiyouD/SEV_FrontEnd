@@ -35,7 +35,7 @@
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintaineventsession' }">
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintaineventstudent' }">
             Events
           </v-btn>
         </template>
@@ -242,7 +242,7 @@
       </v-list-item>
       
       <v-list dense nav>
-        <v-list-item link @click="$router.push({ path: '/maintainlevel' })">
+        <v-list-item v-if="role.roleType == 'Admin'" link @click="$router.push({ path: '/maintainlevel' })">
           <v-list-item-icon>
             <v-icon>mdi-receipt</v-icon>
           </v-list-item-icon>

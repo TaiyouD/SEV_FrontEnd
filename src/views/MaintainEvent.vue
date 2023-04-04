@@ -52,6 +52,7 @@
         <v-data-table v-if="isAdmin" :headers="headersAdmin" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
           <template #item="{ item }">
             <tr>
+              <td>{{ item.eventTitle }}</td>
               <td>{{ item.eventType }}</td>
               <td>{{ item.date }}</td>
               <td>{{ convertTime(item.startTime) }}</td>
@@ -84,6 +85,7 @@
           <v-data-table v-if="isFaculty" :headers="headersFaculty" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
             <template #item="{ item }">
               <tr>
+                <td>{{ item.eventTitle }}</td>
                 <td>{{ item.eventType }}</td>
                 <td>{{ item.date }}</td>
                 <td>{{ convertTime(item.startTime) }}</td>
@@ -106,7 +108,7 @@
                   </v-card-title>
                   <v-card-text>
                       <h3 class="mt-2 ">{{ message }}</h3>
-                      <v-form ref="form" v-model="valid" lazy validation>
+                      <v-form ref="form" lazy validation>
       
                         <v-text-field class=" mt-2" 
                             
@@ -252,6 +254,7 @@ export default {
       selectedFilter: null,
       message: "Add, Edit or Delete Events",
       headersAdmin: [
+        { text: "Event Title", value: "eventTitle", sortable: false },
         { text: "Event Type", value: "eventType", sortable: false },
         { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
@@ -261,6 +264,7 @@ export default {
         { text: "Students", value: "students", sortable: false },
       ],
       headersFaculty: [
+        { text: "Event Title", value: "eventTitle", sortable: false },
         { text: "Event Type", value: "eventType", sortable: false },
         { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
