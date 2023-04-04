@@ -3,7 +3,7 @@
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
-        <v-btn v-if="isAdmin || isFaculty" icon to="/maintain">
+        <v-btn v-if="isFaculty || isAccomp" icon to="/maintainevent">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-icon v-if="isStudent" class="mr-8">align_vertical_top</v-icon>
@@ -12,11 +12,17 @@
           <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       </v-toolbar>
       <br />
+      <div class="line"></div>
+      
+        <br>
       <div style="display: flex; justify-content: space-between; text-align: center;">
-        <h4>Event: {{event.eventType}} </h4>
-        <h4>Date: {{event.date}} </h4>
-        <h4>Time: {{ event.startTime }} - {{event.endTime}}</h4>
+        <v-spacer><h4>Event Title: {{event.eventTitle}} </h4> </v-spacer>
+        <v-spacer><h4>Event Type: {{event.eventType}} </h4> </v-spacer>
+        <v-spacer><h4>Date: {{event.date}} </h4> </v-spacer>
+        <v-spacer><h4>Time: {{ event.startTime }} - {{event.endTime}}</h4> </v-spacer>
       </div>
+      <br>
+      <div class="line"></div>
       <br>
       <v-card>
         <v-card-title>
@@ -50,49 +56,21 @@
             </v-list-item>
           </v-list>
         </v-menu>
-          <v-btn v-if="isAdmin" class="mx-2" color="success" @click="addEvent(id)">Create Event</v-btn>
         </v-card-title>
         <v-card-text>
           <b>{{ message }}</b>
         </v-card-text>
-        <v-data-table v-if="isAdmin" :headers="headersAdmin" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
-          <template #item="{ item }">
-            <tr>
-              <td>{{ item.eventType }}</td>
-              <td>{{ item.date }}</td>
-              <td>{{ convertTime(item.startTime) }}</td>
-              <td>{{ convertTime(item.endTime) }}</td>
-              <td>{{ item.duration }}</td>
-              <td>{{ item.isReady ? '&#10003;' : '' }}</td> 
-
-              <td>
-                <template item-value="students">
-                <v-icon color="primary" class="mx-4">mdi-account-group</v-icon>
-                </template>
-            </td>
-
-              <td>
-                <div class="d-flex justify-end">
-                  <v-icon color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
-                  <v-icon color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
-                </div>
-              </td>
-            </tr>
-            </template>
-          </v-data-table>
-
           <v-data-table v-if="isFaculty" :headers="headersFaculty" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
             <template #item="{ item }">
               <tr>
-                <td>{{ item.eventType }}</td>
-                <td>{{ item.date }}</td>
+
                 <td>{{ convertTime(item.startTime) }}</td>
                 <td>{{ convertTime(item.endTime) }}</td>
                 <td>{{ item.duration }}</td>
            
                 <td>
                   <template item-value="students"> <!--change to view which student is there-->
-                  <v-icon color="primary" class="mx-4">mdi-account-group</v-icon>
+                  <v-icon color="primary" class="mx-4">mdi-account</v-icon>
                   </template>
                 </td>
 
@@ -137,7 +115,7 @@
                       <v-card-text>
                         <v-container>
     
-                      <v-form ref="form" v-model="valid" lazy validation>
+                      <v-form ref="form" lazy validation>
     
                     <!-- Select Hearing Date Below -->
                       <!-- <v-text-field
@@ -315,6 +293,7 @@
 <script>
 
 import EventServices from "../services/eventServices.js";
+import EventSessionServices from "../services/eventSessionServices.js";
 import Utils from "@/config/utils.js";
 import RoleServices from "../services/roleServices.js";
 import AvailabilityServices from "../services/availabilityServices.js";
@@ -329,14 +308,16 @@ export default {
       event:{},
       tempRole:{},
       display_dialog: false,
-      isAdmin:false,
       isFaculty:false,
+      isAccomp:false,
       isStudent:false,
       vEditEventSession:false,
       vAddAvailability:false,
       vAddCritique:false,
       search: "",
       events: [],
+      eventsessionsevent:[],
+      eventsessions:[],
       filteredEvents: [],
       eventsList: ["All Events", "Junior", "Jury", "Recital", "Scholarship", "Senior"],
       selectedEvent: null,
@@ -345,63 +326,44 @@ export default {
       selectedDate: null,
       selectedFilter: null,
       message: "Add, Edit or Delete Events",
-      headersAdmin: [
-        { text: "Event Type", value: "eventType", sortable: false },
-        { text: "Date", value: "date", sortable: false },
-        { text: "Start Time", value: "startTime", sortable: false },
-        { text: "End Time", value: "endTime", sortable: false },
-        { text: "Duration", value: "duration", sortable: false },
-        { text: "Ready", value: "isReady", sortable: false },
-        { text: "Students", value: "students", sortable: false },
-      ],
       headersFaculty: [
-        { text: "Event Type", value: "eventType", sortable: false },
-        { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
         { text: "Duration", value: "duration", sortable: false },
-        { text: "Students", value: "students", sortable: false },
+        { text: "Accompanist", value: "accompanist", sortable: false },
+        { text: "Student", value: "student", sortable: false },
+        { text: "Critique", value: "critique", sortable: false }
+      ],
+      headersAccomp: [
+        { text: "Start Time", value: "startTime", sortable: false },
+        { text: "End Time", value: "endTime", sortable: false },
+        { text: "Duration", value: "duration", sortable: false },
+        { text: "Faculty", value: "Faculty", sortable: false },
+        { text: "Student", value: "student", sortable: false },
         { text: "Critique", value: "critique", sortable: false }
       ],
       headersStudent: [
-        { text: "Event Type", value: "eventType", sortable: false },
-        { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
         { text: "Duration", value: "duration", sortable: false },
-        { text: "Critique", value: "critique", sortable: false },
-        { text: "Edit Event", value: "edit", sortable: false },
-        
+        { text: "Faculty", value: "faculty", sortable: false },
+        { text: "Accompanist", value: "accompanist", sortable: false },
+        { text: "Critique", value: "critique", sortable: false }        
       ],
     };
   },
   mounted() {
     this.retrieveEvents();
   },
-  created(){
+  async created(){
     this.user = Utils.getStore("user");
-    this.retrieveRole();
-    this.retrieveThisEvent();
-    this.retrieveEventSessions();
+    await this.retrieveRole();
+    await this.retrieveThisEvent();
+    await this.retrieveEventSessions();
   },
   methods: {
-  retrieveEvents() {
-    return new Promise((resolve, reject) => {
-        EventServices.getAll()
-        .then((response) => {
-            this.events = response.data;
-            this.filteredEvents = response.data;
-            this.filteredDates = response.data;
-            resolve();
-        })
-        .catch((e) => {
-            this.message = e.response.data.message;
-            reject(e);
-        });
-    });
-    },
-    retrieveThisEvent() {
-        EventServices.get(this.eventId)
+    async retrieveThisEvent() {
+        await EventServices.get(this.eventId)
         .then((response) => {
             this.event = response.data;
         })
@@ -409,8 +371,42 @@ export default {
             this.message = e.response.data.message;
         });
     },
-    
-
+    async retrieveEventSessions(){
+      await EventSessionServices.getAllForEvent(this.eventId)
+        .then((response) => {
+            console.log('event session', response.data)
+            this.eventsessionsevent = response.data;
+        })
+        .catch((e) => {
+            this.message = e.response.data.message;
+        });
+      await this.retrieveEventSessionPerRole();
+    },
+    retrieveEventSessionPerRole(){
+      if (this.role.roleType == "Faculty"){
+        for (let i = 0; i < this.eventsessionsevent.length; i++) {
+          if (this.eventsessionsevent[i].privateInstructorId == this.role.id){
+            this.eventsessions.push(this.eventsessionsevent[i]);
+          }
+        }
+      }
+      if (this.role.roleType == "Accompanist"){
+        for (let i = 0; i < this.eventsessionsevent.length; i++) {
+          if (this.eventsessionsevent[i].studentId == this.role.id){
+            this.eventsessions.push(this.eventsessionsevent[i]);
+          }
+        }
+      }
+      if (this.role.roleType == "Student" || this.role.roleType == "Incoming Student"){
+        for (let i = 0; i < this.eventsessionsevent.length; i++) {
+          if (this.eventsessionsevent[i].accompanistId == this.role.id){
+            this.eventsessions.push(this.eventsessionsevent[i]);
+          }
+        }
+      this.filteredEvents = this.eventsessions;
+      }
+      console.log('event per role', this.eventsessions);
+    },
     convertTime(time) {
       const date = new Date(`1/1/2000 ${time}`);
       const formattedTime = date.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'});
@@ -471,15 +467,15 @@ export default {
           this.message = e.response.data.message;
         });
     },
-    retrieveRole() {
-        RoleServices.getRoleForUser(this.user.userId)
+    async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
             this.role = response.data[0];
-            if (response.data[0].roleType == "Admin"){
-              this.isAdmin=true
-            }
-            if (response.data[0].roleType == "Faculty" || (this.role.roleType == "Accompanist" && this.role.roleType != null)){
+            if (response.data[0].roleType == "Faculty"){
               this.isFaculty=true
+            }
+            if (response.data[0].roleType == "Accompanist"){
+              this.isAccomp=true
             }
             if (response.data[0].roleType == "Student" || response.data[0].roleType == "Incoming Student"){
               this.isStudent=true
@@ -548,3 +544,10 @@ export default {
   },
 };
 </script> 
+<style>
+.line {
+  border-top: 1.5px solid black;
+  margin: 10px auto;
+  width: 96.5%;
+}
+</style>
