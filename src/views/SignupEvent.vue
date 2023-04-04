@@ -536,7 +536,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
