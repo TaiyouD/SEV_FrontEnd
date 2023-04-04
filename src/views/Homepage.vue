@@ -51,7 +51,7 @@
             </v-card-text>
 
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <!-- <v-spacer></v-spacer>
               <v-btn 
               href="https://docs.google.com/forms/d/e/1FAIpQLScUqUM1udM6oIOnTop36YW896Sev0EdKw_zgVk3ELkhJp3n2Q/viewform"
               target="_blank"
@@ -59,7 +59,7 @@
               color="surface-variant" variant="text" text>
                 AUDITION FOR A SCHOLARSHIP
                 <v-icon>mdi-arrow-right</v-icon>
-              </v-btn>
+              </v-btn> -->
             </v-card-actions>
           </v-card>
         </v-col>
