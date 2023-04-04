@@ -8,7 +8,9 @@
 
 <script>
 import AuthServices from "@/services/authServices";
+import roleServices from "@/services/roleServices";
 import Utils from "@/config/utils.js";
+
 export default {
   name: "login_signup_social",
   data() {
@@ -17,11 +19,13 @@ export default {
       lName: "",
       roleCounter: 0,
       user: {},
+      role: {},
     };
   },
   created() {},
   mounted() {
     this.loginWithGoogle();
+
   },
   methods: {
     async loginWithGoogle() {
@@ -62,6 +66,16 @@ export default {
         .catch((error) => {
           console.log("error", error);
         });
+    },
+    retrieveRole() {
+      roleServices.getRoleForUser(this.user.userId)
+      .then((response) => {
+        this.role = response.data[0];
+        console.log("role: " + this.role.roleType);
+      })
+      .catch((e) => {
+        this.message = e.response.data.message;
+      });
     },
   },
 };
