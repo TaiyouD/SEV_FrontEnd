@@ -280,7 +280,6 @@
     },
     async mounted() {
       this.resetMenu();
-      this.retrieveRole();
     },
     methods: {
       resetMenu() {
