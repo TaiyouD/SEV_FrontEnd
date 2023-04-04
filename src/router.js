@@ -30,6 +30,7 @@ import MaintainAvailability from "./views/MaintainAvailability.vue";
 import MaintainComposers from "./views/MaintainComposer.vue";
 import MaintainEvents from "./views/MaintainEvent.vue";
 import MaintainEventSessions from "./views/MaintainEventSession.vue";
+import MaintainEventsStudent from "./views/MaintainEventStudent.vue";
 import MaintainInstruments from "./views/MaintainInstrument.vue";
 import MaintainLevels from "./views/MaintainLevel.vue";
 import MaintainRoles from "./views/MaintainRole.vue";
@@ -198,6 +199,11 @@ const router = new Router({
       name: "maintaineventsession",
       component: MaintainEventSessions,
       props: true
+    },
+    {
+      path: "/maintaineventstudent",
+      name: "maintaineventstudent",
+      component: MaintainEventsStudent
     },
     {
       path: "/maintaininstrument",
