@@ -104,7 +104,8 @@
             id="duration"
             :items="[{ text: '5 Minutes', value: '5' },
                      { text: '10 Minutes', value: '10' },
-                     { text: '15 Minutes', value: '15' }]"
+                     { text: '15 Minutes', value: '15' },
+                     { text: ' Unknown', value: '0' }]"
             label="Duration"
             required
           ></v-select>
@@ -142,7 +143,8 @@
           date: '',
           startTime: '',
           endTime: '',
-          duration: ''
+          duration: '',
+          isReady: false
         },
         message: "Enter Data and Click Save.",
       };
@@ -154,7 +156,8 @@
           date: this.event.date,
           startTime: this.event.startTime,
           endTime: this.event.endTime,
-          duration: this.event.duration
+          duration: this.event.duration,
+          isReady: this.event.isReady
         };
         EventServices.create(data)
           .then((response) => {

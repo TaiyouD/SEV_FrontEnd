@@ -57,12 +57,12 @@
 export default {
   data: () => ({
     cards: [
-      { title: "Composers", path: "/maintaincomposer", icon: "mdi-account-music" },
-      { title: "Pieces", path: "/maintainsong", icon: "mdi-playlist-music" },
-      { title: "Instruments", path: "/maintaininstrument", icon: "mdi-piano" },
-      { title: "Levels", path: "/maintainlevel", icon: "mdi-signal" },
       { title: "Events", path: "/maintainevent", icon: "mdi-calendar-check" },
-      { title: "Roles", path: "/maintainrole", icon: "mdi-account-group" }
+      { title: "Roles", path: "/maintainrole", icon: "mdi-account-group" },
+      { title: "Pieces", path: "/maintainsong", icon: "mdi-playlist-music" },
+      { title: "Composers", path: "/maintaincomposer", icon: "mdi-account-music" },
+      { title: "Instruments", path: "/maintaininstrument", icon: "mdi-piano" },
+      { title: "Levels", path: "/maintainlevel", icon: "mdi-signal" }
     ]
   })
 };

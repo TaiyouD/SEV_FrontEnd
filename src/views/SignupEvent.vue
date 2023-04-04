@@ -1,5 +1,4 @@
 <template>
-  
     <div>
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
         <v-container>
@@ -17,511 +16,995 @@
         </v-row>
         </div>
         </v-container>
-        
-    <!-- This is where the multiple tab container is going to go  -->
-    <div>
-        <div class="wrapper">
-            <tabs :mode="mode" style="padding-left: 130px; padding-right: 130px;"> 
-                <tab title="Recital">     
-  <v-row>
-    <v-col>
-      <v-sheet height="400"  style="text-align: center;">
-        Select Accompanist and Signup Date to See Available Times 
-        <v-calendar 
-        v-if="selected === '2023-4-15' && selected2 === 'John Doe'"
-        start = 2023-4-15
-        color="primary"
-        type="day"
-        :events = events
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-
-            >
-              Today
-            </template>
-          </template>
-
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar>
+  <div>
+    <div class="wrapper">
+    <h2>Available Time Slots</h2>
+    <v-container>
+        <v-card>
+          <v-card-title>
+            Select Upcoming Event
+            <v-spacer></v-spacer>
+          </v-card-title>
+          <v-card-text>
+            <b>{{ message }}</b>
+          </v-card-text>
+          <v-data-table 
+              :headers="headers" 
+              :items="listOfEvents"
+              v-model="selectedEvent"
+              @click:row="showDialog"> 
 
 
-        <v-calendar 
-        v-else
-        now
-        color="primary"
-        type="day"
-        :events = events
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-            >
-              Today
-            </template>
-          </template>
+    <template #item="{ item }">
+      <tr>
+        <td @click="showSelectedDialog(item)">{{ item.eventType }} </td>
+        <td @click="showSelectedDialog(item)">{{ item.date }} </td>
+        <td @click="showSelectedDialog(item)">{{ item.startTime }} </td>
+        <td @click="showSelectedDialog(item)">{{ item.endTime }} </td>
+      </tr>
+    </template>
+  </v-data-table>
+  <v-dialog v-if="selectedEventType === 'Recital'" v-model="recitalDialogVisible" max-width = "800">
+    <v-card>
+        <v-card-title>
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Recital Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+        <v-container>
+        <v-card-text>
 
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar>
+          <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
 
-      </v-sheet>
-    </v-col>
-  </v-row>
-
-                    <!-- Time Select Above -->
-       <!-- Select Hearing Date Below -->
-       <v-select style="padding-top: 80px;"
-        :items="selected"
-        label="Select Available Hearing Dates"
-        @change="selectButton"
-        v-model="selected"
-        item-title="date"
-        return-object
-        single-line
-        filled
-     ></v-select>
-
-
-                     <!-- Accompanist Select Below -->
-    <v-select 
-        :items="selected2"
-        item-title="Accompanist"
-        item-value=""
-        label="Select Accompanist"
-        @change="selectButton"
-        v-model="selected2"
-        return-object
-        single-line
-        filled
-    ></v-select>
-
-    <v-select 
-
-        item-title="Time Slot"
-        item-value=""
-        label="Select Time Slot"
-        return-object
-        single-line
-        filled
-    ></v-select>
-
-        <!-- Instructor Select Below -->
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 260px;"
-        :items="items2"
-        item-title="state2"
-        label="Select Instructor"
-        return-object
-        single-line
-        filled
-     ></v-select>
-
-     <v-select style="padding-right: 30px; width: 260px;"
-        :items="items2"
-
-        label="Select Duration"
-        return-object
-        single-line
-        filled
-     ></v-select>
-                
-
-                    <!--  Instrument Select Below -->
-    <v-select   style="width: 260px;"
-        v-model="select"
-        :items="items4"
-        item-title="Instrument"
-        item-value=""
-        label="Select Voice or Instrument"
-        return-object
-        single-line
-        filled
-    ></v-select>
-    </div>
-</div>
-                   
-<v-container fluid>
-    <v-text-field
-      name="input-7-1"
-      label="Selection Title"
-      filled
-      auto-grow
-    ></v-text-field>
-  </v-container>
-
-  <v-select style="padding-top: 8px;"
-        item-title="date"
-        label="Select Composer"
-        return-object
-        single-line
-        filled
-     ></v-select>
-
-
-     <div style="text-align: center;">
-<div style="display:inline-block; margin:auto;">
-<v-btn color="success" variant="tonal" style="text-align: center;">
-    Submit
-</v-btn>
-<router-link to="/addaccompanist" tag="v-btn">
-<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-    Add Accompanist
-</v-btn>
-</router-link>
-<router-link to="/addsong" tag="v-btn">
-  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Add Song
-  </v-btn>
-  </router-link>
-</div>
-</div>
-    </tab>
-
-
-
-<!-- ================START of JURY TAB================= -->
-<tab title="Jury">
-        <!-- Select Hearing Date Below -->
+        <!-- ===============Timeslot ==================== -->
         <v-row>
-    <v-col>
-      <v-sheet height="400"  style="text-align: center;">
-        Select Accompanist and Signup Date to See Available Times 
-        <v-calendar 
-        v-if="selected === '2023-4-15' && selected2 === 'John Doe'"
-        start = 2023-4-15
-        color="primary"
-        type="day"
-        :events = events
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-            >
-              Today
-            </template>
-          </template>
-
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar>
-
-
-        <v-calendar 
-        v-else
-        now
-        color="primary"
-        type="day"
-        :events = events
-        >
-        <template v-slot:day-header="{ present }">
-            <template
-              v-if="present"
-            >
-              Today
-            </template>
-          </template>
-
-          <template >
-            <div
-              class="text-center"
-            >
-            </div>
-          </template>
-        </v-calendar>
-
-      </v-sheet>
+          <v-col>
+      <v-select  class=" mr-4"  width = "380" 
+        :items= "availableAccompanists"
+        v-model = "selectedAccompanist"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    ></v-select>
+    <v-select class ="mr-4" width = "390"
+        :items="availableTimeslots"
+        v-model="selectedStartTime"
+        label="Select Start Time"
+        return-object
+        single-line
+        filled
+        @change ="updateText"
+    ></v-select>
     </v-col>
   </v-row>
-
-                    <!-- Time Select Above -->
-       <!-- Select Hearing Date Below -->
-       <v-select style="padding-top: 80px;"
-        :items="selected"
-        label="Select Available Hearing Dates"
-        @change="selectButton"
-        v-model="selected"
-        item-title="date"
-        return-object
-        single-line
-        filled
-     ></v-select>
-
-
-                     <!-- Accompanist Select Below -->
-    <v-select 
-        :items="selected2"
-        item-title="Accompanist"
-        item-value=""
-        label="Select Accompanist"
-        @change="selectButton"
-        v-model="selected2"
-        return-object
-        single-line
-        filled
-    ></v-select>
-
-    <v-select 
-
-        item-title="Time Slot"
-        item-value=""
-        label="Select Time Slot"
-        return-object
-        single-line
-        filled
-    ></v-select>
-
-        <!-- Instructor Select Below -->
-    <div style="text-align: center;">
-    <div style="display: inline-flex; padding-top: 20px;  width: 780px;" >
-    <v-select style="padding-right: 30px; width: 260px;"
-        :items="items2"
-        item-title="state2"
-        label="Select Instructor"
-        return-object
-        single-line
-        filled
-     ></v-select>
-                
-
+    <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
+    </div>
+    </div>
                     <!--  Instrument Select Below -->
-    <v-select   style="width: 260px;"
-        v-model="select"
-        :items="items4"
+                    <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+      <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
         item-title="Instrument"
-        item-value=""
+        item-value = "instrument"
+        item-text="instrument.type"
         label="Select Voice or Instrument"
         return-object
         single-line
         filled
     ></v-select>
-    </div>
-</div>
-                   
-<v-container fluid>
-    <v-text-field
-      name="input-7-1"
-      label="Selection Title"
-      filled
-      auto-grow
-    ></v-text-field>
-  </v-container>
 
-  <v-select style="padding-top: 8px;"
-        item-title="date"
-        label="Select Composer"
+    <v-select  class=" mr-4"  width = "380" 
+        :items = userSongs
+        v-model="selectedSongs"
+        item-text = "song.title"
+        item-value = "song" 
+        label="Select Piece"
+        multiple
+        chips
         return-object
         single-line
         filled
      ></v-select>
-
-
-     <div style="text-align: center;">
+    </v-col>
+  </v-row>
+</div>
+    </div>
+    <v-card-text>
+        <v-checkbox v-model = "showTextField" label = "Duet Or Ensemble?"/>
+        <v-text-field v-if="showTextField" label = "Other Member's Name"/>
+      </v-card-text>
+    <!-- ===========Button for missing song, composer, and submit =================-->
+    <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn color="success" variant="tonal" style="text-align: center;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
 <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-    Add Accompanist
+    Missing an Accompanist?
 </v-btn>
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Add Song
+      Missing a Song?
   </v-btn>
   </router-link>
 </div>
 </div>
-                </tab>
-            </tabs>
+    <!-- ============End of button============== -->
+    </v-card-text>
+    </v-container>
+      </v-card>
 
+
+      
+  </v-dialog>
+  <v-dialog v-if="selectedEventType === 'Senior'" v-model="seniorDialogVisible" max-width="800">
+    <v-card>
+      <v-card-title>
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Senior Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+
+        <v-card-text>
+        <v-container> 
+      <div style="text-align: center;">
+      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+        <!-- ===============Timeslot ==================== -->
+        <v-row>
+          <v-col>
+      <v-select class ="mr-4" width = "380"
+        :items=availableAccompanists
+        v-model = "selectedAccompanist"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    >
+    
+  </v-select>
+    <v-select class ="mr-4" width = "390"
+        :items="availableTimeslots"
+        v-model="selectedStartTime"
+        label="Select Start Time"
+        return-object
+        single-line
+        filled
+        @change ="updateText"
+    ></v-select>
+  </v-col>
+  </v-row>
+    <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
+
+  </div>
+    </div>
+    <div style="text-align: center;">
+      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+                    <!--  Instrument Select Below -->
+        <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
+        item-title="Instrument"
+        item-value = "instrument"
+        item-text="instrument.type"
+        label="Select Voice or Instrument"
+        return-object
+        single-line
+        filled
+    ></v-select>
+
+    <v-select  class=" mr-4"  width = "380" 
+        :items = userSongs
+        v-model="selectedSongs"
+        item-text = "song.title"
+        item-value = "song" 
+        label="Select Piece"
+        multiple
+        chips
+        return-object
+        single-line
+        filled
+     ></v-select>
+    </v-col>
+  </v-row>
+    </div>
+</div>
+
+    <!-- ===========Button for missing song, composer, and submit =================-->
+    <div style="text-align: center;">
+<div style="display:inline-block; margin:auto;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
+    Submit
+</v-btn>
+<router-link to="/addaccompanist" tag="v-btn">
+<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+    Missing an Accompanist?
+</v-btn>
+</router-link>
+<router-link to="/addsong" tag="v-btn">
+  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+      Missing a Song?
+  </v-btn>
+  </router-link>
+</div>
+</div>
+
+    <!-- ============End of button============== -->
+ </v-container>
+  </v-card-text>
+    </v-card>
+      </v-dialog>
+
+  <v-dialog v-if="selectedEventType === 'Junior'" v-model="juniorDialogVisible" max-width = "800">
+    <v-card>
+        <v-card-title>
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Junior Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+        <v-container>
+        <v-card-text>
+
+          <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+
+        <!-- ===============Timeslot ==================== -->
+        <v-row>
+          <v-col>
+      <v-select  class=" mr-4"  width = "380" 
+        :items= "availableAccompanists"
+        v-model = "selectedAccompanist"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    ></v-select>
+    <v-select class ="mr-4" width = "390"
+        :items="availableTimeslots"
+        v-model="selectedStartTime"
+        label="Select Start Time"
+        return-object
+        single-line
+        filled
+        @change ="updateText"
+    ></v-select>
+    </v-col>
+  </v-row>
+  <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
     </div>
     </div>
-    <!-- End of multiple tab container  -->
+                    <!--  Instrument Select Below -->
+                    <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+      <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
+        item-title="Instrument"
+        item-value = "instrument"
+        item-text="instrument.type"
+        label="Select Voice or Instrument"
+        return-object
+        single-line
+        filled
+    ></v-select>
+
+    <v-select  class=" mr-4"  width = "380" 
+        :items = userSongs
+        v-model="selectedSongs"
+        item-text = "song.title"
+        item-value = "song" 
+        label="Select Piece"
+        multiple
+        chips
+        return-object
+        single-line
+        filled
+     ></v-select>
+    </v-col>
+  </v-row>
+</div>
     </div>
+    <!-- ===========Button for missing song, composer, and submit =================-->
+    <div style="text-align: center;">
+<div style="display:inline-block; margin:auto;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
+    Submit
+</v-btn>
+<router-link to="/addaccompanist" tag="v-btn">
+<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+    Missing an Accompanist?
+</v-btn>
+</router-link>
+<router-link to="/addsong" tag="v-btn">
+  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+      Missing a Song?
+  </v-btn>
+  </router-link>
+</div>
+</div>
+    <!-- ============End of button============== -->
+    </v-card-text>
+    </v-container>
+      </v-card>
+  </v-dialog>
+
+
+  <v-dialog v-if="selectedEventType === 'Jury'" v-model="juryDialogVisible" max-width = "800">
+    <v-card>
+        <v-card-title>
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Jury Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+        <v-container>
+        <v-card-text>
+
+          <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+
+        <!-- ===============Timeslot ==================== -->
+        <v-row>
+          <v-col>
+      <v-select  class=" mr-4"  width = "380" 
+        :items= "availableAccompanists"
+        v-model = "selectedAccompanist"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    ></v-select>
+    <v-select class ="mr-4" width = "390"
+        :items="availableTimeslots"
+        v-model="selectedStartTime"
+        label="Select Start Time"
+        return-object
+        single-line
+        filled
+        @change ="updateText"
+    ></v-select>
+    </v-col>
+  </v-row>
+  <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
+    </div>
+    </div>
+                    <!--  Instrument Select Below -->
+                    <div style="text-align: center;">
+          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+      <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
+        item-title="Instrument"
+        item-value = "instrument"
+        item-text="instrument.type"
+        label="Select Voice or Instrument"
+        return-object
+        single-line
+        filled
+    ></v-select>
+
+    <v-select  class=" mr-4"  width = "380" 
+        :items = userSongs
+        v-model="selectedSongs"
+        item-text = "song.title"
+        item-value = "song" 
+        label="Select Piece"
+        multiple
+        chips
+        return-object
+        single-line
+        filled
+     ></v-select>
+    </v-col>
+  </v-row>
+</div>
+    </div>
+    <v-card-text>
+        <v-checkbox v-model = "showTextField" label = "Duet Or Ensemble?"/>
+        <v-text-field v-if="showTextField" label = "Other Member's Name"/>
+      </v-card-text>
+
+    <!-- ===========Button for missing song, composer, and submit =================-->
+    <div style="text-align: center;">
+<div style="display:inline-block; margin:auto;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
+    Submit
+</v-btn>
+<router-link to="/addaccompanist" tag="v-btn">
+<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+    Missing an Accompanist?
+</v-btn>
+</router-link>
+<router-link to="/addsong" tag="v-btn">
+  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+      Missing a Song?
+  </v-btn>
+  </router-link>
+</div>
+</div>
+    <!-- ============End of button============== -->
+    </v-card-text>
+    </v-container>
+      </v-card>
+  </v-dialog>
+
+
+
+
+  <!-- This is supposed to be just 10 minutes duration. Automatically set this -->
+  <v-dialog v-if="selectedEventType === 'Scholarship'" v-model="scholarshipDialogVisible" max-width = "800"> 
+    <v-card>
+      <v-card-title>
+          <v-toolbar id="navbar-maroon">
+            <span class="text-h5">Scholarship Sign Up </span>
+          </v-toolbar>
+        </v-card-title>
+
+        <v-card-text>
+        <v-container> 
+      <div style="text-align: center;">
+      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+        <!-- ===============Timeslot ==================== -->
+        <v-row>
+          <v-col>
+      <v-select class ="mr-4" width = "380"
+        :items=availableAccompanists
+        v-model = "selectedAccompanist"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    >
+    
+  </v-select>
+    <v-select class ="mr-4" width = "390"
+        :items="availableTimeslots"
+        v-model="selectedStartTime"
+        label="Select Start Time"
+        return-object
+        single-line
+        filled
+        @change ="updateText"
+    ></v-select>
+  </v-col>
+  </v-row>
+    <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
+
+  </div>
+    </div>
+    <div style="text-align: center;">
+      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+                    <!--  Instrument Select Below -->
+        <v-row>
+          <v-col>
+    <v-select  class=" mr-4"  width = "380" 
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
+        item-title="Instrument"
+        item-value = "instrument"
+        item-text="instrument.type"
+        label="Select Voice or Instrument"
+        return-object
+        single-line
+        filled
+    ></v-select>
+
+    <v-select  class=" mr-4"  width = "380" 
+        :items = userSongs
+        v-model="selectedSongs"
+        item-text = "song.title"
+        item-value = "song" 
+        label="Select Piece"
+        multiple
+        chips
+        return-object
+        single-line
+        filled
+     ></v-select>
+    </v-col>
+  </v-row>
+    </div>
+</div>
+
+    <!-- ===========Button for missing song, composer, and submit =================-->
+    <div style="text-align: center;">
+<div style="display:inline-block; margin:auto;">
+<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
+    Submit
+</v-btn>
+<router-link to="/addaccompanist" tag="v-btn">
+<v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+    Missing an Accompanist?
+</v-btn>
+</router-link>
+<router-link to="/addsong" tag="v-btn">
+  <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
+      Missing a Song?
+  </v-btn>
+  </router-link>
+</div>
+</div>
+
+    <!-- ============End of button============== -->
+ </v-container>
+  </v-card-text>
+    </v-card>
+  </v-dialog>
+        </v-card>
+      </v-container>
+    </div>
+    </div>
+    </div>
+
 
 </template>
   
   <script>
-  import TutorialServices from "../services/tutorialServices";
-  import Utils from "@/config/utils.js";
-  import Tab from '../components/Tab'
-  import Tabs from '../components/Tabs'
+  import eventServices from "../services/eventServices";
+  import eventSessionServices from "../services/eventSessionServices";
+  import roleServices from "../services/rolesServices";
+  import availabilityServices from "../services/availabilityServices";
+  import userServices from "../services/userServices";
+  import Utils from "@/config/utils.js"
+  import RepertoireSongServices from "../services/repertoireSongServices";
+  import songService from "../services/songServices"
+  import instrumentRoleServices from "../services/instrumentRoleServices";
+  import eventSongServices from "../services/eventSongservices"
 
   export default {
-    name: "tutorials-list",
+    name: "events-list",
     components: {
-      Tab,
-      Tabs
     },
     data() {
       return {
-        data: () => ({}),
-        sheet:null,
-        selected: [' ','2023-4-15', '2023-4-16', '2023-4-17', '2023-4-18'],
-        selected2: [' ', 'John Doe', 'John Doe2', 'John Doe3'],
-        extended: false,
-        mode: 'light',
+        instrumentRole: {
+          id: null,
+          instrument:{
+            type: ""
+          },
+          song: {},
+          privateInstructorId: "",
+          accompanistId: ""
+        },
+        listOfEvents: [], //Change this later --- this is the events
+        eventsSession: [],
+        listOfRoles: [],
+        roleForUser: {},
+        userSongs: [],
+        accompanists: [],
+        availableAccompanists: [],
+        availabilities: [],
+        users: [],
         search: "",
-        tutorials: [],
-        currentTutorial: null,
         currentIndex: -1,
         title: "",
         user: {},
         message: "Music Department",
         headers: [
           { text: "Title", value: "title" },
-          { text: "Description", value: "description" },
-          { text: "Actions", value: "actions", sortable: false },
+          { text: "Date", value: "date" },
+          { text: "Start Time", value:"startTime"},
+          { text: "End Time", value:"endTime"},
         ],
-        colors: [
-          'primary',
-          'secondary',
-          'yellow darken-2',
-          'red',
-          'orange',
-        ],
-        model: 0,
-        dates: [
-        '2023-4-15', '2023-4-16', '2023-4-17', '2023-4-18',
-        ],
-        items2: ['John Doe', 'John Doe2', 'John Doe3'],
-        items3: ['John Doe', 'John Doe2', 'John Doe3'],
-        items4: ['Thing1', 'Thing2', 'Thing3', 'Thing4'],
-        events: [
-            {
-          name: 'Event 2',
-          start: '2023-04-15T10:00:00',
-          end: '2023-04-15T10:10:00',
-          timed: true,
-        },
-        {
-          name: 'Event 1',
-          start: '2023-04-15T08:00:00',
-          end: '2023-04-15T08:10:00',
-          timed: true,
-        },
-        {
-          name: 'Event 3',
-          start: '2023-04-15T11:20:00',
-          end: '2023-04-15T11:30:00',
-          timed: true,
-        },   
-    ],
-    events2: [
-            {
-          name: 'Event 2',
-          start: '2023-04-15T10:00:00',
-          end: '2023-04-15T10:10:00',
-          timed: true,
-        },
-        {
-          name: 'Event 1',
-          start: '2023-04-15T08:00:00',
-          end: '2023-04-15T08:10:00',
-          timed: true,
-        },
-        {
-          name: 'Event 3',
-          start: '2023-04-15T11:20:00',
-          end: '2023-04-15T11:30:00',
-          timed: true,
-        },   
-        {
-          name: 'Event 4',
-          start: '2023-04-15T15:20:00',
-          end: '2023-04-15T15:30:00',
-          timed: true,
-        },
-        {
-          name: 'Event 5',
-          start: '2023-04-15T15:40:00',
-          end: '2023-04-15T15:50:00',
-          timed: true,
-        },   
-    ]
+      EndTime: '',
+
+      start: [],
+      dialogVisible: false,
+      recitalDialogVisible: true,
+      seniorDialogVisible: true,
+      juniorDialogVisible: true,
+      juryDialogVisible: true,
+      scholarshipDialogVisible: true,
+
+      selectedEvent: null,
+      selectedAccompanist:null,
+      selectedInstrument: null,
+      selectedSongs: null,
+      selectedEventType: null,
+      selectedStartTime: null,
+      selectedEndTime: null,
+      showTextField: false,
       };
     },
-    mounted() {
-      this.user = Utils.getStore("user");
-      this.retrieveTutorials();
+    async created() {
+      this.user = Utils.getStore("user"); // This util grabs the specific users' role information
+      await this.retrieveRoles();
+      await this.retrieveRoleForUser();
+      await this.retrieveEvents();
+      //await this.retrieveEventSessions();
+      await this.retrieveUsers();
+      await this.retrieveAvailabilities();
+      await this.userRepertoire();
+      await this.retrieveSongs();
+      await this.getAccompanist();
+      await this.retrieveInstrumentRoles();
     },
+    // watch:{
+    //   selectedStartTime: function(){
+    //     this.EndText = null
+    //   },
+    //   showSelectedDialog: function(){
+    //     this.EndText = null;
+    //   }
+
+    // },
     methods: {
-    selectButton(){
-        this.$nextTick(() => {
-        this.select = 0;
-    });},
-    changeStyle () {
-      if (this.mode === 'dark') {
-        this.mode = 'light'
-      } else {
-        this.mode = 'dark'
-      }
-    },
-      editTutorial(tutorial) {
-        this.$router.push({ name: "edit", params: { id: tutorial.id } });
+      async submitForm(){
+          console.log(this.selectedEvent.id)
+          console.log(this.selectedAccompanist.id)
+          console.log(this.selectedInstrument.privateInstructorId)
+          console.log(this.selectedStartTime)
+          console.log(this.selectedEndTime)
+          console.log(this.selectedSongs)
+          let eventSessionId;
+          const selectedSongs = this.selectedSongs
+          const data ={
+            eventId: this.selectedEvent.id,
+            accompanistId: this.selectedAccompanist.id,
+            privateInstructorId: this.selectedInstrument.privateInstructorId,
+            startTime: this.selectedStartTime,
+            endTime: this.selectedEndTime,
+            studentId: this.user.userId,
+          }
+          console.log(data)
+        await eventSessionServices.create(data)
+          .then((response) => {
+
+            console.log('Success!', response.data);
+            eventSessionId = response.data.id,
+          console.log(eventSessionId)
+
+          })
+          .catch((error) => {
+            console.log('Error:', error);
+          });
+
+          const eventSongs = selectedSongs.map((song) => {
+            return{
+              eventsessionId: eventSessionId,
+              repertoireSongId: song.id,
+            }
+          })
+          for (let i = 0; i < eventSongs.length; i++){
+            
+          console.log("eventsongs data", eventSongs[i])
+          eventSongServices.create(eventSongs[i])
+            .then((response) => {
+              console.log('Success', response.data);
+            })
+            .catch ((error) => {
+              console.log('Error for creating eventSongs:', error)
+            })
+          }
+          // this.$forceUpdate();
+          this.$router.go(0);
+  
       },
-      viewTutorial(tutorial) {
-        this.$router.push({ name: "view", params: { id: tutorial.id } });
-      },
-      deleteTutorial(tutorial) {
-        TutorialServices.delete(tutorial.id)
-          .then(() => {
-            this.retrieveTutorials();
+      async retrieveInstrumentRoles() {
+        await instrumentRoleServices.getAllForUser(this.roleForUser.id)
+          .then((response) => {
+            console.log(response.data);
+            this.instrumentRole = response.data;
+            console.log('instrumentRole');
+            console.log(this.instrumentRole);
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
-      retrieveTutorials() {
-        TutorialServices.getAllForUser(this.user.userId)
+      updateText(){
+        const index = this.start.indexOf(this.selectedStartTime)
+        //console.log(this.roleForUser.studentMajor)
+        //console.log("student private hours", this.roleForUser.studentPrivateHours)
+        if(this.roleForUser.studentMajor === "Music" && this.roleForUser.studentPrivateHours === 2){
+          
+          if(index !== -1 && index + 1 <= this.start.length) {
+            const nextTime = this.start[index];
+            const date = new Date (`1/1/2000 ${nextTime}`);
+            date.setMinutes(date.getMinutes() + 15);
+            const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.selectedEndTime = formattedTime;
+            this.EndTime = `${formattedTime}`
+          } else{
+            this.EndTime = ""
+          }
+      }
+      else if (this.roleForUser.studentMajor === "Music" && this.roleForUser.studentPrivateHours === 1){
+        if(index !== -1 && index + 1 <= this.start.length) {
+            const nextTime = this.start[index];
+            const date = new Date (`1/1/2000 ${nextTime}`);
+            date.setMinutes(date.getMinutes() + 10);
+            const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.selectedEndTime = formattedTime;
+            this.EndTime = `${formattedTime}`
+          } else{
+            this.EndTime = ""
+          }}
+        else if (this.roleForUser.studentMajor !== "Music" && this.roleForUser.studentPrivateHours === 2){
+          if(index !== -1 && index + 1 <= this.start.length) {
+            const nextTime = this.start[index];
+            const date = new Date (`1/1/2000 ${nextTime}`);
+            date.setMinutes(date.getMinutes() +10);
+            const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.selectedEndTime = formattedTime;
+            this.EndTime = `${formattedTime}`
+          } else{
+            this.EndTime = ""
+          }
+        }
+        else if (this.roleForUser.studentMajor !== "Music" && this.roleForUser.studentPrivateHours === 1){
+          if(index !== -1 && index + 1 <= this.start.length) {
+            const nextTime = this.start[index];
+            const date = new Date (`1/1/2000 ${nextTime}`);
+            date.setMinutes(date.getMinutes() +5);
+            const formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit',});
+            this.selectedEndTime = formattedTime;
+            this.EndTime = `${formattedTime}`
+          } else{
+            this.EndTime = ""
+          }
+        }
+      },
+      async retrieveRoleForUser(){
+        await roleServices.getRoleForUser(this.user.userId)
+        .then((response) => {
+          this.roleForUser = response.data[0];
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        })
+      },
+      async userRepertoire(){
+        await RepertoireSongServices.getAllForUser(this.roleForUser.id)
+        .then((response) => {
+          this.userSongs = response.data;
+          console.log('song')
+          console.log(this.userSongs)
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        })
+      },
+      async retrieveSongs(){
+        await songService.getAll()
+        .then((response) => {
+          this.songs = response.data;
+          ///console.log("All songs", this.songs)
+        })
+      },
+      async retrieveEvents() {
+        await eventServices.getAll()
           .then((response) => {
-            this.tutorials = response.data;
+          if (this.roleForUser.studentClassification === "Incoming Student"){
+            this.listOfEvents = response.data.filter(event =>  event.isReady !== false && event.eventType !== "Scholarship")
+           
+          }
+          else{
+            this.listOfEvents = response.data.filter(event => event.isReady !== false);
+            console.log("I dont know why this activates in RetrieveEvents", this.listOfEvents)
+          }} 
+          )
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveEventSessions(item) {
+        await eventSessionServices.getAll()
+          .then((response) => {
+            // Filter out events that don't have the specified item Id
+            this.eventsSession = response.data.filter(event => event.eventId === item.id);
+
+            this.eventsSession.forEach(event =>{
+              const startTimeStr = event.startTime
+              const endTimeStr = event.endTime
+              
+              const [startHour, startMinute] = startTimeStr.split (':')
+              const [endHour, endMinute] = endTimeStr.split(':')
+              const startDate = new Date();
+              startDate.setHours(parseInt(startHour), parseInt(startMinute), 0, 0);
+              //startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+              const endDate = new Date();
+              endDate.setHours(parseInt(endHour), parseInt(endMinute), 0, 0);
+              event.startTime = new Date(startDate);
+              console.log(event.startTime)
+              event.endTime= new Date(endDate);
+
+            })
+            //console.log("This should show the event session for a particular event")
+            //console.log("eventsSession", this.eventsSession)
+            
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveRoles(){
+        await roleServices.getAll()
+          .then((response) => {
+            this.listOfRoles = response.data;
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveAvailabilities(){
+        await availabilityServices.getAll()
+          .then((response) => {
+            this.availabilities = response.data;
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveUsers(){
+        await userServices.getAll()
+          .then((response) => {
+            this.users = response.data;
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
       refreshList() {
-        this.retrieveTutorials();
-        this.currentTutorial = null;
+        this.retrieveEvents();
+        this.currentevent = null;
         this.currentIndex = -1;
       },
-      setActiveTutorial(tutorial, index) {
-        this.currentTutorial = tutorial;
-        this.currentIndex = tutorial ? index : -1;
+      setActiveEvent(event, index) {
+        this.currentevent = event;
+        this.currentIndex = event ? index : -1;
       },
-      removeAllTutorials() {
-        TutorialServices.deleteAll()
-          .then((response) => {
-            console.log(response.data);
-            this.refreshList();
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
+      showDialog(item){
+        this.selectedAccompanist = null;
+        this.selectedInstrument = null;
+        this.selectedSongs = null;
+        this.selectedStartTime = null;
+        this.selectedEndTime = null;
+        const event = this.listOfEvents.find((e) => e.id === item.eventID);
+        this.selectedEvent = event;
       },
+      async getAccompanist(){
+        for (let i = 0; i < this.listOfRoles.length; i++){
+          if (this.listOfRoles[i].roleType === 'Accompanist'){
+            await userServices.get(this.listOfRoles[i].id)
+              .then((response) => {
+                    this.accompanists.push(response.data);
+                  })
+            }
+          }
+        },
+        getAvailablitiesForEvent(item){
+          return this.availabilities.filter((availability)=> availability.eventId === item.id)
+        },
+        getAvailableAccompanists(availabilities){
+          const accompanistsIds = availabilities.map((availability) => availability.accompanistId);
+          const uniqueIds = [...new Set(accompanistsIds)]
+          console.log("List of Accompanists", this.accompanists)
+          return this.accompanists.filter((accompanist) => uniqueIds.includes(accompanist.id));
+        },
+
+    async showSelectedDialog(item) {
+        console.log("testing this", item)
+        this.selectedAccompanist = null;
+        this.selectedInstrument = null;
+        this.selectedSongs = null;
+        this.selectedStartTime = null;
+        this.selectedEndTime = null;
+        this.selectedEvent = item
+      this.EndTime = null
+      //Functioncall for retrieving event session
+      await this.retrieveEventSessions(item)
+
+      // Function call for getting the available accompanists depending on the specific events
+      const availabilities = this.getAvailablitiesForEvent(item)
+      this.availableAccompanists = this.getAvailableAccompanists(availabilities)
+        console.log("filtered Accompanists", this.availableAccompanists)
+      // Function call for getting the start time and end time for each specific events 
+      this.start = await this.availableStartTime(item) 
+
+      // These makes sure that the dialog boxes that pops up show the right dialog boxes. f
+      this.selectedEventType = item.eventType;
+      if (this.selectedEventType === 'Recital') {
+        this.recitalDialogVisible = true;
+      } else if (this.selectedEventType === 'Senior') {
+        this.seniorDialogVisible = true;
+      }
+      else if (this.selectedEventType === 'Jury') {
+        this.juryDialogVisible = true;
+      }
+      else if (this.selectedEventType === 'Junior') {
+        this.juniorDialogVisible = true;
+      }
+      else if (this.selectedEventType === 'Scholarship') {
+        this.scholarshipDialogVisible = true;
+      }
+      this.dialogVisible = false;
     },
-    
-  };
+
+    async availableStartTime(item){
+      
+      const startTimes=[];
+      const startTimeStr = item.startTime
+      const endTimeStr = item.endTime
+
+
+      const takenSlots = [];
+      this.eventsSession.forEach(event => {
+        const startSession = new Date (event.startTime)
+        const endSession = new Date(event.endTime)
+        for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
+          //startTimes.push(startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+          takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+        }
+      })
+      const uniqueTimes = [...new Set(takenSlots)]
+      console.log("TakenSlots" , uniqueTimes)
+
+      const [startHour, startMinute] = startTimeStr.split (':')
+      const [endHour, endMinute] = endTimeStr.split(':')
+      const startDate = new Date();
+      startDate.setHours(parseInt(startHour), parseInt(startMinute), 0, 0);
+      const endDate = new Date();
+      endDate.setHours(parseInt(endHour), parseInt(endMinute), 0, 0);
+      const startTime = new Date(startDate);
+      const endTime= new Date(endDate);
+      
+
+      let timeslots = [];
+      while (startTime <= endTime){ // While the start time is less than or equal to the end time given to us
+        let timeslot = {
+        time: startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+        available: false//!this.eventsSession.includes(timeString)
+        }
+        //startTimes.push(startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+        timeslots.push(timeslot);
+        startTime.setMinutes(startTime.getMinutes() + 5);
+      }
+      uniqueTimes.forEach(uniquetime =>{
+        // console.log(uniquetime)
+        timeslots.forEach(timeslot =>{
+          if(timeslot.time === uniquetime){
+            timeslot.available = true;
+            //console.log("testing", timeslot)
+            }
+      })})
+      console.log(startTimes)
+
+      // Return the timeslots filtered by whats already taken up and whats not
+      return timeslots.filter((slot) => slot.available === false).map((slot) => slot.time);
+  },
+  },
+
+
+computed: {
+  availableTimeslots(){
+    this.start.filter((slot) => slot.available === false).map((slot) => slot.time)
+    console.log(this.start)
+    return this.start
+}
+}
+};
   </script>
   
+
+
   <style lang="css">
   * {
     margin: 0;
@@ -550,5 +1033,6 @@
     background:white;
     justify-content:center; 
     display:flex
+
   }
 </style>

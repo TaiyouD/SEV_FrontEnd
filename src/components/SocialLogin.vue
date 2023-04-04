@@ -9,7 +9,6 @@
 <script>
 import AuthServices from "@/services/authServices";
 import Utils from "@/config/utils.js";
-
 export default {
   name: "login_signup_social",
   data() {
@@ -44,7 +43,6 @@ export default {
           text: "signup_with",
           width: 400,
           logo_alignment: "center",
-          
         }
       );
     },

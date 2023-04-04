@@ -15,7 +15,7 @@
           <p class="text-subtitle-1 mt-1">
               {{user.email}}
             </p> 
-            <div v-if="user != null && role != null">
+            <div v-if="isFaculty">
             <p class="text-subtitle-1 mt-1">
               Faculty Type: {{ role.facultyType }}
             </p>
@@ -128,6 +128,7 @@
     name: "profile-faculty",
     data: () => ({
       user: {},
+      isFaculty:false,
       role: {},
       title: "Music Department",
       initials: "",
@@ -170,6 +171,9 @@
         roleServices.getRoleForUser(this.user.userId)
         .then((response) => {
           this.role = response.data[0];
+          if (response.data[0].roleType == "Faculty"){
+            this.isFaculty = true;
+          }
           console.log(this.role);
         })
         .catch((e) => {
