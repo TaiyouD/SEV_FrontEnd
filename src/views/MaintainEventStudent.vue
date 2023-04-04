@@ -12,18 +12,6 @@
           <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       </v-toolbar>
       <br />
-      <div class="line"></div>
-      
-        <br>
-      <div style="display: flex; justify-content: space-between; text-align: center;">
-        <v-spacer><h4>Event Title: {{event.eventTitle}} </h4> </v-spacer>
-        <v-spacer><h4>Event Type: {{event.eventType}} </h4> </v-spacer>
-        <v-spacer><h4>Date: {{event.date}} </h4> </v-spacer>
-        <v-spacer><h4>Time: {{ event.startTime }} - {{event.endTime}}</h4> </v-spacer>
-      </div>
-      <br>
-      <div class="line"></div>
-      <br>
       <v-card>
         <v-card-title>
           {{ "All Events" }}
@@ -210,8 +198,9 @@
                       readonly
                       append-icon="mdi-school-outline"
                   ></v-text-field>
+                  
     
-    
+                <!-- Instructor Select Below -->
                   <!-- mdi-human-male-board -->
                   <v-autocomplete width = "260"
                       :items="items2"
@@ -306,6 +295,9 @@ export default {
       selectedFilter: null,
       message: "Add, Edit or Delete Events",
       headersStudent: [
+        { text: "Event Title", value: "eventTitle", sortable: false },
+        { text: "Event Type", value: "eventType", sortable: false },
+        { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
         { text: "Duration", value: "duration", sortable: false },
