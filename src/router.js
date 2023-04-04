@@ -14,6 +14,7 @@ import AddRoles from "./views/AddRole.vue";
 import AddSongs from "./views/AddSong.vue";
 import AddSongRepertoire from "./views/AddSongRepertoire.vue";
 import Critique from "./views/Critique.vue";
+import CritiqueView from "./views/CritiqueView.vue";
 import EditComposers from "./views/EditComposer.vue";
 import EditEvents from "./views/EditEvent.vue";
 import EditInstruments from "./views/EditInstrument.vue";
@@ -109,6 +110,11 @@ const router = new Router({
       path: "/critique",
       name: "critique",
       component: Critique,
+    },
+    {
+      path: "/critiqueview",
+      name: "critiqueview",
+      component: CritiqueView,
     },
     {
       path: "/editcomposer",
