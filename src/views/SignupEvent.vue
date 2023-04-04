@@ -133,7 +133,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -234,7 +234,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -331,7 +331,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -433,7 +433,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -529,6 +529,9 @@
 <v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
+<v-btn @click="testForSongFetch" color="success" variant="tonal" style="text-align: center;">
+    Testing the song fetch
+</v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
 <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
     Missing an Accompanist?
@@ -536,7 +539,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -646,6 +649,16 @@
 
     // },
     methods: {
+      async testForSongFetch(){
+        await eventSongServices.getAll() 
+        .then((response) => {
+            console.log("All the songs should be here!", response.data);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+
+      },
       async submitForm(){
           console.log(this.selectedEvent.id)
           console.log(this.selectedAccompanist.id)
@@ -694,7 +707,7 @@
             })
           }
           // this.$forceUpdate();
-          this.$router.go(0);
+          //this.$router.go(0);
   
       },
       async retrieveInstrumentRoles() {
