@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.roleForUser.roleType == 'Student' || this.roleForUser.roleType == 'Incoming Student'">
+    <div v-if="this.roleForUser.roleType = 'Student' || (this.roleForUser.roleType = 'Incoming Student')">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
         <v-container>
             <v-toolbar>

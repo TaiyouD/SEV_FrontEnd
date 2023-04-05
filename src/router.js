@@ -23,9 +23,6 @@ import EditLevels from "./views/EditLevel.vue";
 import EditRoles from "./views/EditRole.vue";
 import EditSongs from "./views/EditSong.vue";
 import EventEvaluation from "./views/EventEvaluation.vue";
-import EventPastList from "./views/EventPastList.vue";
-import EventUpcomingList from "./views/EventUpcomingList.vue";
-import EventView from "./views/EventView.vue";
 import Maintain from "./views/Maintain.vue";
 import MaintainAvailability from "./views/MaintainAvailability.vue";
 import MaintainComposers from "./views/MaintainComposer.vue";
@@ -163,22 +160,6 @@ const router = new Router({
       name: "editlevel",
       component: EditLevels,
       props: true
-    },
-    {
-      path: "/eventpast",
-      name: "eventpast",
-      component: EventPastList,
-      props: true,
-    },
-    {
-      path: "/eventupcoming",
-      name: "eventupcoming",
-      component: EventUpcomingList,
-    },
-    {
-      path: "/eventview",
-      name: "eventview",
-      component: EventView
     },
     {
       path: "/maintain",

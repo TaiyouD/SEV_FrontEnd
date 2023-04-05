@@ -1,6 +1,6 @@
 
 <template>
-    <div v-if="this.currentRole.roleType == 'Admin'">
+    <div v-if="this.currentRole.roleType = 'Admin'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
