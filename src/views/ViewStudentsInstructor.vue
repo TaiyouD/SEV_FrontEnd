@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.role.roleType == 'Faculty'">
+    <div v-if="this.role.roleType = 'Faculty'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
