@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="this.role.roleType == 'Admin'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
@@ -92,6 +92,8 @@
   <script>
   
   import SongServices from "../services/songServices";
+  import RoleServices from "../services/roleServices";
+  import Utils from "@/config/utils.js";
   
   export default {
     name: "editsong",
@@ -99,6 +101,8 @@
   data() {
     return {
       song: {
+        user:{},
+        role:{},
         title: '',
         language: '',
         translation: ''
@@ -109,8 +113,21 @@
   },
   mounted() {
     this.getSong(this.id);
+    this.user = Utils.getStore("user");
+  },
+  async created(){
+    await this.retrieveRole();
   },
   methods: {
+    async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
       getSong(id) {
         SongServices.get(id)
           .then(response => {

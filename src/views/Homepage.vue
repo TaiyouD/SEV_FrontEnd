@@ -1,6 +1,6 @@
 <template>
   
-  <div>
+  <div v-if="this.role.roleType != null">
     <v-parallax src="../assets/music-notes-bg1.jpg" height="100" />
     <v-container>
       
@@ -9,8 +9,31 @@
         <v-spacer></v-spacer>
         <v-toolbar-title>{{this.message}}</v-toolbar-title>
     </v-toolbar>
+      <!-- <br /><br /> -->
+    <!-- <div  class="mx-auto">
+    <v-alert
+      v-model="alert"
+      dismissible
+      color="primary"
+      border="top"
+      elevation="8"
+      colored-border
+     
+    >
+     Hello!
+     {{this.name}}
+    </v-alert>
+    </div>
+    <div class="text-center">
+      <v-btn
+        v-if="!alert"
+        dark
+        @click="alert = true"
+      >
+        Reset Alert
+      </v-btn>
+    </div> -->
   </v-container>
-
     <v-sheet
     class="mx-auto"
     max-width="1200"
@@ -50,7 +73,7 @@
             </v-card-text>
 
             <v-card-actions>
-              <!-- <v-spacer></v-spacer>
+              <v-spacer></v-spacer>
               <v-btn 
               href="https://docs.google.com/forms/d/e/1FAIpQLScUqUM1udM6oIOnTop36YW896Sev0EdKw_zgVk3ELkhJp3n2Q/viewform"
               target="_blank"
@@ -58,7 +81,7 @@
               color="surface-variant" variant="text" text>
                 AUDITION FOR A SCHOLARSHIP
                 <v-icon>mdi-arrow-right</v-icon>
-              </v-btn> -->
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -227,10 +250,8 @@
 </template>
   
 <script>
-  // import TutorialServices from "../services/tutorialServices";
+  import RoleServices from "../services/roleServices";
   import Utils from "@/config/utils.js";
-  import roleServices from "@/services/roleServices";
-
   export default {
     name: "home-page",
     data() {
@@ -256,23 +277,22 @@
     },
     async created() {
     this.resetMenu();
-
+    this.retrieveRole();
     },
-    async mounted() {
+    mounted() {
+      this.user = Utils.getStore("user");
       this.resetMenu();
-      this.retrieveRole();
     },
     methods: {
-      retrieveRole() {
-      roleServices.getRoleForUser(this.user.userId)
-      .then((response) => {
-        this.role = response.data[0];
-        console.log("role: " + this.role.roleType);
-      })
-      .catch((e) => {
-        this.message = e.response.data.message;
-      });
-    },
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
       resetMenu() {
       this.user = null;
       // ensures that their name gets set properly from store
@@ -281,22 +301,6 @@
         this.initials = this.user.fName[0] + this.user.lName[0];
         this.name = this.user.fName + " " + this.user.lName;
       }
-    },
-    async routeToPages(role){
-      console.log(role);
-      if(this.role.roleType == "Admin"){
-      this.$router.push({ path: "/maintain", name: "maintain" });
-      }
-      else if(this.role.roleType == 'Incoming Student'){
-      this.$router.push({ name: "home" });
-      }
-      else if(this.role.roleType == 'Student' || (this.role.roleType == 'Accompanist' && this.role.facultyType == null)){
-      this.$router.push({ name: "home" });
-      }
-      else if(this.role.roleType == 'Faculty' || (this.role.roleType == 'Accompanist' && this.role.facultyType != null)){
-      this.$router.push({ name: "maintainevent" });
-      }
-
     },
       // editTutorial(tutorial) {
       //   this.$router.push({ name: "edit", params: { id: tutorial.id } });

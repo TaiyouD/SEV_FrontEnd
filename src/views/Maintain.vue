@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div v-if="this.role.roleType == 'Admin'">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container align="center">
       <v-toolbar>
@@ -54,6 +54,8 @@
 </style>
 
 <script>
+import RoleServices from "../services/roleServices";
+import Utils from "@/config/utils.js";
 export default {
   data: () => ({
     cards: [
@@ -63,7 +65,27 @@ export default {
       { title: "Pieces", path: "/maintainsong", icon: "mdi-playlist-music" },
       { title: "Instruments", path: "/maintaininstrument", icon: "mdi-piano" },
       { title: "Levels", path: "/maintainlevel", icon: "mdi-signal" }
-    ]
-  })
+    ], 
+    user:{},
+    role:{}
+  }),
+  mounted() {
+      this.retrieveAvailability();
+      this.user = Utils.getStore("user");
+  },
+  async created(){
+    await this.retrieveRole();
+  },
+  methods: {
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+    }
 };
 </script>

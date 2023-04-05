@@ -1,6 +1,6 @@
 
 <template>
-    <div>
+    <div v-if="this.role.roleType == 'Admin'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
@@ -45,11 +45,15 @@
   <script>
 
   import InstrumentServices from "../services/instrumentServices";
+  import RoleServices from "../services/roleServices";
+  import Utils from "@/config/utils.js";
   
   export default {
     name: "addinstrument",
     data() {
       return {
+        user:{},
+        role:{},
         valid: false,
         instrument: {
           id: null,
@@ -59,7 +63,22 @@
         message: "Enter Data and Click Save.",
       };
     },
+    mounted() {
+      this.user = Utils.getStore("user");
+    },
+    async created(){
+      await this.retrieveRole();
+    },
     methods: {
+      async retrieveRole() {
+      await RoleServices.getRoleForUser(this.user.userId)
+        .then((response) => {
+          this.role = response.data[0];
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+    },
       saveInstrument() {
         var data = {
           type: this.instrument.type,

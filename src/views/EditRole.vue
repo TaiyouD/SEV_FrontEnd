@@ -1,6 +1,6 @@
 
 <template>
-    <div>
+    <div v-if="this.currentRole.roleType == 'Admin'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
@@ -142,6 +142,7 @@
   
   import RoleServices from "../services/roleServices";
   import UserServices from "../services/userServices";
+  import Utils from "@/config/utils.js";
 
   export default {
     name: "editRole",
@@ -165,9 +166,14 @@
           isApproved: '',
           studentLevel: null,
         },
+        currentUser:{},
+        currentRole:{},
         message: '',
         valid: false
       }
+    },
+    async created(){
+      await this.retrieveRole();
     },
     computed: {
       isEditingFaculty() {
@@ -182,8 +188,18 @@
     },
     mounted() {
       this.getRole(this.id);
+      this.currentUser = Utils.getStore("user");
     },
     methods: {
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.currentUser)
+          .then((response) => {
+            this.currentRole = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
         getRole(id) {
           RoleServices.get(id)
               .then(response => {

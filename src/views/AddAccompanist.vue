@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="this.role.roleType != null">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
@@ -45,6 +45,7 @@
 <script>
 
 import RoleServices from "../services/roleServices";
+import Utils from "@/config/utils.js";
 
 export default {
   name: "addaccompanist",
@@ -65,8 +66,24 @@ export default {
       message: "Enter data and click save.",
     };
   },
-
+  async created(){
+    this.user = Utils.getStore("user");
+    await this.retrieveRole();
+  },
   methods: {
+    async retrieveRole() {
+          await RoleServices.getRoleForUser(this.user.userId)
+            .then((response) => {
+              this.role = response.data[0];
+              /*this.roleId2 = this.role.map(function(el) {
+                  return el.id;});*/
+              console.log('role');
+              console.log(this.role);
+            })
+            .catch((e) => {
+              this.message = e.response.data.message;
+            });
+        },
     saveAccompanist() {
         //send notification to admin
       var data = {

@@ -1,6 +1,6 @@
 
   <template>
-  <div>
+  <div v-if="this.role.roleType == 'Admin'">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -60,12 +60,15 @@
 
 import RoleServices from "../services/roleServices.js";
 import UserServices from "../services/userServices.js";
+import Utils from "@/config/utils.js";
 
 export default {
   name: "maintainrole",
   props: ["id"],
   data() {
     return {
+      user:{},
+      role:{},
       search: "",
       roles: [],
       filteredRoles: [],
@@ -82,8 +85,21 @@ export default {
   },
   mounted() {
     this.retrieveRoles();
+    this.user = Utils.getStore("user");
   },
+  async created() {
+      await this.retrieveRole();
+    },
   methods: {
+    async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
     retrieveRoles() {
       RoleServices.getAll()
         .then((response) => {
