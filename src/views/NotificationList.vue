@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="this.role.roleType != null">
       <v-container>
         <v-toolbar>
           <v-toolbar-title>Hello!</v-toolbar-title>
@@ -50,6 +50,7 @@
   <script>
   import TutorialServices from "../services/tutorialServices";
   import Utils from "@/config/utils.js";
+  import RoleServices from "../services/roleServices";
   
   export default {
     name: "notification-list",
@@ -61,6 +62,7 @@
         currentIndex: -1,
         title: "",
         user: {},
+        role:{},
         message: "Search, View or Delete Notifications",
         headers: [
           { text: "Title", value: "title" },
@@ -71,9 +73,20 @@
     },
     mounted() {
       this.user = Utils.getStore("user");
-      this.retrieveTutorials();
+    },
+    async created() {
+      await this.retrieveRole();
     },
     methods: {
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
       editTutorial(tutorial) {
         this.$router.push({ name: "edit", params: { id: tutorial.id } });
       },

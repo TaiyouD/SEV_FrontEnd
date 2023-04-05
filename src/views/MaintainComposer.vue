@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div v-if="this.role.roleType == 'Admin'">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -46,12 +46,16 @@
 <script>
 
 import ComposerServices from "../services/composerServices";
+import RoleServices from "../services/roleServices";
+import Utils from "@/config/utils.js";
 
 export default {
   name: "maintaincomposer",
   props: ["id"],
   data() {
     return {
+      user:{},
+      role:{},
       search: "",
       composers: [],
       message: "Add, Edit or Delete Composers",
@@ -66,8 +70,21 @@ export default {
   },
   mounted() {
     this.retrieveComposers();
+    this.user = Utils.getStore("user");
+  },
+  async created(){
+    await this.retrieveRole();
   },
   methods: {
+    async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+           })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
     retrieveComposers() {
       ComposerServices.getAll()
         .then((response) => {
