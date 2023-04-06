@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if = "this.roleForUser.roleType  == 'Student' || this.roleForUser.roleType == 'Incoming Student'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
         <v-container>
             <v-toolbar>
@@ -552,6 +552,23 @@
   </v-dialog>
         </v-card>
       </v-container>
+
+
+ <!-- ===========Testing a date picker of sorts =============== -->  
+      <div class="button-grid">
+    <div v-for="(row, rowIndex) in buttonRows" :key="rowIndex">
+      <div v-for="(button, buttonIndex) in row" :key="buttonIndex">
+        <button
+          :class="{ selected: selectedButton === button }"
+          @click="selectButton(button)"
+        >
+          {{ button.time }}
+        </button>
+      </div>
+    </div>
+  </div>
+ <!-- ========================== -->
+
     </div>
     </div>
     </div>
@@ -562,7 +579,7 @@
   <script>
   import eventServices from "../services/eventServices";
   import eventSessionServices from "../services/eventSessionServices";
-  import roleServices from "../services/rolesServices";
+  import roleServices from "../services/roleServices";
   import availabilityServices from "../services/availabilityServices";
   import userServices from "../services/userServices";
   import Utils from "@/config/utils.js"
@@ -577,6 +594,29 @@
     },
     data() {
       return {
+        buttonRows: [
+        [
+          { time: "9:00 AM" },
+          { time: "9:05 AM" },
+          { time: "9:10 AM" },
+          { time: "9:15 AM" },
+        ],
+        [
+          { time: "9:20 AM" },
+          { time: "9:25 AM" },
+          { time: "9:30 AM" },
+          { time: "9:35 AM" },
+        ],
+        [
+          { time: "9:40 AM" },
+          { time: "9:45 AM" },
+          { time: "9:50 AM" },
+          { time: "9:55 AM" },
+        ],
+      ],
+      selectedButton: null,
+
+//=====================================================
         instrumentRole: {
           id: null,
           instrument:{
@@ -649,6 +689,10 @@
 
     // },
     methods: {
+      selectButton(button) {
+      this.selectedButton = button;
+    },
+      // =============
       async testForSongFetch(){
         await eventSongServices.getAll() 
         .then((response) => {
@@ -657,17 +701,12 @@
           .catch((e) => {
             this.message = e.response.data.message;
           });
-
       },
       async submitForm(){
-          console.log(this.selectedEvent.id)
-          console.log(this.selectedAccompanist.id)
-          console.log(this.selectedInstrument.privateInstructorId)
-          console.log(this.selectedStartTime)
-          console.log(this.selectedEndTime)
-          console.log(this.selectedSongs)
-          let eventSessionId;
+          let eventSessionId
           const selectedSongs = this.selectedSongs
+
+          // Make the data to put into eventSession table
           const data ={
             eventId: this.selectedEvent.id,
             accompanistId: this.selectedAccompanist.id,
@@ -676,27 +715,28 @@
             endTime: this.selectedEndTime,
             studentId: this.user.userId,
           }
-          console.log(data)
+          // Create a new entry into the eventSesssion table 
         await eventSessionServices.create(data)
           .then((response) => {
 
             console.log('Success!', response.data);
-            eventSessionId = response.data.id,
-          console.log(eventSessionId)
-
+            eventSessionId = response.data.id // Retrieve the eventSessionId of the new session we just created 
           })
           .catch((error) => {
             console.log('Error:', error);
           });
 
+
+          // Make a new data set for the eventSongs table. For every song they want added, make an array of objects that contains the 
+          // event song and eventSessionId
           const eventSongs = selectedSongs.map((song) => {
             return{
               eventsessionId: eventSessionId,
               repertoireSongId: song.id,
             }
           })
+
           for (let i = 0; i < eventSongs.length; i++){
-            
           console.log("eventsongs data", eventSongs[i])
           eventSongServices.create(eventSongs[i])
             .then((response) => {
@@ -706,10 +746,10 @@
               console.log('Error for creating eventSongs:', error)
             })
           }
-          // this.$forceUpdate();
-          //this.$router.go(0);
-  
+
+          this.$router.go(0); //This is just a force refresh 
       },
+
       async retrieveInstrumentRoles() {
         await instrumentRoleServices.getAllForUser(this.roleForUser.id)
           .then((response) => {
