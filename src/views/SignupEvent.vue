@@ -555,19 +555,26 @@
 
 
  <!-- ===========Testing a date picker of sorts =============== -->  
+ <div class="container">
+    <div class="row">
+      <div class="col">
       <div class="button-grid">
-    <div v-for="(row, rowIndex) in buttonRows" :key="rowIndex">
-      <div v-for="(button, buttonIndex) in row" :key="buttonIndex">
-        <button
-          :class="{ selected: selectedButton === button }"
-          @click="selectButton(button)"
-        >
-          {{ button.time }}
-        </button>
+        <div v-for="(row, rowIndex) in buttonRows" :key="rowIndex" class="row mb-3">
+            <div v-for="(button, buttonIndex) in row" :key="buttonIndex" class="col-3">
+              <button
+                :class="{ 'btn-primary': selectedButton === button, 'btn-outline-primary': selectedButton !== button }"
+                class="btn btn-block"
+                @click="selectButton(button)"
+              >
+                {{ button.time }}
+                </button>
       </div>
     </div>
   </div>
- <!-- ========================== -->
+  </div>
+  </div>
+  </div>
+ <!-- ========================================================= -->
 
     </div>
     </div>
@@ -1086,6 +1093,9 @@ computed: {
     background:white;
     justify-content:center; 
     display:flex
-
   }
+  .button-grid {
+  margin-top: 20px;
+}
+
 </style>
