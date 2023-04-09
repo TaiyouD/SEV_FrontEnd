@@ -260,7 +260,7 @@
             this.role = response.data[0];
             /*this.roleId2 = this.role.map(function(el) {
                 return el.id;});*/
-            console.log('role');
+            console.log('role here');
             console.log(this.role);
           })
           .catch((e) => {

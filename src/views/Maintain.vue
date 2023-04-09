@@ -1,6 +1,6 @@
 
-<template>
-  <div v-if="this.role.roleType = 'Admin'">
+<template >
+  <div v-if="this.role.roleType == 'Admin'">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container align="center">
       <v-toolbar>
@@ -54,7 +54,7 @@
 </style>
 
 <script>
-import RoleServices from "../services/roleServices";
+import RoleServices from "../services/roleServices.js";
 import Utils from "@/config/utils.js";
 export default {
   data: () => ({
@@ -67,20 +67,19 @@ export default {
       { title: "Levels", path: "/maintainlevel", icon: "mdi-signal" }
     ], 
     user:{},
-    role:{}
+    role:{
+      roleType:""
+    },
   }),
-  mounted() {
-      this.retrieveAvailability();
-      this.user = Utils.getStore("user");
-  },
   async created(){
+    this.user = Utils.getStore("user");
     await this.retrieveRole();
   },
   methods: {
       async retrieveRole() {
         await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
-            this.role = response.data[0];
+            this.role = response.data[0]
           })
           .catch((e) => {
             this.message = e.response.data.message;

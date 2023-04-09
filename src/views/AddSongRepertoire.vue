@@ -78,10 +78,8 @@ data() {
     role:{}
   };
 },
-mounted() {
-  this.user = Utils.getStore("user");
-},
 async created(){
+  this.user = Utils.getStore("user");
   const result = await SongServices.getAll();
   this.song = result.data;
   await this.retrieveRole();

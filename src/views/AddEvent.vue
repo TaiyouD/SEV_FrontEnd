@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.role.roleType = 'Admin'">
+    <div v-if="this.role.roleType == 'Admin'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
@@ -28,7 +28,6 @@
           <v-row>
           <v-col cols="4">
             <v-menu
-              v-model="datePicker"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -50,7 +49,6 @@
           </v-col>
           <v-col cols="4">
             <v-menu
-              v-model="startTimePicker"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -78,7 +76,6 @@
           </v-col>
           <v-col cols="4">
             <v-menu
-              v-model="endTimePicker"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -147,8 +144,6 @@
       return {
         valid: false,
         event: {
-          user:{},
-          role:{},
           eventTitle: '',
           eventType: '',
           date: '',
@@ -157,6 +152,8 @@
           duration: '',
           isReady: false
         },
+        user:{},
+        role:{},
         message: "Enter Data and Click Save.",
       };
     },
@@ -170,10 +167,8 @@
         }
       }
     },
-    mounted() {
-      this.user = Utils.getStore("user");
-    },
     async created(){
+      this.user = Utils.getStore("user");
       await this.retrieveRole();
     },
     methods: {
