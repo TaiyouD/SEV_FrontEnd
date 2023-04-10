@@ -1,6 +1,6 @@
 
 <template>
-  <div v-if="this.role.roleType = 'Admin'">
+  <div v-if="this.role.roleType == 'Admin'">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -70,9 +70,9 @@ export default {
   },
   mounted() {
     this.retrieveComposers();
-    this.user = Utils.getStore("user");
   },
   async created(){
+    this.user = Utils.getStore("user");
     await this.retrieveRole();
   },
   methods: {

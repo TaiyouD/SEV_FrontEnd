@@ -1,12 +1,11 @@
 <template>
-  <div v-if="this.role.roleType = 'Admin' || (this.role.roleType = 'Faculty') || (this.role.roleType = 'Accompanist')">
+  <div v-if="this.role.roleType == 'Admin' || (this.role.roleType == 'Faculty') || (this.role.roleType == 'Accompanist')">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
-        <v-btn v-if="isFaculty || isAccomp" icon to="/maintainevent">
+        <v-btn v-if="isFaculty || isAccomp || isAdmin" icon to="/maintainevent">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <v-icon v-if="isStudent" class="mr-8">align_vertical_top</v-icon>
         <v-toolbar-title>My Event Sessions</v-toolbar-title>
         <v-spacer></v-spacer>
           <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
@@ -261,9 +260,9 @@ export default {
       event:{},
       tempRole:{},
       display_dialog: false,
+      isAdmin: false,
       isFaculty:false,
       isAccomp:false,
-      isStudent:false,
       vEditEventSession:false,
       vAddAvailability:false,
       vAddCritique:false,
@@ -291,7 +290,7 @@ export default {
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
         { text: "Duration", value: "duration", sortable: false },
-        { text: "Faculty", value: "Faculty", sortable: false },
+        { text: "Faculty", value: "faculty", sortable: false },
         { text: "Student", value: "student", sortable: false },
         { text: "Critique", value: "critique", sortable: false }
       ]
@@ -421,6 +420,9 @@ export default {
             }
             if (response.data[0].roleType == "Accompanist"){
               this.isAccomp=true
+            }
+            if (response.data[0].roleType == "Admin"){
+              this.isAdmin=true
             }
           })
           .catch((e) => {

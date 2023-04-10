@@ -499,10 +499,8 @@ import userServices from '../services/userServices';
         message: "Fill out the form below to critique the performance. Once completed, click the 'Save' button.",
       };
     },
-    mounted() {
-      this.user = Utils.getStore("user");
-    },
     async created(){
+        this.user = Utils.getStore("user");
         await this.retrieveFacultyRole();
         await this.retrieveEventSession();
         await this.retrieveStudentRole();
