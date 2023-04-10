@@ -362,6 +362,11 @@ export default {
     initials: "",
     name: "",
   }),
+  watch: {
+    $route() {
+      this.resetMenu();
+    }
+  },  
   async created() {
     this.resetMenu();
   },
