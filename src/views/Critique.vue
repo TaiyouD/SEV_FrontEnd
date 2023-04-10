@@ -104,6 +104,7 @@ export default {
       //     levelNumber:""
       //   }
       // }, 
+      testeventSessionId: 1,
       instrumentRole:[],
       selected: [],
       search: "",
@@ -133,6 +134,7 @@ export default {
     this.user = Utils.getStore("user");
     await this.retrieveRole();
     await this.retrieveThisEventSession();
+    await this.retrieveThisEvent();
     // await this.retrieveInstructorInstrumentRoles();
     await this.retrieveCritiquesForEventSession();
     // await this.makeHoursZero();
@@ -150,9 +152,11 @@ export default {
         });
     },
     async retrieveThisEventSession() {
-        await EventSessionServices.get(this.eventSessionId)
+        await EventSessionServices.get(this.testeventSessionId)
         .then((response) => {
             this.eventSession = response.data;
+            console.log('eventSession');
+            console.log(this.eventSession);
         })
         .catch((e) => {
             this.message = e.response.data.message;
@@ -162,6 +166,8 @@ export default {
         await EventServices.get(this.eventSession.eventId)
         .then((response) => {
             this.event = response.data;
+            console.log('event');
+            console.log(this.event);
         })
         .catch((e) => {
             this.message = e.response.data.message;

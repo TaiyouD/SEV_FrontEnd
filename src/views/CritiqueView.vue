@@ -17,10 +17,10 @@
         <v-card>
         <br>
         <div style="display: flex; justify-content: space-between; text-align: center;">
-            <h4 class="ml-5">Date: {{critique.date}}</h4>
+            <!-- <h4 class="ml-5">Date: {{critique.date}}</h4>
             <h4>Performer: {{studentUser.fName}} {{studentUser.lName}}</h4>
             <h4>Critiquer: {{facultyUser.fName}} {{facultyUser.lName}}</h4>
-            <h4 class="mr-5">Piece: </h4>
+            <h4 class="mr-5">Piece: </h4> -->
         </div>
         <div class="line"></div>
         <br>
@@ -63,7 +63,7 @@
                 large
                 color="amber accent-4"
                 class="white--text"
-                >good</v-btn>
+                >Good</v-btn>
             </div>
             <div v-else-if="critique.deportmentGrade == 'Excellent'">
                 <v-btn
@@ -122,7 +122,7 @@
                 large
                 color="amber accent-4"
                 class="white--text"
-                >good</v-btn>
+                >Good</v-btn>
             </div>
             <div v-else-if="critique.toneGrade == 'Excellent'">
                 <v-btn
@@ -181,7 +181,7 @@
                 large
                 color="amber accent-4"
                 class="white--text"
-                >good</v-btn>
+                >Good</v-btn>
             </div>
             <div v-else-if="critique.accuracyGrade == 'Excellent'">
                 <v-btn
@@ -240,7 +240,7 @@
                 large
                 color="amber accent-4"
                 class="white--text"
-                >good</v-btn>
+                >Good</v-btn>
             </div>
             <div v-else-if="critique.techniqueGrade == 'Excellent'">
                 <v-btn
@@ -299,7 +299,7 @@
                 large
                 color="amber accent-4"
                 class="white--text"
-                >good</v-btn>
+                >Good</v-btn>
             </div>
             <div v-else-if="critique.interpretationGrade == 'Excellent'">
                 <v-btn
@@ -358,7 +358,7 @@
                 large
                 color="amber accent-4"
                 class="white--text"
-                >good</v-btn>
+                >Good</v-btn>
             </div>
             <div v-else-if="critique.balanceGrade == 'Excellent'">
                 <v-btn
@@ -417,7 +417,7 @@
                 large
                 color="amber accent-4"
                 class="white--text"
-                >good</v-btn>
+                >Good</v-btn>
             </div>
             <div v-else-if="critique.dictionGrade == 'Excellent'">
                 <v-btn
@@ -501,16 +501,17 @@ import userServices from '../services/userServices';
     },
     async created(){
         this.user = Utils.getStore("user");
-        await this.retrieveFacultyRole();
-        await this.retrieveEventSession();
-        await this.retrieveStudentRole();
-        await this.retrieveFacultyRole();
+        // await this.retrieveEventSession();
+        // await this.retrieveCritique();
+        // await this.retrieveStudentRole();
+        // await this.retrieveFacultyRole();
     },
     methods: {
     async retrieveThisEventSession() {
         await EventSessionServices.get(this.eventSessionId)
         .then((response) => {
             this.eventSession = response.data;
+            this.retrieveThisEvent();
         })
         .catch((e) => {
             this.message = e.response.data.message;
@@ -547,7 +548,7 @@ import userServices from '../services/userServices';
         });
     },
     async retrieveFacultyRole() {
-      await RoleServices.getRoleForUser(this.user.userId)
+      await RoleServices.getRoleForUser(this.critique.facultyId)
         .then((response) => {
           this.facultyRole = response.data[0];
           console.log('faculty role');
