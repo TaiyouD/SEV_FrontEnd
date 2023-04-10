@@ -56,12 +56,14 @@ export default {
       };
       AuthServices.loginUser(token)
         .then((response) => {
+          console.log(response.data)
           this.user = response.data;
           Utils.setStore("user", this.user);
           this.fName = this.user.fName;
           this.lName = this.user.lName;
-          this.$router.push({ name: "home" });
-          this.$router.go();
+          // check what role they are
+          // based on role, go to different home pages
+          this.$router.push({ name: "homestudent" });
         })
         .catch((error) => {
           console.log("error", error);
