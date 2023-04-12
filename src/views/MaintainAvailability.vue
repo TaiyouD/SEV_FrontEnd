@@ -18,7 +18,7 @@
           <v-spacer><h4>Event Title: {{event.eventTitle}} </h4> </v-spacer>
           <v-spacer><h4>Event Type: {{event.eventType}} </h4> </v-spacer>
           <v-spacer><h4>Date: {{event.date}} </h4> </v-spacer>
-          <v-spacer><h4>Time: {{ event.startTime }} - {{event.endTime}}</h4> </v-spacer>
+          <v-spacer><h4>Time: {{convertTime(event.startTime)}} - {{convertTime(event.endTime)}}</h4> </v-spacer>
         </div>
         <br>
         <div class="line"></div>
@@ -97,35 +97,34 @@
         });
     },
     retrieveAvailability() {
-      AvailabilityServices.getAll()
-        .then((response) => {
-          const availability = response.data;
-          // Fetch role and user data for each availability
-          const promises = availability.map(avail => {
-            const roleId = avail.facultyId ? avail.facultyId : avail.accompanistId;
-            return RoleServices.get(roleId)
-              .then((roleResponse) => {
-                const role = roleResponse.data;
-                return UserServices.get(role.userId)
-                  .then((userResponse) => {
-                    avail.roleType = role.roleType;
-                    avail.fName = userResponse.data.fName;
-                    avail.lName = userResponse.data.lName;
-                    avail.email = userResponse.data.email;
-                    return avail;
-                  });
-              });
-          });
-          // Resolve all promises and update availability
-          Promise.all(promises).then((availability) => {
-            this.availability = availability;
-          }).catch((e) => {
+        AvailabilityServices.getAll()
+          .then((response) => {
+            const availability = response.data;
+            const promises = availability.map(avail => {
+              const roleId = avail.facultyId ? avail.facultyId : avail.accompanistId;
+              return RoleServices.get(roleId)
+                .then((roleResponse) => {
+                  const role = roleResponse.data;
+                  return UserServices.get(role.userId)
+                    .then((userResponse) => {
+                      avail.roleType = role.roleType;
+                      avail.fName = userResponse.data.fName;
+                      avail.lName = userResponse.data.lName;
+                      avail.email = userResponse.data.email;
+                      return avail;
+                    });
+                });
+            });
+            Promise.all(promises).then((availability) => {
+              // Filter the availabilities that have the same eventID as the one passed
+              this.availability = availability.filter(avail => avail.eventId === this.eventId);
+            }).catch((e) => {
+              this.message = e.response.data.message;
+            });
+          })
+          .catch((e) => {
             this.message = e.response.data.message;
           });
-        })
-        .catch((e) => {
-          this.message = e.response.data.message;
-        });
       },
       convertTime(time) {
         const date = new Date(`1/1/2000 ${time}`);
