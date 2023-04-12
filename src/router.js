@@ -111,14 +111,16 @@ const router = new Router({
       component: AddSongRepertoire,
     },
     {
-      path: "/critique",
+      path: "/critique/:eventSessionId",
       name: "critique",
       component: Critique,
+      props: true
     },
     {
-      path: "/critiqueview",
+      path: "/critiqueview/:critiqueId",
       name: "critiqueview",
       component: CritiqueView,
+      props: true
     },
     {
       path: "/editcomposer",
@@ -180,10 +182,11 @@ const router = new Router({
     {
       path: "/maintainevent",
       name: "maintainevent",
-      component: MaintainEvents
+      component: MaintainEvents,
+      props: true
     },
     {
-      path: "/maintaineventsession",
+      path: "/maintaineventsession/:eventId",
       name: "maintaineventsession",
       component: MaintainEventSessions,
       props: true
