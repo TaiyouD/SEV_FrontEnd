@@ -1,4 +1,3 @@
-// Whenever I edit an availability, it takes me to another page. How do I have a pop up so I have everything on one page? It needs to contain the editAvailability code below
 
 <template>
   <div>
