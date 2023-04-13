@@ -34,7 +34,7 @@
         <v-menu>
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" color="primary" class="ml-2">
-              {{ selectedDate || "Upcoming "}}
+              {{ selectedDate || "All Dates" }}
               <v-icon>mdi-menu-down</v-icon>
             </v-btn>
           </template>
@@ -49,7 +49,7 @@
         <v-card-text>
           <b>{{ message }}</b>
         </v-card-text>
-        <v-data-table v-if="isAdmin" :headers="headersAdmin" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventTitle', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
+        <v-data-table v-if="isAdmin" :headers="headersAdmin" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
           <template #item="{ item }">
             <tr>
               <td>{{ item.eventTitle }}</td>
@@ -59,8 +59,10 @@
               <td>{{ convertTime(item.endTime) }}</td>
 
               <td >
+<!-- 
+              <div v-if="selectedEvent == 'All Events' || (selectedEvent == 'Upcoming')"> -->
                 <template item-value="isReady">
-                  <div v-if="isUpcoming || isCurrent">
+                  <div v-if="isCurrentUpcoming">
                   <v-icon v-if="item.isReady" color="green" class="mx-1">mdi-check-bold</v-icon>
                   <div v-else>
                     <v-icon color="red darken-3" class="mx-1" @click="confirmIsReady(item)">mdi-alpha-x-box-outline</v-icon>
@@ -103,7 +105,7 @@
 
               <td>
                 <div class="d-flex justify-end">
-                  <v-icon v-if="isUpcoming || isCurrent" color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
+                  <v-icon v-if="isCurrentUpcoming" color="primary" @click="editEvent(item)">mdi-pencil</v-icon>
                   <v-icon v-if="isUpcoming" color="error" @click="deleteEvent(item)">mdi-delete</v-icon>
                 </div>
               </td>
@@ -124,7 +126,7 @@
             </v-card>
           </v-dialog>
 
-          <v-data-table v-if="isFaculty || isAccompanist" :headers="headersFaculty" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventTitle', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
+          <v-data-table v-if="isFaculty || isAccompanist" :headers="headersFaculty" :items="filteredEvents" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
             <template #item="{ item }">
               <tr>
                 <td>{{ item.eventTitle }}</td>
@@ -135,7 +137,7 @@
                   <template item-value="availability">
                     <!--Dialog Availability Faculty and Accompanist-->
                   
-                    <v-icon v-if="isUpcoming" color="primary" dark class="mx-4" @click="getAvailability(item) && displayDialog()">
+                    <v-icon v-if="isUpcoming" color="primary" dark class="mx-4" @click="getAvailability(item)">
                       mdi-calendar-plus-outline
                       </v-icon>
 
@@ -203,7 +205,34 @@
                             append-icon="mdi-timer-music"> 
                           </v-text-field>     
                           </div>
-                      </div>                           
+                      </div>
+                      <div style="text-align: center;">
+                        <div class=" mt-2 d-flex flex-row bg-surface-variant" max-width = "780" >
+                          <!--  Availability Start Time Below -->
+                          <!-- v-model="availability.startTime"
+                            id="startTime" -->
+                            <v-text-field class=" mr-4" width="360"
+                            v-model="availability.startTime"
+                              label="Available Start Time"
+                              return-object
+                              single-line
+                              filled
+                              append-icon="mdi-clock-in"
+                            ></v-text-field>
+        
+                            <!--Event Time Slot-->
+                            <!-- :item-text="item => `${events.startTime} ${events.endTime}`" -->
+                            <!-- v-model="availability.endTime"
+                              id="endTime" -->
+                            <v-text-field width="360"
+                              v-model="availability.endTime"
+                              label="Available End Time"
+                              single-line
+                              filled
+                              append-icon="mdi-clock-out"
+                            ></v-text-field>   
+                            </div></div>  
+                            
                             <div v-for="(availability, index) in listAvailabilities" :key="index">
                               
                               <div style="text-align: center;">
@@ -230,7 +259,7 @@
                                     append-icon="mdi-clock-out"
                                   ></v-text-field>
                                                     
-                                  <v-icon v-if="listAvailabilities.length > 1" class="ml-4 mb-6" size="28" color="primary" @click="removeAvailability(availability, index)">mdi-trash-can-outline</v-icon>
+                                  <v-icon class="ml-4 mb-6" size="28" color="primary" @click="removeAvailability(index)">mdi-trash-can-outline</v-icon>
                                   <br>
                                 </div></div>
                             </div>                         
@@ -303,8 +332,8 @@ export default {
       vEditEventSession:false,
       displayIcon:false,
       isUpcoming:false,
-      isCurrent:false,
       isPast:false,
+      isCurrentUpcoming:false,
       facultyId:null,
       accompanistId:null,
       editedEvent:{
@@ -313,18 +342,12 @@ export default {
         startTime:"",
         endTime:""
       },
-      listAvailabilities:[
-        {
-          startTime:'',
-        endTime:''
-        }
-      ],
+      listAvailabilities:[],
       availabilities:{},
       availability:{
         startTime:'',
         endTime:''
       },
-      originalAvailabilities:[],
       showTextField: false,
       // availability:[{
       //   startTime:"",
@@ -334,15 +357,12 @@ export default {
       search: "",
       events: [],
       filteredEvents: [],
-      eventsList: ["All Events", "Junior", "Jury", "Hearing", "Scholarship", "Senior"],
+      eventsList: ["All Events", "Junior", "Jury", "Recital", "Scholarship", "Senior"],
       selectedEvent: null,
       filteredDates: [],
-      eventsDate: ["Current", "Past", "Upcoming "],
-      selectedDate: "Upcoming ",
+      eventsDate: ["All Dates", "Current", "Past", "Upcoming "],
+      selectedDate: null,
       selectedFilter: null,
-      upcomingList:[],
-      currentList:[],
-      pastList:[],
       message: "Add, Edit or Delete Events",
       headersAdmin: [
         { text: "Event Title", value: "eventTitle", sortable: false },
@@ -350,7 +370,7 @@ export default {
         { text: "Date", value: "date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
-        { text: "Ready", value: "isReady", sortable: false },//not display this unless is upcoming
+        { text: "Ready", value: "isReady", sortable: false },
         { text: "Availability", value: "availability", sortable: false }, //not display this unless is upcoming
         { text: "Students", value: "students", sortable: false },
         { text: "Event Sessions", value: "eventsession", sortable: false }
@@ -373,50 +393,20 @@ export default {
     this.retrieveRole();
   },
   methods: {
-      retrieveEvents() {
-      return new Promise((resolve, reject) => {
+  retrieveEvents() {
+    return new Promise((resolve, reject) => {
         EventServices.getAll()
-          .then((response) => {
-            const now = new Date();
-            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; 
-            const today = new Date(now.getTime() - timezoneOffset);
-            const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
-            
+        .then((response) => {
             this.events = response.data;
-            // this.filteredEvents = response.data;
-
-            // filter past events
-            this.pastList = this.events.filter((event) => {
-              const eventDate = new Date(event.date);
-              return eventDate.getTime() < today.getTime();
-            });
-
-            // filter current events
-            this.currentList = this.events.filter((event) => {
-              const eventDate = new Date(event.date);
-              return eventDate.getTime() >= today.getTime() && eventDate.getTime() <= midnight.getTime();
-            });
-
-            // filter upcoming events
-            this.upcomingList = this.events.filter((event) => {
-              const eventDate = new Date(event.date);
-              return eventDate.getTime() > midnight.getTime();
-            });
-            this.filteredEvents = this.upcomingList;
-            this.isUpcoming = true;
-            console.log('filtered events', this.filteredEvents)
-
-            console.log('current', this.currentList)
-            console.log('past', this.pastList)
-            console.log('upcoming', this.upcomingList)
-
+            this.filteredEvents = response.data;
+            this.filteredDates = response.data;
             resolve();
-          })
-          .catch((e) => {
+        })
+        .catch((e) => {
             this.message = e.response.data.message;
             reject(e);
-          });
-      });
+        });
+    });
     },
     convertTime(time) {
       const date = new Date(`1/1/2000 ${time}`);
@@ -439,7 +429,7 @@ export default {
       if (this.selectedEvent && this.selectedEvent !== "All Events") {
         filteredData = filteredData.filter(event => event.eventType === this.selectedEvent);
       }
-      if (this.selectedDate) {
+      if (this.selectedDate && this.selectedDate !== "All Dates") {
         if (this.selectedDate === "Current") {
           const now = new Date();
           const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
@@ -520,18 +510,21 @@ export default {
     dateCondition(){
       if (this.selectedDate == "Upcoming "){
         this.isUpcoming=true
-        this.isCurrent=false
-        this.isPast=false
       }
-      if (this.selectedDate == 'Current'){
-        this.isCurrent = true
+      else{
         this.isUpcoming=false
-        this.isPast=false
+      }
+      if (this.selectedDate == "Upcoming " || this.selectedDate == 'Current'){
+        this.isCurrentUpcoming=true
+      }
+      else{
+        this.isCurrentUpcoming=false
       }
       if(this.selectedDate == "Past"){
         this.isPast = true;
-        this.isCurrent = false
-        this.isUpcoming=false
+      }
+      else{
+        this.isPast = false
       }
     },
     //get selected event info and open confirmation message
@@ -560,24 +553,12 @@ export default {
 
     //get all avaiabilities for the selected event and for the specific role
     async getAvailability(event){
-        // set the edited student data to the clicked student
+        // Set the edited student data to the clicked student
         console.log("event selected")
         console.log(event)
         this.editedEvent = { ...event };
-        //reinitialize variables specially after close a dialog and call this function again
-        this.availabilities = []
-        this.availability={
-        startTime:'',
-        endTime:''
-      }
-        this.message= "Add, Edit or Delete Events";
-        this.listAvailabilities=[{
-          startTime:'',
-          endTime:''
-        }];
         await AvailabilityServices.getAll()
         .then((response) => {
-          console.log("response", response.data)
             const resul = [];
             //getting event depending if is accompanist or faculty
             for(let i = 0; i < response.data.length; i++){
@@ -599,14 +580,13 @@ export default {
             }
             if (this.found){
               this.availability = resul[0]; //just handling one availability
-              this.listAvailabilities = resul;
-              this.originalAvailabilities = resul;
+              this.availabilities = resul;
             }            
         })
         console.log("availability", this.availability)
         console.log("availabilities", this.availabilities)
-        console.log('availability lenght', this.availabilities.length)
-       // await this.displayDialog();
+        console.log('availability lenght', this.availabilities.length > 1)
+        await this.displayDialog();
     },
     displayDialog(){
       this.display_dialog = true;
@@ -622,27 +602,51 @@ export default {
     },
 
     //remove availability slots
-    removeAvailability(item, index) {
-      console.log("here 1", item)
-      if(item.startTime == "" && item.endTime == ""){
+    removeAvailability(index) {
       this.listAvailabilities.splice(index, 1);
-      console.log("here 2")
-      }
-      else{
-        console.log("here 3")
-        AvailabilityServices.delete(item.id)
-        .then(() => {
-          this.listAvailabilities.splice(index, 1);
-          this.message = "Event was deleted successfully!";
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      }
-      this.getAvailability(this.editedEvent);
     },
 
     //save changes to availability times
+    saveAvailability(item) { 
+      console.log("item", item)
+      this.listAvailabilities.unshift(this.availability)
+      console.log("list of availabilities", this.listAvailabilities)
+      //create a new availability if us adding a new one
+      if(!this.found){
+        for (let i = 0; i < this.listAvailabilities.length; i++){
+          var data = {
+            facultyId: this.facultyId,
+            accompanistId: this.accompanistId,
+            eventId: item.id,
+            startTime: this.listAvailabilities[i].startTime,
+            endTime: this.listAvailabilities[i].endTime
+          };
+          AvailabilityServices.create(data) 
+            .then((response) => {
+              console.log("add " + response.data);
+            })
+            .catch((e) => {
+              this.message = e.response.data.message;
+            });
+        }}
+        //update an availability if it already exists
+        else{
+          for (let i = 0; i < this.listAvailabilities.length; i++){
+            if(this.listAvailabilities[i].id == null){
+            this.listAvailabilities[i].id = this.availability.id + 1
+          }
+            AvailabilityServices.update(this.listAvailabilities[i].id,this.listAvailabilities[i]) 
+            .then(() => {
+              this.message = 'The Availability was updated successfully!';
+            })
+            .catch(e => {
+              this.message = e.response.data.message;
+            });
+        }}
+        this.display_dialog = false;
+      },
+
+          //save changes to availability times
     async saveAvailability(item) { 
       console.log("item", item)
       //this.listAvailabilities.unshift(this.availability)
@@ -665,25 +669,49 @@ export default {
               this.message = e.response.data.message;
             });
         }
-        this.getAvailability(item);
       }
         //update an availability if it already exists
         else{
-          for (let i = 0; i < this.listAvailabilities.length; i++){
-            if(this.listAvailabilities[i].id == null){
-            this.listAvailabilities[i].id = this.availability.id + 1
+          const addedAvailability=[];
+          if(this.originalAvailabilities.length < this.listAvailabilities.lenght){
+            for (let i = this.originalAvailabilities.lenght - 1; i < this.listAvailabilities.length; i++){
+              addedAvailability.push(this.listAvailabilities[i])
+            }
+            for (let i = 0; i < addedAvailability.length; i++){
+              var data2 = {
+                facultyId: this.facultyId,
+                accompanistId: this.accompanistId,
+                eventId: item.id,
+                startTime: addedAvailability[i].startTime,
+                endTime: addedAvailability[i].endTime
+              };
+              await AvailabilityServices.create(data2) 
+                .then((response) => {
+                  console.log("add " + response.data);
+                })
+                .catch((e) => {
+                  this.message = e.response.data.message;
+                });
+         }
+         this.display_dialog = false;
           }
-            AvailabilityServices.update(this.listAvailabilities[i].id,this.listAvailabilities[i]) 
-            .then(() => {
-              this.message = 'The Availability was updated successfully!';
-            })
-            .catch(e => {
-              this.message = e.response.data.message;
-            });
-        }}
+          else{
+            for (let i = 0; i < this.listAvailabilities.length; i++){
+              if(this.listAvailabilities[i].id == null){
+              this.listAvailabilities[i].id = this.availability.id + 1
+            }
+              AvailabilityServices.update(this.listAvailabilities[i].id,this.listAvailabilities[i]) 
+              .then(() => {
+                console.log('The Availability was updated successfully!');
+              })
+              .catch(e => {
+                this.message = e.response.data.message;
+              });
+          }}
+      }
         this.display_dialog = false;
         //this.listAvailabilities.shift(this.availability)
-
+        this.getAvailability(item);
       },
 
   },
