@@ -80,12 +80,11 @@
                       An OC student you should follow this proccess to sign-up for a Jury Recitial:
                       <br>
                       <br>1. Click on the Sign-Up Button on the Navigation Bar.
-                      <br>2. From the Sign-Up page then click on the Jury Recitial Hearing made available.
-                      <br>3. Then 
-                      <br>4. Acquaintance with a wide selection of music literature beyond the student’s specialization through lectures, assignments, and concert attendance.
-                      <br>5. Ability to perform a cross-section of that repertory according to the student’s interest and departmental standards.
-                      <br>6. Ability to communicate clearly, critically, and creatively about music.
-                      <br><br>Student must complete a minimum of 126 hours including the major, core, and minor if required. Elective hours may be needed to reach 126 hours.
+                      <br>2. From the Sign-Up page select the avaliable Jury Recitial from the list of upcoming events.
+                      <br>3. After selecting the event find and select a start time for your performance that fit your avaliablity.
+                      <br>4. Then fill out the rest of the information necessary for your Jury performance.
+                      <br>5. Click Submit after all information has been filled out.
+                      <br><br> If you are missing a piece or can't find a Accompanist click on the provided buttons to fill out the forms to find or add them.
                     </p>
                   </v-carousel-item>
                   <v-carousel-item>
@@ -95,16 +94,12 @@
                     <p>
                       An OC student you should follow this proccess to sign-up for a Recitial Recitial:
                       <br>
-                      <br>1. Ability to hear and analyze rhythm, melody, harmony, and form.
-                      <br>2. Ability to sight-read music and perform with other musicians.
-                      <br>3. Understanding of compositional and aesthetic properties of style and how the art of music is shaped by cultural forces.
-                      <br>4. Acquaintance with a wide selection of music literature beyond the student’s interest and departmental standards.
-                      <br>5. Ability to perform a cross-section of that repertory according to the student’s interest and departmental standards.
-                      <br>6. Ability to communicate clearly, critically, and creatively about music.
-                      <br>7. Ability to plan and teach elementary and secondary general music effectively.
-                      <br>8. Ability to conduct ensembles and rehearse instrumental music effectively.
-                      <br>9. Organizational leadership skills for management of instrumental ensembles in the public schools.
-                      <br><br>Student must complete a minimum of 126 hours including the major, core, and minor if required. Elective hours may be needed to reach 126 hours.
+                      <br>1. Click on the Sign-Up Button on the Navigation Bar.
+                      <br>2. From the Sign-Up page select the avaliable Recitial Hearing from the list of upcoming events.
+                      <br>3. After selecting the event find and select a start time for your performance that fit your avaliablity.
+                      <br>4. Then fill out the rest of the information necessary for your Recitial performance.
+                      <br>5. Click Submit after all information has been filled out.
+                      <br><br> If you are missing a piece or can't find a Accompanist click on the provided buttons to fill out the forms to find or add them.
                     </p>
                   </v-carousel-item>
                   <v-carousel-item>
@@ -114,16 +109,12 @@
                     <p>
                       An OC student you should follow this proccess to sign-up for a Senior or Junior Capstone Recitial:
                       <br>
-                      <br>1. Ability to hear and analyze rhythm, melody, harmony, and form.
-                      <br>2. Ability to sight-read music and perform with other musicians.
-                      <br>3. Understanding of compositional and aesthetic properties of style and how the art of music is shaped by cultural forces.
-                      <br>4. Acquaintance with a wide selection of music literature beyond the student’s interest and departmental standards.
-                      <br>5. Ability to perform a cross-section of that repertory according to the student’s interest and departmental standards.
-                      <br>6. Ability to communicate clearly, critically, and creatively about music.
-                      <br>7. Ability to plan and teach elementary and secondary general music effectively.
-                      <br>8. Ability to conduct ensembles and rehearse instrumental music effectively.
-                      <br>9. Organizational leadership skills for management of instrumental ensembles in the public schools.
-                      <br><br>Student must complete a minimum of 126 hours including the major, core, and minor if required. Elective hours may be needed to reach 126 hours.
+                      <br>1. Click on the Sign-Up Button on the Navigation Bar.
+                      <br>2. From the Sign-Up page select the avaliable Capstone event for yourself either being Junior or Senior from the list of upcoming events.
+                      <br>3. After selecting the event find and select a start time for your performance that fit your avaliablity.
+                      <br>4. Then fill out the rest of the information necessary for your Capstone performance.
+                      <br>5. Click Submit after all information has been filled out.
+                      <br><br> If you are missing a piece or can't find a Accompanist click on the provided buttons to fill out the forms to find or add them.
                     </p>
                   </v-carousel-item>
                   <v-carousel-item>
@@ -133,16 +124,12 @@
                     <p>
                       An OC student you should follow this proccess to sign-up for a Senior or Junior Capstone Recitial:
                       <br>
-                      <br>1. Ability to hear and analyze rhythm, melody, harmony, and form.
-                      <br>2. Ability to sight-read music and perform with other musicians.
-                      <br>3. Understanding of compositional and aesthetic properties of style and how the art of music is shaped by cultural forces.
-                      <br>4. Acquaintance with a wide selection of music literature beyond the student’s interest and departmental standards.
-                      <br>5. Ability to perform a cross-section of that repertory according to the student’s interest and departmental standards.
-                      <br>6. Ability to communicate clearly, critically, and creatively about music.
-                      <br>7. Ability to plan and teach elementary and secondary general music effectively.
-                      <br>8. Ability to conduct ensembles and rehearse instrumental music effectively.
-                      <br>9. Organizational leadership skills for management of instrumental ensembles in the public schools.
-                      <br><br>Student must complete a minimum of 126 hours including the major, core, and minor if required. Elective hours may be needed to reach 126 hours.
+                      <br>1. Click on the Sign-Up Button on the Navigation Bar.
+                      <br>2. From the Sign-Up page select the avaliable Scholarship Opportunitity from the list of upcoming events.
+                      <br>3. After selecting the event find and select a start time for your performance that fit your avaliablity.
+                      <br>4. Then fill out the rest of the information necessary for your Scholarship performance.
+                      <br>5. Click Submit after all information has been filled out.
+                      <br><br> If you are missing a piece or can't find a Accompanist click on the provided buttons to fill out the forms to find or add them.
                     </p>
                   </v-carousel-item>
                 </v-carousel>

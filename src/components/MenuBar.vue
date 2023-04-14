@@ -20,7 +20,7 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-else-if="user != null && (role.roleType == 'Student' || (role.roleType == 'Faculty' || (role.roleType == 'Accompanist' && role.facultyType == null)))" :to="{ name: 'homestudent' }">
+      <router-link v-else-if="user != null && (role.roleType == 'Student' || (role.roleType != 'Faculty' || (role.roleType == 'Accompanist' && role.facultyType == null)))" :to="{ name: 'homestudent' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
