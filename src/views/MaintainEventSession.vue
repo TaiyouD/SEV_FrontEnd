@@ -297,7 +297,7 @@ export default {
     };
   },
   mounted() {
-    this.retrieveEvents();
+    this.retrieveThisEvent();
   },
   async created(){
     this.user = Utils.getStore("user");
@@ -456,7 +456,7 @@ export default {
       // else if(this.selectedDate == "Past"){
       //   this.$router.push({ name: "view-critique", params: { eventSessionId: item.id } });
       // }
-      this.$router.push({ name: "addcritique", params: { eventSessionId: item.id } });
+      this.$router.push({ name: "critique", params: { eventSessionId: item.id } });
     },
     addAvailability(availability) { //change
       // Set the edited student data to the clicked student
