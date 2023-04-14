@@ -11,7 +11,7 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-else-if="user != null && (role.roleType == 'Incoming Student')" :to="{ name: 'home' }">
+      <router-link v-if="user != null && role.roleType == 'Incoming Student'" :to="{ name: 'home' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
@@ -20,7 +20,7 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-else-if="user != null && (role.roleType == 'Student' || (role.roleType != 'Faculty' || (role.roleType == 'Accompanist' && role.facultyType == null)))" :to="{ name: 'homestudent' }">
+      <router-link v-if="user != null && (role.roleType == 'Student' || role.roleType == 'Accompanist')" :to="{ name: 'homestudent' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
@@ -29,7 +29,7 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-else-if="user != null && (role.roleType == 'Faculty' || (role.roleType == 'Accompanist' && role.facultyType != null))" :to="{ name: 'homefaculty' }">
+      <router-link v-if="user != null && (role.roleType == 'Faculty' || (role.roleType == 'Accompanist' && role.facultyType != null))" :to="{ name: 'homefaculty' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
@@ -38,16 +38,7 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-else-if="user != null && (role.roleType == 'Admin')" :to="{ name: 'homeadmin' }">
-        <v-img 
-          class="mx-2"
-          src="../assets/oc-logo.png"
-          max-height="50"
-          max-width="50"
-          contain
-        ></v-img>
-      </router-link>
-      <router-link v-else-if="user != null && (role == null)">
+      <router-link v-if="user != null && (role.roleType == 'Admin')" :to="{ name: 'homeadmin' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
@@ -362,11 +353,6 @@ export default {
     initials: "",
     name: "",
   }),
-  watch: {
-    $route() {
-      this.resetMenu();
-    }
-  },  
   async created() {
     this.resetMenu();
   },
