@@ -91,7 +91,7 @@
         
               <td>
                 <template item-value="students">
-                <v-icon color="primary" class="mx-4">mdi-account-group</v-icon>
+                <v-icon color="primary" class="mx-4" @click="goToStudents(item)">mdi-account-group</v-icon>
                 </template>
             </td>
 
@@ -551,6 +551,12 @@ export default {
     goToMaintainAvailability(event){
       this.$router.push({ name: "maintainavailability", params: { eventId: event.id } });
     },
+    
+    //go to list of students signed up for event
+    goToStudents(event){
+      this.$router.push({ name: "viewStudentsEvent", params: { eventId: event.id } });
+    },
+
     //go to event sessions page
     viewEventSessions(event){
       this.$router.push({ name: "maintaineventsession", params: { eventId: event.id } });
