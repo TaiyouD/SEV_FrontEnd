@@ -125,7 +125,7 @@
                         <v-card-actions>
                         <v-spacer></v-spacer>
                           <v-btn color="primary" class="mx-2" @click="updateAvailability(item)">Save</v-btn>
-                          <v-btn color="error" class="mx-2" @click="editDialog = false">Cancel</v-btn>
+                          <v-btn color="error" class="mx-2" @click="cancel()">Cancel</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -207,6 +207,7 @@
                 });
             });
             Promise.all(promises).then((availability) => {
+              this.availability=[]
               // Filter the availabilities that have the same eventID as the one passed
               this.availability = availability.filter(avail => avail.eventId === this.eventId);
             }).catch((e) => {
@@ -225,19 +226,42 @@
       addAvailability() {
         this.$router.push({ name: "addavailability", params: { AvailabilityId: this.id } });
       },
-      editAvailability(availability) {
-        this.editedavailability = { ...availability };
+      editAvailability(item) {
+        this.editedavailability = Object.assign({}, item);
         this.editDialog = true;
+        this.startTimePicker = false;
+        this.endTimePicker = false;
       },
       updateAvailability() {
-        AvailabilityServices.update(this.editedavailability.id, this.editedavailability)
+        const index = this.availability.findIndex(a => a.id === this.editedavailability.id);
+          if (index !== -1) 
+          {
+            this.availability.splice(index, 1, this.editedavailability);
+          }
+
+          // Update the data table
+          this.availability = this.availability.slice();
+
+          AvailabilityServices.update(this.editedavailability.id, this.editedavailability)
           .then(() => {
-            this.message = 'The Availability was updated successfully!';
+            this.message = 'The availability was updated successfully!';
           })
           .catch(e => {
             this.message = e.response.data.message;
           });
+
+          // Reset the editedavailability
+          this.editedavailability = {};
+
           this.editDialog = false;
+          this.startTimePicker = false;
+          this.endTimePicker = false;
+      },
+      cancel()
+      {
+        this.editDialog = false;
+        this.startTimePicker = false;
+        this.endTimePicker = false;
       },
       deleteAvailability(availability) {
         if (confirm(`Are you sure you want to delete this availability?`)) {
