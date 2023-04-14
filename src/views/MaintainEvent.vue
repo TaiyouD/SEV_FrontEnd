@@ -554,7 +554,7 @@ export default {
     
     //go to list of students signed up for event
     goToStudents(event){
-      this.$router.push({ name: "viewStudentsEvent", params: { eventId: event.id } });
+      this.$router.push({ name: "viewstudentsevent", params: { eventId: event.id } });
     },
 
     //go to event sessions page
