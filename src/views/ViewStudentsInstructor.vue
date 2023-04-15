@@ -348,6 +348,7 @@
             });
         // Hide the edit dialog
         this.editDialog = false;
+        // this.retrieveStudentsforInstructor()
         window.location.reload(); //change
         //this.updateStudent(this.editedStudent);
       },
