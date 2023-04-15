@@ -1,6 +1,6 @@
 <template>
   
-  <div>
+  <div v-if="this.role.roleType != null">
     <v-parallax src="../assets/music-notes-bg1.jpg" height="100" />
     <v-container>
       
@@ -250,9 +250,8 @@
 </template>
   
 <script>
-  // import TutorialServices from "../services/tutorialServices";
+  import RoleServices from "../services/roleServices";
   import Utils from "@/config/utils.js";
-
   export default {
     name: "home-page",
     data() {
@@ -263,6 +262,7 @@
         currentIndex: -1,
         title: "",
         user: {},
+        role:{},
         message: "Welcome to the Music Department",
         model: 0,
         alert: true,
@@ -277,11 +277,22 @@
     },
     async created() {
     this.resetMenu();
+    this.retrieveRole();
     },
-    async mounted() {
+    mounted() {
+      this.user = Utils.getStore("user");
       this.resetMenu();
     },
     methods: {
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
       resetMenu() {
       this.user = null;
       // ensures that their name gets set properly from store

@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div v-if = "this.role.roleType  == 'Student' || this.role.roleType == 'Incoming Student'">
+
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
         <v-container>
             <v-toolbar>
@@ -31,24 +32,21 @@
           <v-data-table 
               :headers="headers" 
               :items="listOfEvents"
-              v-model="selectedEvent"
-              @click:row="showDialog"> 
-
-
+              v-model="selectedEvent"> 
     <template #item="{ item }">
       <tr>
-        <td @click="showSelectedDialog(item)">{{ item.eventType }} </td>
+        <td @click="showSelectedDialog(item)">{{ computedTitle(item) }} </td>
         <td @click="showSelectedDialog(item)">{{ item.date }} </td>
         <td @click="showSelectedDialog(item)">{{ item.startTime }} </td>
         <td @click="showSelectedDialog(item)">{{ item.endTime }} </td>
       </tr>
     </template>
   </v-data-table>
-  <v-dialog v-if="selectedEventType === 'Recital'" v-model="recitalDialogVisible" max-width = "800">
+  <v-dialog v-if="selectedEventType === 'Hearing'" v-model="hearingDialogVisible" max-width = "800">
     <v-card>
         <v-card-title>
           <v-toolbar id="navbar-maroon">
-            <span class="text-h5">Recital Sign Up </span>
+            <span class="text-h5">Hearing Sign Up </span>
           </v-toolbar>
         </v-card-title>
         <v-container>
@@ -56,6 +54,7 @@
 
           <div style="text-align: center;">
           <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+
 
         <!-- ===============Timeslot ==================== -->
         <v-row>
@@ -101,7 +100,7 @@
     ></v-select>
 
     <v-select  class=" mr-4"  width = "380" 
-        :items = userSongs
+        :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
         item-value = "song" 
@@ -133,7 +132,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -158,6 +157,30 @@
         <v-container> 
       <div style="text-align: center;">
       <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+<!-- ===========Testing a date picker of sorts =============== -->  
+<template>
+  <div class = calendar-container>
+  <v-sheet height = "400">
+        <v-calendar
+          :events="events"
+          @click:event ="selectEvent"
+          @event-mouseover="handleEventMouseover"
+          :event-color="getEventColor" 
+          ref = "calendar"
+          v-model="selectedDate"
+          color="primary"
+          :type="'day'"
+          first-time = "08:55"
+          interval-count = "110" 
+          :interval-minutes=5
+          :short-interval="true"
+        >
+        </v-calendar>
+      </v-sheet>
+    </div>
+      </template>
+      
+      <div style="max-width: 380;">
         <!-- ===============Timeslot ==================== -->
         <v-row>
           <v-col>
@@ -172,7 +195,7 @@
     >
     
   </v-select>
-    <v-select class ="mr-4" width = "390"
+    <v-select class ="mr-4" width = "380"
         :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
@@ -181,17 +204,6 @@
         filled
         @change ="updateText"
     ></v-select>
-  </v-col>
-  </v-row>
-    <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
-
-  </div>
-    </div>
-    <div style="text-align: center;">
-      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-                    <!--  Instrument Select Below -->
-        <v-row>
-          <v-col>
     <v-select  class=" mr-4"  width = "380" 
         :items = "instrumentRole"
         v-model = "selectedInstrument"
@@ -203,9 +215,8 @@
         single-line
         filled
     ></v-select>
-
     <v-select  class=" mr-4"  width = "380" 
-        :items = userSongs
+        :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
         item-value = "song" 
@@ -216,11 +227,12 @@
         single-line
         filled
      ></v-select>
-    </v-col>
+  </v-col>
   </v-row>
-    </div>
-</div>
 
+  </div>
+    </div>
+  </div>
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
@@ -234,7 +246,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -303,7 +315,7 @@
     ></v-select>
 
     <v-select  class=" mr-4"  width = "380" 
-        :items = userSongs
+        :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
         item-value = "song" 
@@ -331,7 +343,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -400,7 +412,7 @@
     ></v-select>
 
     <v-select  class=" mr-4"  width = "380" 
-        :items = userSongs
+        :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
         item-value = "song" 
@@ -433,7 +445,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -507,7 +519,7 @@
     ></v-select>
 
     <v-select  class=" mr-4"  width = "380" 
-        :items = userSongs
+        :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
         item-value = "song" 
@@ -536,7 +548,7 @@
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Song?
+      Missing a Piece?
   </v-btn>
   </router-link>
 </div>
@@ -552,14 +564,12 @@
     </div>
     </div>
     </div>
-
-
 </template>
   
   <script>
   import eventServices from "../services/eventServices";
   import eventSessionServices from "../services/eventSessionServices";
-  import roleServices from "../services/rolesServices";
+  import roleServices from "../services/roleServices";
   import availabilityServices from "../services/availabilityServices";
   import userServices from "../services/userServices";
   import Utils from "@/config/utils.js"
@@ -568,12 +578,21 @@
   import instrumentRoleServices from "../services/instrumentRoleServices";
   import eventSongServices from "../services/eventSongservices"
 
+
+
   export default {
     name: "events-list",
     components: {
     },
+
     data() {
       return {
+        events: [],
+      selectedDate: null,
+      //`2023-04-10`,
+ 
+      selectedEvents: [],
+//=====================================================
         instrumentRole: {
           id: null,
           instrument:{
@@ -586,14 +605,12 @@
         listOfEvents: [], //Change this later --- this is the events
         eventsSession: [],
         listOfRoles: [],
-        roleForUser: {},
-        userSongs: [],
+        role: {},
+        repertoireSongs: [],
         accompanists: [],
         availableAccompanists: [],
         availabilities: [],
         users: [],
-        search: "",
-        currentIndex: -1,
         title: "",
         user: {},
         message: "Music Department",
@@ -607,13 +624,13 @@
 
       start: [],
       dialogVisible: false,
-      recitalDialogVisible: true,
+      hearingDialogVisible: true,
       seniorDialogVisible: true,
       juniorDialogVisible: true,
       juryDialogVisible: true,
       scholarshipDialogVisible: true,
 
-      selectedEvent: null,
+      selectedEvent: null,  // Used to grab information on which event the user clicked on through the v-data-table
       selectedAccompanist:null,
       selectedInstrument: null,
       selectedSongs: null,
@@ -621,15 +638,18 @@
       selectedStartTime: null,
       selectedEndTime: null,
       showTextField: false,
+      timeslotTemp: null,
+
+      timeslots: [],
+
       };
     },
     async created() {
       this.user = Utils.getStore("user"); // This util grabs the specific users' role information
-      await this.retrieveRoles();
-      await this.retrieveRoleForUser();
+
+      await this.retrieveAllRoles();
+      await this.retrieveRole();
       await this.retrieveEvents();
-      //await this.retrieveEventSessions();
-      await this.retrieveUsers();
       await this.retrieveAvailabilities();
       await this.userRepertoire();
       await this.retrieveSongs();
@@ -646,15 +666,39 @@
 
     // },
     methods: {
+
+      getEventColor(event) {
+      return event.selected ? 'green' : 'blue';
+    },
+    selectEvent(event) {
+      event.selected = !event.selected;
+    },
+
+      handleEventClick({ event }) {
+      // Toggle the selected state of the clicked event
+      event.selected = !event.selected;
+
+      // Update the list of selected events
+      this.selectedEvents = this.events.filter(e => e.selected);
+    },
+    handleEventMouseover({ event }) {
+      // Highlight the event when the user hovers over it
+      console.log("Does this work?")
+      event.highlighted = true;
+    },
+
+
+
+    computedTitle(item){
+        const temp = this.listOfEvents.filter(event =>  event.id == item.id)
+        return temp[0].eventTitle
+    },
+
+      //====================================================
       async submitForm(){
-          console.log(this.selectedEvent.id)
-          console.log(this.selectedAccompanist.id)
-          console.log(this.selectedInstrument.privateInstructorId)
-          console.log(this.selectedStartTime)
-          console.log(this.selectedEndTime)
-          console.log(this.selectedSongs)
-          let eventSessionId;
+          let eventSessionId
           const selectedSongs = this.selectedSongs
+          // Make the data to put into eventSession table
           const data ={
             eventId: this.selectedEvent.id,
             accompanistId: this.selectedAccompanist.id,
@@ -663,27 +707,26 @@
             endTime: this.selectedEndTime,
             studentId: this.user.userId,
           }
-          console.log(data)
+          // Create a new entry into the eventSesssion table 
         await eventSessionServices.create(data)
           .then((response) => {
 
             console.log('Success!', response.data);
-            eventSessionId = response.data.id,
-          console.log(eventSessionId)
-
+            eventSessionId = response.data.id // Retrieve the eventSessionId of the new session we just created 
           })
           .catch((error) => {
             console.log('Error:', error);
           });
-
+          // Make a new data set for the eventSongs table. For every song they want added, make an array of objects that contains the 
+          // event song and eventSessionId
           const eventSongs = selectedSongs.map((song) => {
             return{
               eventsessionId: eventSessionId,
               repertoireSongId: song.id,
             }
           })
+
           for (let i = 0; i < eventSongs.length; i++){
-            
           console.log("eventsongs data", eventSongs[i])
           eventSongServices.create(eventSongs[i])
             .then((response) => {
@@ -693,12 +736,10 @@
               console.log('Error for creating eventSongs:', error)
             })
           }
-          // this.$forceUpdate();
-          this.$router.go(0);
-  
+          //this.$router.go(0); //This is just a force refresh 
       },
       async retrieveInstrumentRoles() {
-        await instrumentRoleServices.getAllForUser(this.roleForUser.id)
+        await instrumentRoleServices.getAllForUser(this.role.id)
           .then((response) => {
             console.log(response.data);
             this.instrumentRole = response.data;
@@ -711,9 +752,7 @@
       },
       updateText(){
         const index = this.start.indexOf(this.selectedStartTime)
-        //console.log(this.roleForUser.studentMajor)
-        //console.log("student private hours", this.roleForUser.studentPrivateHours)
-        if(this.roleForUser.studentMajor === "Music" && this.roleForUser.studentPrivateHours === 2){
+        if(this.role.studentMajor === "Music" && this.role.studentPrivateHours === 2){
           
           if(index !== -1 && index + 1 <= this.start.length) {
             const nextTime = this.start[index];
@@ -726,7 +765,7 @@
             this.EndTime = ""
           }
       }
-      else if (this.roleForUser.studentMajor === "Music" && this.roleForUser.studentPrivateHours === 1){
+      else if (this.role.studentMajor === "Music" && this.role.studentPrivateHours === 1){
         if(index !== -1 && index + 1 <= this.start.length) {
             const nextTime = this.start[index];
             const date = new Date (`1/1/2000 ${nextTime}`);
@@ -737,7 +776,7 @@
           } else{
             this.EndTime = ""
           }}
-        else if (this.roleForUser.studentMajor !== "Music" && this.roleForUser.studentPrivateHours === 2){
+        else if (this.role.studentMajor !== "Music" && this.role.studentPrivateHours === 2){
           if(index !== -1 && index + 1 <= this.start.length) {
             const nextTime = this.start[index];
             const date = new Date (`1/1/2000 ${nextTime}`);
@@ -749,7 +788,7 @@
             this.EndTime = ""
           }
         }
-        else if (this.roleForUser.studentMajor !== "Music" && this.roleForUser.studentPrivateHours === 1){
+        else if (this.role.studentMajor !== "Music" && this.role.studentPrivateHours === 1){
           if(index !== -1 && index + 1 <= this.start.length) {
             const nextTime = this.start[index];
             const date = new Date (`1/1/2000 ${nextTime}`);
@@ -762,21 +801,21 @@
           }
         }
       },
-      async retrieveRoleForUser(){
+      async retrieveRole(){
         await roleServices.getRoleForUser(this.user.userId)
         .then((response) => {
-          this.roleForUser = response.data[0];
+          this.role = response.data[0];
         })
         .catch((e) => {
           this.message = e.response.data.message;
         })
       },
       async userRepertoire(){
-        await RepertoireSongServices.getAllForUser(this.roleForUser.id)
+        await RepertoireSongServices.getAllForUser(this.role.id)
         .then((response) => {
-          this.userSongs = response.data;
+          this.repertoireSongs = response.data;
           console.log('song')
-          console.log(this.userSongs)
+          console.log(this.repertoireSongs)
         })
         .catch((e) => {
           this.message = e.response.data.message;
@@ -792,7 +831,7 @@
       async retrieveEvents() {
         await eventServices.getAll()
           .then((response) => {
-          if (this.roleForUser.studentClassification === "Incoming Student"){
+          if (this.role.studentClassification === "Incoming Student"){
             this.listOfEvents = response.data.filter(event =>  event.isReady !== false && event.eventType !== "Scholarship")
            
           }
@@ -811,6 +850,7 @@
             // Filter out events that don't have the specified item Id
             this.eventsSession = response.data.filter(event => event.eventId === item.id);
 
+            // eventsSession dates are in the wrong format, so this section changes it to the proper date format
             this.eventsSession.forEach(event =>{
               const startTimeStr = event.startTime
               const endTimeStr = event.endTime
@@ -819,23 +859,19 @@
               const [endHour, endMinute] = endTimeStr.split(':')
               const startDate = new Date();
               startDate.setHours(parseInt(startHour), parseInt(startMinute), 0, 0);
-              //startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
               const endDate = new Date();
               endDate.setHours(parseInt(endHour), parseInt(endMinute), 0, 0);
               event.startTime = new Date(startDate);
               console.log(event.startTime)
               event.endTime= new Date(endDate);
-
             })
-            //console.log("This should show the event session for a particular event")
-            //console.log("eventsSession", this.eventsSession)
             
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
-      async retrieveRoles(){
+      async retrieveAllRoles(){
         await roleServices.getAll()
           .then((response) => {
             this.listOfRoles = response.data;
@@ -852,33 +888,6 @@
           .catch((e) => {
             this.message = e.response.data.message;
           });
-      },
-      async retrieveUsers(){
-        await userServices.getAll()
-          .then((response) => {
-            this.users = response.data;
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
-      refreshList() {
-        this.retrieveEvents();
-        this.currentevent = null;
-        this.currentIndex = -1;
-      },
-      setActiveEvent(event, index) {
-        this.currentevent = event;
-        this.currentIndex = event ? index : -1;
-      },
-      showDialog(item){
-        this.selectedAccompanist = null;
-        this.selectedInstrument = null;
-        this.selectedSongs = null;
-        this.selectedStartTime = null;
-        this.selectedEndTime = null;
-        const event = this.listOfEvents.find((e) => e.id === item.eventID);
-        this.selectedEvent = event;
       },
       async getAccompanist(){
         for (let i = 0; i < this.listOfRoles.length; i++){
@@ -901,28 +910,32 @@
         },
 
     async showSelectedDialog(item) {
-        console.log("testing this", item)
+      // v-models for each v-select within the event's dialog boxes are reset
         this.selectedAccompanist = null;
         this.selectedInstrument = null;
         this.selectedSongs = null;
         this.selectedStartTime = null;
         this.selectedEndTime = null;
+        this.EndTime = null;
+
         this.selectedEvent = item
-      this.EndTime = null
-      //Functioncall for retrieving event session
+        this.selectedDate = new Date(item.date)     //  Date is put into selectedDate, which is the v-model for the calendar
+        
+      //Function call for retrieving event session
       await this.retrieveEventSessions(item)
 
       // Function call for getting the available accompanists depending on the specific events
       const availabilities = this.getAvailablitiesForEvent(item)
       this.availableAccompanists = this.getAvailableAccompanists(availabilities)
-        console.log("filtered Accompanists", this.availableAccompanists)
+        console.log("Filtered Accompanists", this.availableAccompanists)
+
       // Function call for getting the start time and end time for each specific events 
       this.start = await this.availableStartTime(item) 
 
       // These makes sure that the dialog boxes that pops up show the right dialog boxes. f
       this.selectedEventType = item.eventType;
-      if (this.selectedEventType === 'Recital') {
-        this.recitalDialogVisible = true;
+      if (this.selectedEventType === 'Hearing') {
+        this.hearingDialogVisible = true;
       } else if (this.selectedEventType === 'Senior') {
         this.seniorDialogVisible = true;
       }
@@ -938,14 +951,16 @@
       this.dialogVisible = false;
     },
 
+
+    // This function retrieves every event session available for the student to sign up for
     async availableStartTime(item){
       
-      const startTimes=[];
       const startTimeStr = item.startTime
       const endTimeStr = item.endTime
 
-
+      console.log("Start Time: ", item, "   End Time: ", item.endTime)
       const takenSlots = [];
+      // For each event sessions within our database, 
       this.eventsSession.forEach(event => {
         const startSession = new Date (event.startTime)
         const endSession = new Date(event.endTime)
@@ -967,26 +982,44 @@
       const endTime= new Date(endDate);
       
 
+      // This loops makes a new array of objects called timeslots the objects contain the availablitiy and the time. 
       let timeslots = [];
-      while (startTime <= endTime){ // While the start time is less than or equal to the end time given to us
+      while (startTime <= endTime){ 
         let timeslot = {
         time: startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
-        available: false//!this.eventsSession.includes(timeString)
+        available: false
         }
-        //startTimes.push(startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
         timeslots.push(timeslot);
         startTime.setMinutes(startTime.getMinutes() + 5);
       }
+
+        // For the calendar -- calendar requires the start, end, color, and name of events to populate 
+        this.events = [];
+      timeslots.forEach(event =>{
+        const dateParts = item.date.split('/');
+        const startTime = new Date(`${dateParts[2]}-${dateParts[0]}-${dateParts[1]} ${event.time}`);
+        const endTime = new Date(startTime.getTime() + 5 * 60 * 1000);
+        this.events.push({
+          name: 'Available',
+          start: startTime,
+          end: endTime,
+          color: 'green',
+        })
+      })
+      console.log("This is the events for the calendar", this.events)
+
+
+      // For each taken slots, if the takenslots matches the timeslots time, change the available to true. 
       uniqueTimes.forEach(uniquetime =>{
-        // console.log(uniquetime)
+         //console.log(uniquetime)
         timeslots.forEach(timeslot =>{
           if(timeslot.time === uniquetime){
             timeslot.available = true;
             //console.log("testing", timeslot)
             }
       })})
-      console.log(startTimes)
-
+      console.log("All the starttimes filtered", timeslots)
+      this.timeslotTemp = timeslots
       // Return the timeslots filtered by whats already taken up and whats not
       return timeslots.filter((slot) => slot.available === false).map((slot) => slot.time);
   },
@@ -995,11 +1028,15 @@
 
 computed: {
   availableTimeslots(){
+    //console.log("This will be the this.start", this.start)
     this.start.filter((slot) => slot.available === false).map((slot) => slot.time)
     console.log(this.start)
     return this.start
 }
-}
+},
+mounted() {
+    this.$refs.calendar.setDay(this.selectedDate);
+  },
 };
   </script>
   
@@ -1010,6 +1047,71 @@ computed: {
     margin: 0;
     padding: 0;
     font-family: 'Karla', sans-serif;
+  }
+/* Css for the calendar date picker */
+
+.calendar-container {
+  width: 350px;
+  height: 420px;
+  margin-right: 5%;
+  margin-bottom: 2%;
+  border: 1px solid #ccc;
+  padding: 10px;
+  position: relative;
+}
+
+.timeslots {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.timeslots > div {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #ccc;
+  text-align: center;
+  line-height: 60px;
+  cursor: pointer;
+}
+
+.timeslots > div.selected {
+  background-color: #00cc99;
+  color: #fff;
+}
+
+.calendar {
+  max-width: 100%;
+}
+/* End of the css for calendar datepicker */
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .button-container{
+    width: 200px;
+  }
+  .button{
+    border: 2px solid #dc3545;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: white;
+  }
+  .button.selected{
+    background-color: dc3545;
+    color: white;
+  }
+  .button-label{
+    font-weight: bold;
   }
   .wrapper {
     float: center;
@@ -1033,6 +1135,9 @@ computed: {
     background:white;
     justify-content:center; 
     display:flex
-
   }
+  .button-grid {
+  margin-top: 20px;
+}
+
 </style>
