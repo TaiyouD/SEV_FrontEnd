@@ -19,7 +19,7 @@
   </template> -->
 
 <template>
-<div v-if="user != null">
+<div v-if="this.role.roleType != null">
   <div class=" align-center flex-column">
     <v-img src="../assets/piano-2.jpg" max-height="150" />
     <div class="my-8"></div>

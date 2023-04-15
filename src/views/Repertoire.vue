@@ -1,193 +1,231 @@
 <template>
-    <div>
-      <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
-      <v-container>
-        <v-toolbar>
-          <v-toolbar-title>My Repertoire</v-toolbar-title>
-          <!-- <v-spacer></v-spacer>
-          <v-toolbar-title>{{this.message}}</v-toolbar-title> -->
-        </v-toolbar>
-        <br />
-        <div class="d-flex align-center">
-          <h4 class="mr-3">Voice/Instrument: </h4>
-          <v-select v-if="showDropdown" 
-              :items="instrumentRole"
-              item-tile="Instrument"
-              item-text="instrument.type" 
-              return-object
-              single-line
-              label="Select Voice/Instrument"
-              @change="retrieveInstructor"
-              v-model="selected"
-          ></v-select>
-        <div v-else>
-            {{ instrumentRole[0].instrument.type }} 
-        </div>
-        </div>
-        <h4>Instructor: {{ instructorRole.user.fName }} {{ instructorRole.user.lName }}</h4> 
-        <br /><br />
-        <v-card>
-          <v-card-title>
-            Repertoire
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
-          </v-card-title>
-          <v-card-text>
-            <b>{{ message }}</b>
-          </v-card-text>
-          <v-data-table
-            :headers="headers"
-            :search="search"
-            :items="repertoireSongs"
-            :items-per-page="50"
-          >
-            <template v-slot:[`item.actions`]="{ item }">
-              <div>
-                <v-icon small class="mx-4" @click="editSong()">
-                  mdi-pencil
-                </v-icon>
+  <div v-if="this.role.roleType != null">
+    <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
+    <v-container>
+      <v-toolbar>
+        <v-btn v-if="display" icon to="/viewstudents">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
+        <v-toolbar-title>My Repertoire</v-toolbar-title>
+        <!-- <v-spacer></v-spacer>
+        <v-toolbar-title>{{this.message}}</v-toolbar-title> -->
+      </v-toolbar>
+      <br />
+      <div class="d-flex align-center">
+        <h4 class="mr-3">Voice/Instrument: </h4>
+        <v-select v-if="showDropdown" 
+            :items="instrumentRole"
+            item-tile="Instrument"
+            item-text="instrument.type" 
+            return-object
+            single-line
+            label="Select Voice/Instrument"
+            @change="retrieveInstructor"
+            v-model="selected"
+        ></v-select>
+      <div v-else>
+          {{ instrumentRole[0].instrument.type }} 
+      </div>
+      </div>
+      <h4>Instructor: {{ instructorRole.user.fName }} {{ instructorRole.user.lName }}</h4> 
+      <br /><br />
+      <v-card>
+        <v-card-title>
+          Repertoire
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-card-title>
+        <v-card-text>
+          <b>{{ message }}</b>
+        </v-card-text>
+        <v-data-table
+          :headers="headers"
+          :search="search"
+          :items="repertoireSongs"
+          :items-per-page="50"
+        >
+          <template v-slot:[`item.actions`]="{ item }">
+            <div>
+              <v-icon small class="mx-4" @click="editSong()">
+                mdi-pencil
+              </v-icon>
 
-                <v-icon small class="mx-4" @click="deleteSong(item)">
-                  mdi-trash-can
-                </v-icon>
-              </div>
-            </template>
-          </v-data-table>
-        </v-card>
-        <br>
-        <router-link to="/addpiecerepertoire">
-          <v-btn color="primary" class="mr-4">
-              Add Piece
-          </v-btn>
-          </router-link>
-      </v-container>
-    </div>
-  </template>
-  
-  <script>
-  import RepertoireSongServices from "../services/repertoireSongServices";
-  import Utils from "@/config/utils.js";
-  import RoleServices from "../services/roleServices";
-  import instrumentRoleServices from "../services/instrumentRoleServices";
+              <v-icon small class="mx-4" @click="deleteSong(item)">
+                mdi-trash-can
+              </v-icon>
+            </div>
+          </template>
+        </v-data-table>
+      </v-card>
+      <br>
+      <router-link to="/addpiecerepertoire">
+        <v-btn color="primary" class="mr-4">
+            Add Piece
+        </v-btn>
+        </router-link>
+    </v-container>
+  </div>
+</template>
 
-  export default {
-    name: "repertoire-list",
-    props: [],
-    data() {
-      return {
-        view_dialog: false,
-        instrumentRole: {
-          id: null,
-          instrument: {
-            type:""
-          },
-          song: {},
-          privateInstructortId: "",
-          accompanistId: ""
+<script>
+import RepertoireSongServices from "../services/repertoireSongServices";
+import Utils from "@/config/utils.js";
+import RoleServices from "../services/roleServices";
+import instrumentRoleServices from "../services/instrumentRoleServices";
+export default {
+  name: "repertoire-list",
+  props: ["roleId"],
+  data() {
+    return {
+      display: false,
+      view_dialog: false,
+      instrumentRole: {
+        id: null,
+        instrument: {
+          type:""
         },
-        selected: [],
-        search: "",
-        role:{},
-        instructorRole:{
-          user:{
-            fName:"",
-            lName:""
-          }
-        },
-        repertoireSongs: [],
-        currentRepertoire: null,
-        currentIndex: -1,
-        user: {},
-        composer: {},
-        message: "Search, Edit or Delete Pieces",
-        headers: [
-          { text: "Piece Title", value: "song.title" },
-          { text: "Composer", value: "song.composer.lastName" },
-          { text: "Semester", value: "semester"},
-          { text: "Actions", value: "actions", sortable: false }
-        ]
-      };
+        song: {},
+        privateInstructortId: "",
+        accompanistId: ""
+      },
+      selected: [],
+      search: "",
+      role:{},
+      tempRole:{},
+      instructorRole:{
+        user:{
+          fName:"",
+          lName:""
+        }
+      },
+      repertoireSongs: [],
+      currentRepertoire: null,
+      currentIndex: -1,
+      user: {},
+      composer: {},
+      message: "Search, Edit or Delete Pieces",
+      headers: [
+        { text: "Piece Title", value: "song.title" },
+        { text: "Composer", value: "song.composer.lastName" },
+        { text: "Semester", value: "semester"},
+        { text: "Actions", value: "actions", sortable: false }
+      ]
+    };
+  },
+  computed: {
+  showDropdown() {
+    return this.instrumentRole.length > 1;
+    }
+ },
+  async created() {
+    this.user = Utils.getStore("user");
+    console.log("first prop")
+    console.log(this.roleId)
+    await this.retrieveRole();
+    await this.retrieveInstrumentRoles();
+    await this.retrieveSongs();
+    if(this.instrumentRole.length <= 1){
+        await this.retrieveInstructorOneInstrument();
+    }
+  },
+  methods: {
+    editSong(song) {
+      this.$router.push({ name: "edit", params: { id: song.id } }); //ter isso? ou criar pág pra isso
     },
-    computed: {
-    showDropdown() {
-      return this.instrumentRole.length > 1;
-      }
-   },
-    async created() {
-      this.user = Utils.getStore("user");
-      await this.retrieveRole();
-      await this.retrieveInstrumentRoles();
-      await this.retrieveSongs();
-      if(this.instrumentRole.length <= 1){
-          await this.retrieveInstructorOneInstrument();
-      }
+     viewSong() {
+       //this.$router.push({ name: "view", params: { id: song.id } });// mesmo de cima
+        this.edit_dialog = false;
+      },
+    deleteSong(song) {
+      RepertoireSongServices.delete(song.id)
+        .then(() => {
+          this.retrieveSongs();
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
     },
-    methods: {
-      editSong(song) {
-        this.$router.push({ name: "edit", params: { id: song.id } }); //ter isso? ou criar pág pra isso
-      },
-       viewSong() {
-         //this.$router.push({ name: "view", params: { id: song.id } });// mesmo de cima
-          this.edit_dialog = false;
-        },
-      deleteSong(song) {
-        RepertoireSongServices.delete(song.id)
-          .then(() => {
-            this.retrieveSongs();
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
-      async retrieveRole() {
-        await RoleServices.getRoleForUser(this.user.userId)
-          .then((response) => {
-            this.role = response.data[0];
-            /*this.roleId2 = this.role.map(function(el) {
-                return el.id;});*/
-            console.log('role');
-            console.log(this.role);
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
-      async retrieveInstrumentRoles() {
-        /*var roleId2 = this.role.map(function(el) {
-            return el.id;});
-          console.log('role');   */ 
-        await instrumentRoleServices.getAllForUser(this.role.id)
-          .then((response) => {
-            this.instrumentRole = response.data;
-            console.log('instrumentRole');
-            console.log(this.instrumentRole);
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
-      async retrieveSongs() {
-        await RepertoireSongServices.getAllForUser(this.role.id)
-          .then((response) => {
-            this.repertoireSongs = response.data;
-            console.log('song');
-            console.log(this.repertoireSongs);
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
-      async retrieveInstructor() {
+    async retrieveRole() {
+      await RoleServices.getRoleForUser(this.user.userId)
+        .then((response) => {
+          this.tempRole = response.data[0];
+          /*this.roleId2 = this.role.map(function(el) {
+              return el.id;});*/
+          console.log('tempRole');
+          console.log(this.tempRole);
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+        await this.conditionRole();
+    },
+    async conditionRole(){
+      if (this.tempRole.roleType != "Student"){
+        console.log("props")
+        console.log(this.roleId)
+        const more = await RoleServices.get(this.roleId);
+        this.role = more.data;
+        this.display=true
+        console.log("first role")
+        console.log(more.data)
+      }
+      else{
+        this.role = this.tempRole;
+        console.log("second role")
+        console.log(this.role)
+        this.display=false
+      }
+      console.log("new role")
+      console.log(this.role)
+    },
+    async retrieveInstrumentRoles() {
+      await instrumentRoleServices.getAllForUser(this.role.id)
+        .then((response) => {
+          this.instrumentRole = response.data;
+          console.log('instrumentRole');
+          console.log(this.instrumentRole);
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+    },
+    async retrieveSongs() {
+      await RepertoireSongServices.getAllForUser(this.role.id)
+        .then((response) => {
+          this.repertoireSongs = response.data;
+          console.log('song');
+          console.log(this.repertoireSongs);
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+    },
+    async retrieveInstructor() {
+      console.log("instructor id")
+      console.log(this.selected)
+      console.log(this.instrumentRole[0].privateInstructorId)
+      await RoleServices.get(this.selected.privateInstructorId)
+        .then((response) => {
+          this.instructorRole = response.data;
+          /*this.roleId2 = this.role.map(function(el) {
+              return el.id;});*/
+          console.log('instructor');
+          console.log(this.instructorRole);
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+    },
+    async retrieveInstructorOneInstrument() {
         console.log("instructor id")
-        console.log(this.selected)
         console.log(this.instrumentRole[0].privateInstructorId)
-        await RoleServices.get(this.selected.privateInstructorId)
+        await RoleServices.get(this.instrumentRole[0].privateInstructorId)
           .then((response) => {
             this.instructorRole = response.data;
             /*this.roleId2 = this.role.map(function(el) {
@@ -198,46 +236,29 @@
           .catch((e) => {
             this.message = e.response.data.message;
           });
-      },
-      async retrieveInstructorOneInstrument() {
-          console.log("instructor id")
-          console.log(this.instrumentRole[0].privateInstructorId)
-          await RoleServices.get(this.instrumentRole[0].privateInstructorId)
-            .then((response) => {
-              this.instructorRole = response.data;
-              /*this.roleId2 = this.role.map(function(el) {
-                  return el.id;});*/
-              console.log('instructor');
-              console.log(this.instructorRole);
-            })
-            .catch((e) => {
-              this.message = e.response.data.message;
-            });
-      },
-      refreshList() {
-        this.retrieveSongs();
-        this.currentSong = null;
-        this.currentIndex = -1;
-      },
-      setActiveSong(song, index) {
-        this.currentSong = song;
-        this.currentIndex = song ? index : -1;
-      },
-      removeAllSongs() {
-        RepertoireSongServices.deleteAll()
-          .then((response) => {
-            console.log(response.data);
-            this.refreshList();
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      }
+    },
+    refreshList() {
+      this.retrieveSongs();
+      this.currentSong = null;
+      this.currentIndex = -1;
+    },
+    setActiveSong(song, index) {
+      this.currentSong = song;
+      this.currentIndex = song ? index : -1;
+    },
+    removeAllSongs() {
+      RepertoireSongServices.deleteAll()
+        .then((response) => {
+          console.log(response.data);
+          this.refreshList();
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
     }
-  };
-  </script>
+  }
+};
+</script>
 
 <style>
-
 </style>
-  

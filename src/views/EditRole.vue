@@ -1,10 +1,10 @@
 
 <template>
-    <div>
+    <div v-if="this.currentRole.roleType == 'Admin'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
-          <v-toolbar-title>Edit Role</v-toolbar-title>
+          <v-toolbar-title>Edit User</v-toolbar-title>
         </v-toolbar>
         <br />
         <h4>{{ message }}</h4>
@@ -82,6 +82,16 @@
         required
       ></v-text-field>
       <v-select
+        v-model="role.studentPrivateHours"
+            id="studentPrivateHours"
+            label="Student Private Hours"
+            required
+            :items="[{ text: 'None', value: 0 }, 
+                    { text: 'One Hour', value: 1 } , 
+                    { text: 'Two Hours', value: 2 }
+                    ]"
+        ></v-select>
+      <v-select
         v-model="role.studentLevel"
             id="studentLevel"
             label="Student Level"
@@ -132,6 +142,7 @@
   
   import RoleServices from "../services/roleServices";
   import UserServices from "../services/userServices";
+  import Utils from "@/config/utils.js";
 
   export default {
     name: "editRole",
@@ -151,12 +162,19 @@
           studentClassification: '',
           studentSemester: '',
           studentMajor: '',
+          studentPrivateHours: null,
           isApproved: '',
           studentLevel: null,
         },
+        currentUser:{},
+        currentRole:{},
         message: '',
         valid: false
       }
+    },
+    async created(){
+      this.currentUser = Utils.getStore("user");
+      await this.retrieveRole();
     },
     computed: {
       isEditingFaculty() {
@@ -173,6 +191,15 @@
       this.getRole(this.id);
     },
     methods: {
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.currentUser)
+          .then((response) => {
+            this.currentRole = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
         getRole(id) {
           RoleServices.get(id)
               .then(response => {
