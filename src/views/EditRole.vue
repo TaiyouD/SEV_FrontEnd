@@ -192,9 +192,10 @@
     },
     methods: {
       async retrieveRole() {
-        await RoleServices.getRoleForUser(this.user.currentUser)
+        await RoleServices.getRoleForUser(this.currentUser.userId)
           .then((response) => {
             this.currentRole = response.data[0];
+            console.log('current role', this.currentRole)
           })
           .catch((e) => {
             this.message = e.response.data.message;
