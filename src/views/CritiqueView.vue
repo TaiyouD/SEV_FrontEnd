@@ -19,12 +19,34 @@
         <v-card>
         <br>
         <div style="display: flex; justify-content: space-between; text-align: center;">
+          <v-row>
+            <v-col class="mr-5" cols="2">
             <h4 class="ml-5">Date: {{critique.date}}</h4>
+            </v-col>
+            <v-col class="mx-5" cols="2">
             <h4>Performer: {{studentUser.fName}} {{studentUser.lName}}</h4>
+            </v-col>
+            <v-col class="mx-5" cols="2">
             <h4>Critiquer: {{facultyUser.fName}} {{facultyUser.lName}}</h4>
-            <h4 class="mr-5">Piece: </h4>
+            </v-col>
+            <v-col class="mr-n16" cols="2">
+            <h4 class="">Piece(s):</h4>
+            </v-col>
+            <v-col class="mx-6 mt-n5" cols="2">
+            <v-select
+                    v-model="song"
+                    :items="songs"
+                    item-text="title"
+                    item-value="id"
+                    label="Standard"
+                    persistent-hint
+                    single-line      
+                ></v-select>
+            </v-col>
+        </v-row>
         </div>
         <div class="line"><br></div>
+
         <v-form  ref="form" v-model="valid" lazy validation>
         <h5 v-if="critique.deportment != null || critique.deportmentGrade != null" class="ml-5">Deportment (Poise, Entrance/Exit Bow)</h5>
         <v-row  v-if="critique.deportment != null || critique.deportmentGrade != null"  align="center" class="ml-2 mr-2">
@@ -482,6 +504,8 @@
   import EventSessionServices from "../services/eventSessionServices";
   import EventServices from "../services/eventServices";
   import EventSongServices from "../services/eventSongservices";
+  import RepertoireSongServices from "../services/repertoireSongServices";
+  import SongServices from "../services/songServices";
   import Utils from "@/config/utils.js";
   import userServices from '../services/userServices';
   
@@ -501,6 +525,10 @@
         eventSession:{},
         event:{},
         eventSongs:[],
+        repertoireSongs:[],
+        songs:[],
+        song:{},
+        songTitle: [],
         message: "Fill out the form below to critique the performance. Once completed, click the 'Save' button.",
       };
     },
@@ -619,7 +647,31 @@
         .catch((e) => {
           this.message = e.response.data.message;
         });
+        this.retrieveRepertoireSongs();
     },
+    async retrieveRepertoireSongs() {
+        for (let i = 0; i < this.eventSongs.length; i++) {
+          const repertoire = await RepertoireSongServices.get(this.eventSongs[i].repertoireSongId);
+          this.repertoireSongs.push(repertoire.data);
+        }
+        console.log('Repertoire Songs');
+        console.log(this.repertoireSongs);
+        this.retrieveSongs();
+    },
+    async retrieveSongs() {
+        for (let i = 0; i < this.repertoireSongs.length; i++) {
+          const song = await SongServices.get(this.repertoireSongs[i].songId);
+          this.songs.push(song.data);
+          this.songTitle[i] = this.songs[i].title;
+        }
+        this.song = this.songs[0];
+        console.log('Songs');
+        console.log(this.songs);
+        console.log(this.song);
+        console.log(this.songTitle);
+        
+    },
+
     },
   };
 </script>
