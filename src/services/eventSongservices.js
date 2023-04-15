@@ -1,7 +1,7 @@
 import apiClient from "@/services/services.js";
 
 export default {
-  getAll() {
+  getAll() { 
     return apiClient.get("/eventsong");
   },
   getAllForUser(userId) { //lemme know if need this so I can add on the backend
