@@ -72,7 +72,7 @@ export default {
       search: "",
       roles: [],
       filteredRoles: [],
-      rolesList: ["All Users", "Accompanist", "Admin", "Faculty", "Prospective Student", "Student"],
+      rolesList: ["All Users", "Accompanist", "Admin", "Faculty", "Incoming Student", "Student"],
       selectedRole: null,
       message: "Add, Edit or Delete Users",
       headers: [

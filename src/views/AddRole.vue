@@ -39,7 +39,7 @@
             :items="[{ text: 'Accompanist', value: 'Accompanist' }, 
                     { text: 'Admin', value: 'Admin' },
                     { text: 'Faculty', value: 'Faculty' },
-                    { text: 'Prospective Student', value: 'Prospective Student' },
+                    { text: 'Prospective Student', value: 'Incoming Student' },
                     { text: 'Student', value: 'Student' }
                     ]"
         ></v-select>
