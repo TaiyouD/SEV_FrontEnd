@@ -18,7 +18,7 @@
         <v-spacer><h4>Event Title: {{event.eventTitle}} </h4> </v-spacer>
         <v-spacer><h4>Event Type: {{event.eventType}} </h4> </v-spacer>
         <v-spacer><h4>Date: {{event.date}} </h4> </v-spacer>
-        <v-spacer><h4>Time: {{ event.startTime }} - {{event.endTime}}</h4> </v-spacer>
+        <v-spacer><h4>Time: {{ convertTime(event.startTime) }} - {{convertTime(event.endTime)}}</h4> </v-spacer>
       </div>
       <br>
       <div class="line"></div>
@@ -33,7 +33,7 @@
         <v-card-text>
           <b>{{ message }}</b>
         </v-card-text>
-          <v-data-table v-if="isFaculty" :headers="headersFaculty" :items="eventsessions" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
+          <v-data-table v-if="isFaculty" :headers="headersFaculty" :items="eventsessions" :search="search" :items-per-page="5" :sort-by="['eventTitle', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
             <template #item="{ item }">
               <tr>
 
@@ -43,11 +43,11 @@
                 <td>
                   <template item-value="accompanist">
                   <v-icon color="primary" class="mx-4" @click="getAccompanist(item)">mdi-account-eye</v-icon>
-                  <v-dialog v-model="display_dialog" persistent max-width="700" :retain-focus="false">
+                  <v-dialog v-model="accomp_dialog" persistent max-width="700" :retain-focus="false">
                     <v-card>
                       <v-card-title>
                         <v-toolbar id="navbar-maroon">
-                        <span class="text-h5">View Availability</span>
+                        <span class="text-h5">View Accompanist</span>
                         </v-toolbar>
                       </v-card-title>
                       <v-card-text>
@@ -58,7 +58,7 @@
                             <div style="text-align: center;">
                             <div class=" d-flex flex-row bg-surface-variant" max-width="780" >
     
-                            <v-text-field class="mr-4" width = "360"
+                            <v-text-field class="mr-4" width="360"
                                 v-model="accompanist.user.fName"
                                 label="First Name"
                                 filled
@@ -67,7 +67,7 @@
                             </v-text-field>
                           
                             <!--  Last Name Below -->
-                              <v-text-field class=" mr-4" width = "360"
+                              <v-text-field class=" mr-4" width="360"
                                 label="Last Name"
                                 v-model="accompanist.user.lName"
                                 filled
@@ -89,7 +89,7 @@
                         </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" @click=" display_dialog = false">
+                        <v-btn color="primary" @click=" accomp_dialog = false">
                           Back
                         </v-btn>
                       
@@ -103,7 +103,7 @@
                 <td>
                   <template item-value="students">
                   <v-icon color="primary" class="mx-4"  @click="getStudent(item)">mdi-account-eye</v-icon>
-                  <v-dialog v-model="display_dialog" persistent max-width="700" :retain-focus="false">    
+                  <v-dialog v-model="student_dialog" persistent max-width="700" :retain-focus="false">    
                     <v-card>
                       <v-card-title>
                       <v-toolbar id="navbar-maroon">
@@ -234,7 +234,7 @@
                       </v-card-text>
                       <v-card-actions>
                        <v-spacer></v-spacer>
-                        <v-btn color="primary" @click=" display_dialog = false">Back</v-btn>
+                        <v-btn color="primary" @click=" student_dialog = false">Back</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -247,11 +247,24 @@
                   <v-icon color="primary" class="mx-4" @click="maintainCritique(item)">mdi-list-box-outline</v-icon>
                   </template>
                 </td>
+
+                <td>
+                  <template v-if="item.hasPassed === null">
+                    <v-btn color="primary" small>Add</v-btn>
+                  </template>
+                  <template v-else-if="item.hasPassed">
+                    <span class="green--text">Passed</span>
+                  </template>
+                  <template v-else>
+                    <span class="red--text">Failed</span>
+                  </template>
+                </td>
+
               </tr>
               </template>
             </v-data-table>
 
-            <v-data-table v-if="isAccomp" :headers="headersAccomp" :items="eventsessions" :search="search" :items-per-page="5" :sort-by="['eventType', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
+            <v-data-table v-if="isAccomp" :headers="headersAccomp" :items="eventsessions" :search="search" :items-per-page="5" :sort-by="['eventTitle', 'date', 'startTime', 'endTime']" :sort-desc="[false]">
               <template #item="{ item }">
                 <tr>
   
@@ -267,7 +280,7 @@
                   <td>
                     <template item-value="students"> 
                     <v-icon color="primary" class="mx-4">mdi-account-eye</v-icon>
-                    <v-dialog v-model="display_dialog" persistent max-width="700" :retain-focus="false">    
+                    <v-dialog v-model="student_dialog" persistent max-width="700" :retain-focus="false">    
                       <v-card>
                         <v-card-title>
                         <v-toolbar id="navbar-maroon">
@@ -398,7 +411,7 @@
                         </v-card-text>
                         <v-card-actions>
                          <v-spacer></v-spacer>
-                          <v-btn color="primary" @click=" display_dialog = false">Back</v-btn>
+                          <v-btn color="primary" @click=" student_dialog = false">Back</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -435,7 +448,8 @@ export default {
       role:{},
       event:{},
       tempRole:{},
-      display_dialog: false,
+      accomp_dialog: false,
+      student_dialog: false,
       isAdmin: false,
       isFaculty:false,
       isAccomp:false,
@@ -469,7 +483,8 @@ export default {
         { text: "End Time", value: "endTime", sortable: false },
         { text: "Accompanist", value: "accompanist", sortable: false },
         { text: "Student", value: "student", sortable: false },
-        { text: "Critique", value: "critique", sortable: false }
+        { text: "Critique", value: "critique", sortable: false },
+        { text: "Passed", value: "passed", sortable: false }
       ],
       headersAccomp: [
         { text: "Start Time", value: "startTime", sortable: false },
@@ -477,7 +492,16 @@ export default {
         { text: "Faculty", value: "faculty", sortable: false },
         { text: "Student", value: "student", sortable: false },
         { text: "Critique", value: "critique", sortable: false }
-      ]
+      ],
+      headersAdmin: [
+        { text: "Start Time", value: "startTime", sortable: false },
+        { text: "End Time", value: "endTime", sortable: false },
+        { text: "Faculty", value: "faculty", sortable: false },
+        { text: "Accompanist", value: "accompanist", sortable: false },
+        { text: "Student", value: "student", sortable: false },
+        { text: "Critique", value: "critique", sortable: false },
+        { text: "Passed", value: "passed", sortable: false }
+      ],
     };
   },
   async created(){
@@ -490,56 +514,33 @@ export default {
     async retrieveThisEvent() {
         await EventServices.get(this.eventId)
         .then((response) => {
-          console.log('event here', response.data)
+
             this.event = response.data;
 
-            // const now = new Date();
-            // const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; 
-            // const today = new Date(now.getTime() - timezoneOffset);
-            // const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
-            
-            // // check if it is a past event
-            // if(Date(response.data.date).getTime() < today.getTime()){
-            //   this.isPastEvent = true
-            // }
-
-            // // check if it is a current event
-            // if(Date(response.data.date).getTime() >= today.getTime() && response.data.date.getTime() <= midnight.getTime()){
-            //   this.isCurrentEvent = true
-            // }
-
-            // // check if it is an upcoming event
-            // if(Date(response.data.date).getTime() > midnight.getTime()){
-            //   this.isUpcomingEvent = true
-            // }
-        })
-        .catch((e) => {
-            this.message = e.response.data.message;
-        });
-        await this.checkDate()
-    },
-    checkDate(){
-      
+            const eventDate = new Date(response.data.date);
             const now = new Date();
-            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; 
+            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000;
             const today = new Date(now.getTime() - timezoneOffset);
             const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
-            
+
             // check if it is a past event
-            if(Date(this.event.date).getTime() < today.getTime()){
-              this.isPastEvent = true
+            if (eventDate < today) {
+              this.isPastEvent = true;
             }
 
             // check if it is a current event
-            if(Date(this.event.date).getTime() >= today.getTime() && this.event.date.getTime() <= midnight.getTime()){
-              this.isCurrentEvent = true
+            if (eventDate >= today && eventDate <= midnight) {
+              this.isCurrentEvent = true;
             }
 
             // check if it is an upcoming event
-            if(Date(this.event.date).getTime() > midnight.getTime()){
-              this.isUpcomingEvent = true
+            if (eventDate > midnight) {
+              this.isUpcomingEvent = true;
             }
-
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
     },
     async retrieveEventSessions(){
       await EventSessionServices.getAllForEvent(this.eventId)
@@ -567,6 +568,9 @@ export default {
           }
         }
       }
+      if (this.role.roleType == "Admin"){
+            this.eventsessions=this.eventsessionsevent
+        }
       console.log('event per role', this.eventsessions);
     },
     addEvent() {
@@ -605,17 +609,27 @@ export default {
             this.message = e.response.data.message;
           });
       },
+      displayHasPassed(){
+        for(let i = 0; i < this.eventsessions.length; i++){
+          if (this.eventsessions[i] == ""){
+            //passed and green
+          }
+          else if (this.eventsessions[i] == false){
+            //failed and red
+          }
+          else{
+            //button to select the has passed
+          }
+        }
+      },
       convertTime(time) {
       const date = new Date(`1/1/2000 ${time}`);
       const formattedTime = date.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'});
       return formattedTime;
     },
-    displayDialog(){
-      this.display_dialog = true;
-    },
     maintainCritique(item){
-      if(this.upcomingEvent != [] || this.selectedDate != []){
-        this.$router.push({ name: "add-critique", params: { eventSessionId: item.id } });
+      if(this.isUpcomingEvent|| this.isCurrentEvent){
+        this.$router.push({ name: "addcritique", params: { eventSessionId: item.id } });
       }
       else{
         this.$router.push({ name: "critique", params: { eventSessionId: item.id } });
@@ -634,7 +648,7 @@ export default {
           });
 
       // Show the edit dialog
-      this.display_dialog = true;
+      this.accomp_dialog = true;
     },
     getStudent(student) { 
       RoleServices.get(student.studentId)
@@ -648,7 +662,7 @@ export default {
           });
 
       // Show the edit dialog
-      this.display_dialog = true;
+      this.student_dialog = true;
     },
 
   },
