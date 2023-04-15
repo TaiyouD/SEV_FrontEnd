@@ -4,7 +4,9 @@
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
-          <v-icon class="mr-8">align_vertical_top</v-icon>
+          <v-btn icon to="/">
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
           <v-toolbar-title>Create Critique</v-toolbar-title>
         </v-toolbar>
         <br/>
@@ -20,28 +22,43 @@
             <h4 class="mr-5">Piece: </h4>
         </div>
         <div class="line"></div>
-        <br>
         <v-form ref="form" v-model="valid" lazy validation>
-        <h5 class="ml-5">Deportment (Poise, Entrance/Exit Bow)</h5>
+          <v-col cols="12">
+            <h5 class="text-center">Deportment (Poise, Entrance/Exit Bow)</h5>
+          </v-col>
         <v-row align="center" class="ml-2 mr-2">
-        <v-col cols="8">
-            <v-textarea
-            v-model="critique.deportment"
-            id="deportment"
-            label=""
-            rows="1"
-            cols="5"
-            required
-            ></v-textarea>
-        </v-col>
-        <v-col cols="4">
+          <v-col cols="12" class="ml-16">
             <v-radio-group v-model="critique.deportmentGrade" name="deportmentGrade" row>
-            <v-radio label="Poor" value="Poor" color="red"></v-radio>
-            <v-radio label="Fair" value="Fair" color="orange"></v-radio>
-            <v-radio label="Good" value="Good" color="yellow"></v-radio>
-            <v-radio label="Excellent" value="Excellent" color="green"></v-radio>
+              <v-col cols="3">
+                <v-radio label="Poor" value="Poor" color="red"></v-radio>
+              </v-col>
+              <v-col cols="3">
+                <v-radio label="Fair" value="Fair" color="orange"></v-radio>
+              </v-col>
+              <v-col cols="3">
+                <v-radio label="Good" value="Good" color="yellow"></v-radio>
+              </v-col>
+              <v-col cols="3">
+                <v-radio label="Excellent" value="Excellent" color="green"></v-radio>
+              </v-col>
             </v-radio-group>
-        </v-col>
+          </v-col>
+          <v-col cols="12">
+            <v-btn block rounded outlined icon @click="showTextArea = !showTextArea">
+              <v-icon>{{ showTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="12">
+            <v-textarea
+              v-if="showTextArea"
+              v-model="critique.deportment"
+              id="deportment"
+              label=""
+              rows="1"
+              cols="5"
+              required
+            ></v-textarea>
+          </v-col>
         </v-row>
        <div class="line"></div>
        <br>
@@ -250,6 +267,7 @@
             hasPassed: false
         },
         valid: false,
+        showTextArea: false,
         user: {},
         facultyRole:{},
         studentRole:{
@@ -344,9 +362,11 @@
 </script>
 
 <style>
+
 .line {
   border-top: 1.5px solid black;
   margin: 10px auto;
   width: 96.5%;
 }
+
 </style>

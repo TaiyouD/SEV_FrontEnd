@@ -1,5 +1,4 @@
 
-
 import Vue from "vue";
 import Router from "vue-router";
 
@@ -40,6 +39,7 @@ import ProfileStudent from "./views/ProfileStudent.vue";
 import Repertoire from "./views/Repertoire.vue";
 import SignupEvent from "./views/SignupEvent.vue";
 import ViewStudents from "./views/ViewStudentsInstructor.vue";
+import ViewStudentsEvent from "./views/ViewStudentsEvent.vue";
 
 
 import TutorialsList from "./views/TutorialsList.vue";
@@ -254,6 +254,12 @@ const router = new Router({
       path: "/viewstudents",
       name: "viewstudents",
       component: ViewStudents
+    },
+    {
+      path: "/viewstudentsevent",
+      name: "viewstudentsevent",
+      component: ViewStudentsEvent,
+      props: true,
     },
     {
       path: "/tutorials",
