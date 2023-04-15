@@ -1,7 +1,7 @@
 
 <template>
 <div>
-  <v-img height=1100 cover src="../assets/music-background.jpg">
+  <v-img height=1100 cover src="../assets/login-background.jpg">
     <br><br><br><br>
     <v-card width="600" class="mx-auto" style="border: 3px solid black;">
     <br>
