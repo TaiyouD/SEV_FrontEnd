@@ -10,6 +10,9 @@ export default {
   get(id) {
     return apiClient.get(`/eventsong/${id}`);
   },
+  getAllForEventSession(eventsessionId) {//lemme know if it works
+    return apiClient.get("/eventsong/eventsessions/" + eventsessionId);
+  },
   create(data) {
     return apiClient.post("/eventsong", data);
   },
