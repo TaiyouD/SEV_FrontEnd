@@ -113,6 +113,7 @@
                 :search="search"
                 :items="notifications"
                 :items-per-page="50"
+                height="130"
               >
                 <template v-slot:[`item.actions`]="{ item }">
                   <div>
