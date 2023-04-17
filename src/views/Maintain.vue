@@ -23,8 +23,6 @@
         </v-col>
       </v-row>
     </v-container>
-    <br><br>
-    <div class="bottom-line"></div>
   </div>
 </template>
 
