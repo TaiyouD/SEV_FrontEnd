@@ -3,9 +3,11 @@
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
-        <v-btn  v-if="role.roleType=='Faculty' || role.facultyType=='Instructor' || role.roleType=='Admin' || (role.roleType == 'Accompanist' && role.facultyType != null)" icon to="/maintaineventsession">
+        <router-link class="routerLink" :to="{ name: 'maintaineventsession', params: { eventId: event.id } }">
+        <v-btn  v-if="role.roleType=='Faculty' || role.facultyType=='Instructor' || role.roleType=='Admin' || (role.roleType == 'Accompanist' && role.facultyType != null)" icon>
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
+        </router-link>
         <v-btn v-if="role.roleType=='Student' || role.roleType=='Incoming Student' || (role.roleType == 'Accompanist' && role.facultyType == null)" icon to="/maintaineventstudent">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
@@ -48,23 +50,18 @@
           :items="critiques"
           :items-per-page="50"
         >
-          <template v-slot:[`item.actions`]="{ item }">
-            <div>
-              <v-icon small class="mx-4" @click="viewCritique(item)">
+          <template v-slot:[`item.view`]="{ item }">
+              <v-icon color="primary" class="mx-4" @click="viewCritique(item)">
                 mdi-archive-eye-outline
               </v-icon>
-              <v-icon small class="mx-4" @click="deleteCritique(item)">
-                mdi-trash-can
-              </v-icon>
-            </div>
           </template>
-          <!-- <template v-slot:[`item.repertoire`]="{ item }">
+          <template v-if="role.roleType == Admin" v-slot:[`item.delete`]="{ item }">
 
-            <v-icon small class="mx-4" @click="viewRepertoire(item)">
-              mdi-book-open-variant
+            <v-icon color="primary" class="mx-4" @click="deleteCritique(item)">
+                mdi-trash-can-outline
             </v-icon>
 
-          </template> -->
+          </template>
         </v-data-table>
       </v-card>
       <!-- <br>
@@ -104,6 +101,7 @@ export default {
       //     levelNumber:""
       //   }
       // }, 
+      testeventSessionId: 1,
       instrumentRole:[],
       selected: [],
       search: "",
@@ -124,14 +122,17 @@ export default {
       headers: [
         { text: "Faculty Id", value: "facultyInfo.id" },
         { text: "Faculty", value: "facultyUser.fname" + "facultyUser.lname" },
-        { text: "Passed", value: "critiques.hasPassed" },
-        { text: "Actions", value: "actions", sortable: false }
+        // { text: "Passed", value: "critiques.hasPassed" },
+        { text: "View", value: "view", sortable: false },
+        { text: "Delete", value: "delete", sortable: false }
       ]
     };
   },
   async created() {
     this.user = Utils.getStore("user");
     await this.retrieveRole();
+    console.log('eventSessionId');
+    console.log(this.eventSessionId);
     await this.retrieveThisEventSession();
     // await this.retrieveInstructorInstrumentRoles();
     await this.retrieveCritiquesForEventSession();
@@ -153,15 +154,21 @@ export default {
         await EventSessionServices.get(this.eventSessionId)
         .then((response) => {
             this.eventSession = response.data;
+            console.log('eventSession');
+            console.log(this.eventSession);
         })
         .catch((e) => {
             this.message = e.response.data.message;
-        });
+        });           
+        await this.retrieveThisEvent();
+
     },
     async retrieveThisEvent() {
         await EventServices.get(this.eventSession.eventId)
         .then((response) => {
             this.event = response.data;
+            console.log('event');
+            console.log(this.event);
         })
         .catch((e) => {
             this.message = e.response.data.message;
@@ -192,13 +199,15 @@ export default {
         .then((response) => {
           this.critiqueSort = response.data;
           console.log('critiqueSort');
-          console.log(this.critiqueSort[0]);
+          console.log(this.critiqueSort);
           for(let i = 0; i < this.critiqueSort.length; i++)
           {
-            if (this.critiqueSort[i].eventSessionId == this.eventSessionId)
+            console.log(this.eventSessionId)
+            console.log(this.critiqueSort[i].eventsessionId)
+            if (this.critiqueSort[i].eventsessionId == this.eventSessionId)
             {
               //this.studentRole.push(this.critiqueSort1[i].id);
-              this.critiques.push(this.critiqueSort[i].id);
+              this.critiques.push(this.critiqueSort[i]);
             }
           }
           console.log('critiques');
@@ -211,7 +220,7 @@ export default {
     },
     async retrieveFacultyInfo() {
       for (let i = 0; i < this.critiques.length; i++) {
-          const role = await RoleServices.get(this.critiques.facultyId[i]);
+          const role = await RoleServices.get(this.critiques[i].facultyId);
           this.facultyInfo.push(role.data);
         }
         console.log('facultyInfo');
@@ -222,7 +231,7 @@ export default {
     },
     async retrieveFacultyUser() {
       for (let i = 0; i < this.critiques.length; i++) {
-          const role = await userServices.get(this.facultyInfo.userId[i]);
+          const role = await userServices.get(this.facultyInfo[i].userId);
           this.facultyUser.push(role.data);
         }
         console.log('facultyUser');
@@ -247,8 +256,8 @@ export default {
     // },
     viewCritique(critique) {
       // Set the edited student data to the clicked student
-      console.log("critique")
-      console.log(critique)
+      console.log("critique1")
+      console.log(critique.id)
       // this.editedStudent = { ...student };
       // if (student.studentPrivateHours == null)
       // {
@@ -256,7 +265,7 @@ export default {
       // }
       // Show the edit dialog
       // this.viewDialog = true;
-      this.$router.push({ name: "critiqueview", params: { id: critique.id } });
+      this.$router.push({ name: "critiqueview", params: { critiqueId: critique.id } });
     },
     // editCritique(critique) {
     //   // Set the edited student data to the clicked student
@@ -316,4 +325,7 @@ export default {
 </script>
 
 <style>
+.routerLink{
+     text-decoration: none;
+ }
 </style>
