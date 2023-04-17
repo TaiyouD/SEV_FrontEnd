@@ -1,6 +1,5 @@
 <template>
     <div v-if = "this.role.roleType  == 'Student' || this.role.roleType == 'Incoming Student'">
-
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
         <v-container>
             <v-toolbar>
@@ -825,7 +824,7 @@
               console.log('Error for creating eventSongs:', error)
             })
           }
-          //this.$router.go(0); //This is just a force refresh 
+          this.$router.go(0); //This is just a force refresh 
       },
       async retrieveInstrumentRoles() {
         await instrumentRoleServices.getAllForUser(this.role.id)
@@ -1069,7 +1068,7 @@
           takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
         }
       })
-      let uniqueTimes = [...new Set(takenSlots)]
+      const uniqueTimes = [...new Set(takenSlots)]
       console.log("TakenSlots" , uniqueTimes)
 
       const [startHour, startMinute] = startTimeStr.split (':')
@@ -1141,7 +1140,7 @@
     }
   }
 }
-uniqueTimes = uniqueTimes.pop();
+
 //endTime.toLocaleString('en-US',{hour: 'numeric', minute: 'numeric', hour12: true})
 for (let i = 0; i < uniqueTimes.length - 1; i++) {
         const uniquetime = uniqueTimes[i];
