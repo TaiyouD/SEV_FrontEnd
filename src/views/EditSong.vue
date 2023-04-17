@@ -100,9 +100,9 @@
     props: ['id'],
   data() {
     return {
+      user:{},
+      role:{},
       song: {
-        user:{},
-        role:{},
         title: '',
         language: '',
         translation: ''
@@ -111,12 +111,10 @@
       valid: false,
     }
   },
-  mounted() {
-    this.getSong(this.id);
-  },
   async created(){
     this.user = Utils.getStore("user");
     await this.retrieveRole();
+    await this.getSong(this.id);
   },
   methods: {
     async retrieveRole() {
@@ -128,8 +126,8 @@
             this.message = e.response.data.message;
           });
       },
-      getSong(id) {
-        SongServices.get(id)
+      async getSong(id) {
+        await SongServices.get(id)
           .then(response => {
             this.song = response.data;
           })
