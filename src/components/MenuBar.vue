@@ -11,7 +11,25 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-if="user != null" :to="{ name: 'home' }">
+      <router-link v-if="user != null && (role.roleType == 'Student' || role.roleType == 'Incoming Student')" :to="{ name: 'home' }">
+        <v-img 
+          class="mx-2"
+          src="../assets/oc-logo.png"
+          max-height="50"
+          max-width="50"
+          contain
+        ></v-img>
+      </router-link>
+      <router-link v-if="user != null && (role.roleType == 'Faculty' || role.roleType == 'Accompanist')" :to="{ name: 'maintainevent' }">
+        <v-img 
+          class="mx-2"
+          src="../assets/oc-logo.png"
+          max-height="50"
+          max-width="50"
+          contain
+        ></v-img>
+      </router-link>
+      <router-link v-if="user != null && (role.roleType == 'Admin')" :to="{ name: 'maintain' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
@@ -35,7 +53,7 @@
       </v-menu>
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintaineventsession' }">
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintaineventstudent' }">
             Events
           </v-btn>
         </template>
@@ -84,7 +102,7 @@
       </v-menu>
     </v-toolbar-items>
     <v-toolbar-items v-if="user != null && (role.roleType == 'Admin')" >
-      
+<!--       
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" v-bind="attrs" v-on="on" 
@@ -92,7 +110,7 @@
             Events
           </v-btn>
         </template>
-      </v-menu>
+      </v-menu> -->
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain  dark v-bind="attrs" v-on="on" 
@@ -202,13 +220,13 @@
             </v-avatar>
           </v-btn>
         </template>
-        <v-card>
+        <!-- <v-card>
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-btn depressed rounded exact :to="{ name: 'login' }" text> Login </v-btn>
             </div>
           </v-list-item-content>
-        </v-card> 
+        </v-card>  -->
       </v-menu>
     </div>
     
@@ -242,13 +260,23 @@
       </v-list-item>
       
       <v-list dense nav>
-        <v-list-item link @click="$router.push({ path: '/maintainlevel' })">
+        <v-list-item v-if="role.roleType != 'Admin'" link @click="$router.push({ path: '/maintainlevel' })">
           <v-list-item-icon>
             <v-icon>mdi-receipt</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
             <v-list-item-title>Vocal Level Info</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item v-if="role.roleType == 'Admin' || role.roleType == 'Faculty' " link @click="$router.push({ path: '/notificationlist' })">
+          <v-list-item-icon>
+            <v-icon>mdi-bell-outline</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Notifications</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item link @click="$router.push({ path: '/repertoire' })">

@@ -1,6 +1,6 @@
 
 <template>
-    <div>
+    <div v-if="this.facultyRole.roleType == 'Faculty' || (this.facultyRole.roleType == 'Admin')">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
@@ -262,13 +262,11 @@
         message: "Fill out the form below to critique the performance. Once completed, click the 'Save' button.",
       };
     },
-    mounted() {
-      this.user = Utils.getStore("user");
-    },
     async created(){
-        await this.retrieveFacultyRole();
-        await this.retrieveEventSession();
-        await this.retrieveStudentRole();
+      this.user = Utils.getStore("user");
+      await this.retrieveFacultyRole();
+      await this.retrieveEventSession();
+      await this.retrieveStudentRole();
     },
     methods: {
     async retrieveFacultyRole() {
@@ -332,14 +330,14 @@
         CritiqueServices.createCritique(this.eventsessionId, data)
         .then((response) => {
           this.critique.id = response.data.id;
-          this.$router.push({ name: "view", params: { id: this.eventsessionId } });
+          this.$router.push({ name: "maintaineventsession", params: { eventId: this.eventsessionId.eventId } });
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
     },
     cancel() {
-      this.$router.push({ name: "view", params: { id: this.eventsessionId } });
+      this.$router.push({ name: "maintaineventsession", params: { eventId: this.eventsessionId.eventId } });
     },
     },
   };

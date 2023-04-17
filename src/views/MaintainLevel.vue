@@ -1,6 +1,6 @@
  
 <template>
-  <div>
+  <div v-if="this.role.roleType != null">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -80,6 +80,7 @@ export default {
   async mounted() {
     this.resetMenu();
     this.retrieveRole();
+    this.retrieveLevels();
   },
   methods: {
     retrieveRole() {

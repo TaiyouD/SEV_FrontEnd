@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="this.role.roleType != null">
   <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
   <v-container>
     <v-toolbar>
@@ -78,10 +78,8 @@ data() {
     role:{}
   };
 },
-mounted() {
-  this.user = Utils.getStore("user");
-},
 async created(){
+  this.user = Utils.getStore("user");
   const result = await SongServices.getAll();
   this.song = result.data;
   await this.retrieveRole();
