@@ -1,7 +1,7 @@
 
 <template>
-    <div>
-      <v-img src="../assets/music-notes-bg1.jpg" max-height="100"/>
+    <div v-if="this.role.roleType == 'Admin'">
+      <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
           <v-btn icon to="/maintainevent">
@@ -146,12 +146,16 @@
   import EventServices from "../services/eventServices.js";
   import RoleServices from "../services/roleServices.js";
   import UserServices from "../services/userServices.js";
+  import Utils from "@/config/utils.js";
+
   
   export default {
     name: "maintainavailability",
     props: ["eventId"],
     data() {
       return {
+        user:{},
+        role:{},
         search: "",
         availability: [],
         event: [],
@@ -176,7 +180,11 @@
     mounted() {
       this.retrieveThisEvent();
       this.retrieveAvailability();
-    },
+  },
+  async created(){
+    this.user = Utils.getStore("user");
+    await this.retrieveRole();
+  },
     methods: {
       retrieveThisEvent() {
         EventServices.get(this.eventId)
@@ -187,7 +195,16 @@
             this.message = e.response.data.message;
         });
     },
-    retrieveAvailability() {
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            this.role = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      retrieveAvailability() {
         AvailabilityServices.getAll()
           .then((response) => {
             const availability = response.data;

@@ -1,6 +1,6 @@
 
 <template>
-    <div>
+    <div v-if="this.currentRole.roleType == 'Admin'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
@@ -156,6 +156,7 @@
 
   <script>
   import RoleServices from "../services/roleServices";
+  import Utils from "@/config/utils.js";
   import UserServices from "../services/userServices";
   
   export default {
@@ -182,8 +183,14 @@
           isApproved: null,
           studentLevel: null
         },
+        currentUser:{},
+        currentRole:{},
         message: "Enter Data and Click Save.",
       }
+    },
+    async created(){
+      this.currentUser = Utils.getStore("user");
+      await this.retrieveRole();
     },
     computed: {
       addFaculty() {
@@ -197,6 +204,15 @@
       },
     },
     methods: {
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.currentUser)
+          .then((response) => {
+            this.currentRole = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
     async saveUserAndRole() {
       await this.saveUser();
       await this.saveRole();
