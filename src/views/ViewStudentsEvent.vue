@@ -40,6 +40,7 @@
                 <td>{{ item.studentId }}</td>
                 <td>{{ item.studentClassification }}</td>
                 <td>{{ item.studentMajor }}</td>
+                <td>{{ item.levelNumber }}</td>
               </tr>
             </template>
           </v-data-table>
@@ -48,11 +49,14 @@
     </div>
 </template>
 
+// In retrieveEventSession I need to get levelNumber from LevelServices along with the other data. The role table has a studentLevelId How can I do this?
+
 <script>
   
   import EventSessionServices from "../services/eventSessionServices.js";
   import EventServices from "../services/eventServices.js";
   import RoleServices from "../services/roleServices.js";
+  //import LevelServices from "../services/levelServices.js";
   import UserServices from "../services/userServices.js";
   
   export default {
@@ -71,6 +75,7 @@
           { text: "I.D. Number", value: "studentId", sortable: false },
           { text: "Classification", value: "studentClassification", sortable: false },
           { text: "Major", value: "studentMajor", sortable: false },
+          { text: "Level", value: "levelNumber", sortable: false },
         ],
       };
     },
@@ -99,9 +104,11 @@
                   const role = roleResponse.data;
                   return UserServices.get(role.userId)
                     .then((userResponse) => {
+                      console.log('student', role)
                       stu.studentId = role.studentId;
                       stu.studentClassification = role.studentClassification;
                       stu.studentMajor = role.studentMajor;
+                      stu.levelNumber = role.level.levelNumber;
                       stu.fName = userResponse.data.fName;
                       stu.lName = userResponse.data.lName;
                       stu.email = userResponse.data.email;
