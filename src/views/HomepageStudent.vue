@@ -317,7 +317,6 @@
             this.events.push(response.data[i]);
           }
         }
-        console.log('events list', this.events);
           const now = new Date();
           const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
           const today = new Date(now.getTime() - timezoneOffset).toDateString();
@@ -327,8 +326,7 @@
           this.eventstemp = this.events.filter((event) => {
               const eventDate = new Date(event.event.date);
               return eventDate > new Date(today + " 23:59:59");});
-          
-          console.log('events here',this.eventstemp);
+
         })
         .catch((e) => {
           this.message = e.response.data.message;
