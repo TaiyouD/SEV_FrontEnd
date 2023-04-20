@@ -20,7 +20,7 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-if="user != null && (role.roleType == 'Student' || role.roleType == 'Accompanist')" :to="{ name: 'homestudent' }">
+      <router-link v-if="user != null && (role.roleType == 'Student')" :to="{ name: 'homestudent' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
@@ -29,7 +29,7 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-if="user != null && (role.roleType == 'Faculty' || (role.roleType == 'Accompanist' && role.facultyType != null))" :to="{ name: 'homefaculty' }">
+      <router-link v-if="user != null && (role.roleType == 'Faculty' || (role.roleType == 'Accompanist'))" :to="{ name: 'homefaculty' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
@@ -94,7 +94,7 @@
           </v-btn>
         </template>
       </v-menu> -->
-      <v-toolbar-items v-if="user != null && (role.facultyType == 'Instructor')">
+      <v-toolbar-items v-if="user != null && (role.roleType == 'Faculty')">
         <v-menu offset-y :close-on-click="true" >
           <template v-slot:activator="{ on, attrs }">
             <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintainevent' }">
@@ -110,6 +110,19 @@
         </template>
       </v-menu>
     </v-toolbar-items>
+
+    <v-toolbar-items v-if="user != null && (role.roleType == 'Accompanist')">
+      <v-menu offset-y :close-on-click="true" >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintainevent' }">
+            Events
+          </v-btn>
+        </template>
+      </v-menu>
+      </v-toolbar-items>
+
+
+
     <v-toolbar-items v-if="user != null && (role.roleType == 'Admin')" >
 <!--       
       <v-menu offset-y :close-on-click="true" >
