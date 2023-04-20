@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.role.roleType == 'Admin' || (this.role.roleType == 'Faculty') || (this.role.roleType == 'Accompanist')">
+  <div v-if="this.user.selectedRole == 'Admin' || (this.user.selectedRole == 'Faculty') || (this.user.selectedRole == 'Accompanist')">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -259,6 +259,7 @@
                             format="ampm"
                             class="custom-picker-add"
                             :minute-steps="5"
+                            :allowed-minutes="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]"
                           ></v-time-picker>
                         </v-menu>
 
@@ -288,6 +289,7 @@
                             format="ampm"
                             class="custom-picker-add"
                             :minute-steps="5"
+                            :allowed-minutes="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]"
                           ></v-time-picker>
                         </v-menu>
                                             
@@ -344,6 +346,7 @@
                                   format="ampm"
                                   class="custom-picker-add"
                                   :minute-steps="5"
+                                  :allowed-minutes="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]"
                                 ></v-time-picker>
                               </v-menu>
 
@@ -374,6 +377,7 @@
                                     format="ampm"
                                     class="custom-picker-add"
                                     :minute-steps="5"
+                                    :allowed-minutes="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]"
                                   ></v-time-picker>
                                 </v-menu>                                                  
                                   <v-icon class="ml-4 mb-6" size="28" color="primary" @click="removeEmptyAvailability(availability, index)">mdi-trash-can-outline</v-icon>
@@ -565,30 +569,30 @@ export default {
         EventServices.getAll()
           .then((response) => {
             const now = new Date();
-            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; 
-            const today = new Date(now.getTime() - timezoneOffset);
-            const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
-            
-            this.events = response.data;
-            // this.filteredEvents = response.data;
+            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
+            const today = new Date(now.getTime() - timezoneOffset).toDateString();
 
-            // filter past events
-            this.pastList = this.events.filter((event) => {
-              const eventDate = new Date(event.date);
-              return eventDate.getTime() < today.getTime();
-            });
+              
+              this.events = response.data;
+              // this.filteredEvents = response.data;
 
-            // filter current events
-            this.currentList = this.events.filter((event) => {
-              const eventDate = new Date(event.date);
-              return eventDate.getTime() >= today.getTime() && eventDate.getTime() <= midnight.getTime();
-            });
+              // filter past events
+              this.pastList = this.events.filter((event) => {
+                const eventDate = new Date(event.date);
+                return eventDate < new Date(today);
+              });
 
-            // filter upcoming events
-            this.upcomingList = this.events.filter((event) => {
-              const eventDate = new Date(event.date);
-              return eventDate.getTime() > midnight.getTime();
-            });
+              // filter current events
+              this.currentList = this.events.filter((event) => {
+                const eventDate = new Date(event.date);
+                return (eventDate.toDateString() === today);
+              });
+
+              // filter upcoming events
+              this.upcomingList = this.events.filter((event) => {
+                const eventDate = new Date(event.date);
+                return eventDate > new Date(today + " 23:59:59");
+              });
             this.filteredEvents = this.upcomingList;
             this.isUpcoming = true;
             console.log('filtered events', this.filteredEvents)
@@ -666,7 +670,7 @@ export default {
       this.showDeleteDialog = true;
     },
 
-    //Alert message before deleting it
+    //Alert message before deleting event
     deleteEventConfirmed() {
       EventServices.delete(this.deleteEventId)
         .then(() => {
@@ -685,20 +689,25 @@ export default {
     retrieveRole() {
         RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
-            this.role = response.data[0];
-            if (response.data[0].roleType == "Admin"){
+            console.log('response role here', response.data)
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
+            if (this.user.selectedRole == "Admin"){
               this.isAdmin=true
             }
             else{
               this.displayIcon=true
             }
-            if (response.data[0].roleType == "Faculty"){
+            if (this.user.selectedRole == "Faculty"){
               this.isFaculty=true
               this.facultyId = response.data[0].id
               console.log("faculty Id", this.facultyId)
 
             }
-            if (this.role.roleType == "Accompanist" && this.role.roleType != null){
+            if (this.user.selectedRole == "Accompanist" && this.user.selectedRole != null){
               this.isAccompanist=true
               this.accompanistId = response.data[0].id
               console.log("accompanist Id", this.accompanistId)

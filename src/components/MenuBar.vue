@@ -131,6 +131,38 @@
       </v-menu>
 
     </v-toolbar-items>
+
+    <!-- <v-menu
+    v-if="showListMenu"
+    offset-y
+  > -->
+  <v-menu v-if="user!=null" offset-y>
+    <template #activator="{ on, attrs }">
+      <v-btn color="accent" dark v-bind="attrs" class="mr-4 ml-4" v-on="on">
+        {{ user.selectedRole }}
+      </v-btn>
+    </template>
+  
+    <v-list>
+      <template #activator>
+        <v-list-item-title v-text="selectedRole"></v-list-item-title>
+      </template>
+  
+      <v-list-item
+      v-for="(role, index) in access"
+      :key="index"
+        @click="
+          selectedRole = role;
+          saveRole();"
+      >
+        <v-list-item-content>
+          <v-list-item-title v-text="role"></v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </v-menu>
+
+    
         
     <div v-if="user != null">
       <v-menu bottom min-width="200" rounded offset-y v-if="user != null">
@@ -223,7 +255,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon x-large v-on="on" v-bind="attrs">
             <v-avatar v-if="user == null">
-              <v-icon color ="secondary">
+              <v-icon color="secondary">
                 {{ icons.mdiAccountCircle }}
               </v-icon>
             </v-avatar>
@@ -352,38 +384,72 @@ export default {
     title: "Music Department",
     initials: "",
     name: "",
+    access:{},
+    selectedRole: "",
   }),
   async created() {
-    this.resetMenu();
+    await this.resetMenu();
   },
   async mounted() {
-    this.resetMenu();
-    this.retrieveRole();
+    await this.resetMenu();
+    await this.retrieveRole();
   },
   computed: {
+    showListMenu() {
+      return this.access.length > 1;
+      }
     // _link() {
     //     return "/" + this.selectedRoles.toLowerCase() + "Home/" + this.currentPersonRoleID;
     // }
-  },
+ },
   methods: {
-    retrieveRole() {
-      roleServices.getRoleForUser(this.user.userId)
+    async retrieveRole() {
+      await roleServices.getRoleForUser(this.user.userId)
       .then((response) => {
-        this.role = response.data[0];
+        for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
         console.log("role: " + this.role.roleType);
       })
       .catch((e) => {
         this.message = e.response.data.message;
       });
     },
-    resetMenu() {
+    async resetMenu() {
       this.user = null;
       // ensures that their name gets set properly from store
       this.user = Utils.getStore("user");
       if (this.user != null) {
         this.initials = this.user.fName[0] + this.user.lName[0];
         this.name = this.user.fName + " " + this.user.lName;
+        //transform access list ([]) in access object ({}) so I can use v-for on the menu bar
+        this.access = this.user.access[0].reduce((acc, value, index) => {
+        acc[index] = value;
+        return acc;
+        }, {});
       }
+    },
+    saveRole() {
+      this.user.selectedRole = this.selectedRole; //how to save the selected role? and don't loose it after refreshing
+      Utils.setStore("user", this.user);
+      console.log("user here", this.user);
+      //redirect to the right menu according to role
+      if(this.selectedRole === 'Admin'){ 
+          this.$router.push({ name: "homeadmin" });
+        }
+      else if(this.selectedRole === 'Faculty'){
+          this.$router.push({ name: "homefaculty" });
+        }
+      else if(this.selectedRole === 'Incoming Student'){
+          this.$router.push({ name: "home" });
+        }
+      else{
+          this.$router.push({ name: "homestudent" });
+        }
+
+      //this.resetMenu();
     },
     logout() {
       AuthServices.logoutUser(this.user)

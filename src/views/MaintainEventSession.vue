@@ -1743,14 +1743,18 @@ export default {
     async retrieveRole() {
         await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
-            this.role = response.data[0];
-            if (response.data[0].roleType == "Faculty"){
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
+            if (this.user.selectedRole == "Faculty"){
               this.isFaculty=true
             }
-            if (response.data[0].roleType == "Accompanist"){
+            if (this.user.selectedRole == "Accompanist"){
               this.isAccomp=true
             }
-            if (response.data[0].roleType == "Admin"){
+            if (this.user.selectedRole == "Admin"){
               this.isAdmin=true
             }
           })
