@@ -1,5 +1,6 @@
 
-  <template>
+<template>
+
   <div v-if="this.role.roleType == 'Admin'">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
@@ -72,7 +73,7 @@ export default {
       search: "",
       roles: [],
       filteredRoles: [],
-      rolesList: ["All Users", "Accompanist", "Admin", "Faculty", "Incoming Student", "Student"],
+      rolesList: ["All Users", "Accompanist", "Admin", "Faculty", "Prospective Student", "Student"],
       selectedRole: null,
       message: "Add, Edit or Delete Users",
       headers: [
@@ -135,7 +136,16 @@ export default {
         this.filteredRoles = this.roles;
       } else {
         this.selectedRole = role;
-        this.filteredRoles = this.roles.filter((r) => r.roleType === role);
+        if (role === "Prospective Student") {
+          this.filteredRoles = this.roles.map((r) => {
+          if (r.roleType === "Incoming Student") {
+            r.roleType = "Prospective Student";
+          }
+          return r;
+        }).filter((r) => r.roleType === "Prospective Student");
+        } else {
+          this.filteredRoles = this.roles.filter((r) => r.roleType === role);
+        }
       }
     },
     addRole() {
