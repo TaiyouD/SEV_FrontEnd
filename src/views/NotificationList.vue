@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.role.roleType != null">
+    <div v-if="this.role != {} && this.role.roleType != null">
       <v-container>
         <v-toolbar>
           <v-toolbar-title>Hello!</v-toolbar-title>
@@ -25,19 +25,16 @@
           <v-data-table
             :headers="headers"
             :search="search"
-            :items="tutorials"
+            :items="notifications"
             :items-per-page="50"
           >
             <template v-slot:[`item.actions`]="{ item }">
               <div>
-                <v-icon small class="mx-4" @click="editTutorial(item)">
-                  mdi-pencil
-                </v-icon>
-                <v-icon small class="mx-4" @click="viewTutorial(item)">
+                <!-- <v-icon small class="mx-4" @click="viewTutorial(item)">
                   mdi-format-list-bulleted-type
-                </v-icon>
-                <v-icon small class="mx-4" @click="deleteTutorial(item)">
-                  mdi-trash-can
+                </v-icon> -->
+                <v-icon  class="mx-4" @click="deleteNotification(item)">
+                  mdi-close
                 </v-icon>
               </div>
             </template>
@@ -48,8 +45,8 @@
   </template>
   
   <script>
-  import TutorialServices from "../services/tutorialServices";
   import Utils from "@/config/utils.js";
+  import NotificationServices from "../services/notificationServices";
   import RoleServices from "../services/roleServices";
   
   export default {
@@ -57,8 +54,8 @@
     data() {
       return {
         search: "",
-        tutorials: [],
-        currentTutorial: null,
+        notifications: [],
+        currentNotification: null,
         currentIndex: -1,
         title: "",
         user: {},
@@ -71,65 +68,69 @@
         ],
       };
     },
-    mounted() {
-      this.user = Utils.getStore("user");
-    },
+
     async created() {
+      this.user = Utils.getStore("user");
       await this.retrieveRole();
+      await this.retrieveNotifications(); 
     },
     methods: {
       async retrieveRole() {
+        // console.log(this.user.userId);
         await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
             this.role = response.data[0];
+            console.log('Role Id');
+            console.log(this.role.id);
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
-      editTutorial(tutorial) {
-        this.$router.push({ name: "edit", params: { id: tutorial.id } });
-      },
-      viewTutorial(tutorial) {
-        this.$router.push({ name: "view", params: { id: tutorial.id } });
-      },
-      deleteTutorial(tutorial) {
-        TutorialServices.delete(tutorial.id)
+      // editTutorial(tutorial) {
+      //   this.$router.push({ name: "edit", params: { id: tutorial.id } });
+      // },
+      // viewTutorial(tutorial) {
+      //   this.$router.push({ name: "view", params: { id: tutorial.id } });
+      // },
+      deleteNotification(notification) {
+        NotificationServices.delete(notification.id)
           .then(() => {
-            this.retrieveTutorials();
+            this.retrieveNotifications();
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
-      retrieveTutorials() {
-        TutorialServices.getAllForUser(this.user.userId)
+      async retrieveNotifications() {
+        await NotificationServices.getNotificationsForRole(this.role.id)
           .then((response) => {
-            this.tutorials = response.data;
+            this.notifications = response.data;
+            console.log(this.notifications)
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
       refreshList() {
-        this.retrieveTutorials();
-        this.currentTutorial = null;
+        this.retrieveNotifications();
+        this.currentNotification = null;
         this.currentIndex = -1;
       },
-      setActiveTutorial(tutorial, index) {
-        this.currentTutorial = tutorial;
-        this.currentIndex = tutorial ? index : -1;
+      setActiveNotification(notification, index) {
+        this.currentNotification = notification;
+        this.currentIndex = notification ? index : -1;
       },
-      removeAllTutorials() {
-        TutorialServices.deleteAll()
-          .then((response) => {
-            console.log(response.data);
-            this.refreshList();
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
+      // removeAllTutorials() {
+      //   TutorialServices.deleteAll()
+      //     .then((response) => {
+      //       console.log(response.data);
+      //       this.refreshList();
+      //     })
+      //     .catch((e) => {
+      //       this.message = e.response.data.message;
+      //     });
+      // },
     },
   };
   </script>

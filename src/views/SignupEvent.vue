@@ -63,12 +63,11 @@
          ref = "calendar"
           :key = "calendarKey"
           :events="filteredEvents"
-          :event-overrides="eventOverrides"
           @click:event="onEventClick"
           v-model="selectedDate"
           color="primary"
           :type="'day'"
-          first-time = "08:55"
+          :first-time = "initialTime"
           interval-count = "110" 
           :interval-minutes=5
           :short-interval="true"
@@ -83,31 +82,11 @@
    
         <!-- ===============Timeslot ==================== -->
       <v-flex>
-      <v-select class ="mr-4" style= "max-width : 306px"
-        :items=availableAccompanists
-        v-model = "selectedAccompanist"
-        :item-text = "item => `${item.fName} ${item.lName}`"
-        label="Select Accompanist"
-        return-object
-        single-line
-        filled
-    >
-  </v-select>
-
-    <!-- <v-select class ="mr-4" style= "max-width : 308px"
-        :items="availableTimeslots"
-        v-model="selectedStartTime"
-        label="Select Start Time"
-        return-object
-        single-line
-        filled
-        @change ="updateText"
-    ></v-select> -->
-
 
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
+        @change = "selectedInstructorAvailability"
         item-title="Instrument"
         item-value = "instrument"
         item-text="instrument.type"
@@ -116,6 +95,28 @@
         single-line
         filled
     ></v-select>
+
+    <v-text-field class ="mr-4" style= "max-width : 306px"
+        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        label="Instructor's Name"
+        return-object
+        single-line
+        filled
+        :disabled="true"
+    >
+    </v-text-field>
+
+    <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
+        v-model = "selectedAccompanist"
+        @change = "selectedAccompanistAvailability"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    >
+  </v-select>
 
     <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
@@ -132,11 +133,6 @@
     </v-flex>
 </div>
     </div>
-    <!-- <v-card-text>
-        <v-checkbox v-model = "showTextField" label = "Duet Or Ensemble?"/>
-        <v-text-field v-if="showTextField" label = "Other Member's Name"/>
-      </v-card-text> -->
-    <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
   <v-btn @click="submitForm" :disabled="!selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
@@ -184,17 +180,15 @@
          ref = "calendar"
           :key = "calendarKey"
           :events="filteredEvents"
-          :event-overrides="eventOverrides"
           @click:event="onEventClick"
           v-model="selectedDate"
           color="primary"
           :type="'day'"
-          first-time = "08:55"
+          :first-time = "initialTime"
           interval-count = "110" 
           :interval-minutes=5
           :short-interval="true"
         >
-        <!-- :event-color="getEventColor"  -->
         </v-calendar>
       </v-sheet>
       </v-flex>
@@ -204,31 +198,11 @@
    
         <!-- ===============Timeslot ==================== -->
       <v-flex>
-      <v-select class ="mr-4" style= "max-width : 306px"
-        :items=availableAccompanists
-        v-model = "selectedAccompanist"
-        :item-text = "item => `${item.fName} ${item.lName}`"
-        label="Select Accompanist"
-        return-object
-        single-line
-        filled
-    >
-  </v-select>
-
-    <!-- <v-select class ="mr-4" style= "max-width : 308px"
-        :items="availableTimeslots"
-        v-model="selectedStartTime"
-        label="Select Start Time"
-        return-object
-        single-line
-        filled
-        @change ="updateText"
-    ></v-select> -->
-
 
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
+        @change = "selectedInstructorAvailability"
         item-title="Instrument"
         item-value = "instrument"
         item-text="instrument.type"
@@ -237,6 +211,28 @@
         single-line
         filled
     ></v-select>
+
+    <v-text-field class ="mr-4" style= "max-width : 306px"
+        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        label="Instructor's Name"
+        return-object
+        single-line
+        filled
+        :disabled="true"
+    >
+    </v-text-field>
+
+    <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
+        v-model = "selectedAccompanist"
+        @change = "selectedAccompanistAvailability"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    >
+  </v-select>
 
     <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
@@ -303,12 +299,11 @@
          ref = "calendar"
           :key = "calendarKey"
           :events="filteredEvents"
-          :event-overrides="eventOverrides"
           @click:event="onEventClick"
           v-model="selectedDate"
           color="primary"
           :type="'day'"
-          first-time = "08:55"
+          :first-time = "initialTime"
           interval-count = "110" 
           :interval-minutes=5
           :short-interval="true"
@@ -323,9 +318,34 @@
    
         <!-- ===============Timeslot ==================== -->
       <v-flex>
-      <v-select class ="mr-4" style= "max-width : 306px"
+
+    <v-select  class=" mr-4"  style= "max-width : 308px"
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
+        @change = "selectedInstructorAvailability"
+        item-title="Instrument"
+        item-value = "instrument"
+        item-text="instrument.type"
+        label="Select Voice or Instrument"
+        return-object
+        single-line
+        filled
+    ></v-select>
+
+    <v-text-field class ="mr-4" style= "max-width : 306px"
+        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        label="Instructor's Name"
+        return-object
+        single-line
+        filled
+        :disabled="true"
+    >
+    </v-text-field>
+
+    <v-select class ="mr-4" style= "max-width : 306px"
         :items=availableAccompanists
         v-model = "selectedAccompanist"
+        @change = "selectedAccompanistAvailability"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
@@ -343,20 +363,7 @@
         filled
         @change ="updateText"
     ></v-select> -->
-
-
-    <v-select  class=" mr-4"  style= "max-width : 308px"
-        :items = "instrumentRole"
-        v-model = "selectedInstrument"
-        item-title="Instrument"
-        item-value = "instrument"
-        item-text="instrument.type"
-        label="Select Voice or Instrument"
-        return-object
-        single-line
-        filled
-    ></v-select>
-
+    
     <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
         v-model="selectedSongs"
@@ -420,12 +427,11 @@
          ref = "calendar"
           :key = "calendarKey"
           :events="filteredEvents"
-          :event-overrides="eventOverrides"
           @click:event="onEventClick"
           v-model="selectedDate"
           color="primary"
           :type="'day'"
-          first-time = "08:55"
+          :first-time = "initialTime"
           interval-count = "110" 
           :interval-minutes=5
           :short-interval="true"
@@ -439,32 +445,12 @@
 
    
         <!-- ===============Timeslot ==================== -->
-      <v-flex>
-      <v-select class ="mr-4" style= "max-width : 306px"
-        :items=availableAccompanists
-        v-model = "selectedAccompanist"
-        :item-text = "item => `${item.fName} ${item.lName}`"
-        label="Select Accompanist"
-        return-object
-        single-line
-        filled
-    >
-  </v-select>
-
-    <!-- <v-select class ="mr-4" style= "max-width : 308px"
-        :items="availableTimeslots"
-        v-model="selectedStartTime"
-        label="Select Start Time"
-        return-object
-        single-line
-        filled
-        @change ="updateText"
-    ></v-select> -->
-
+ <v-flex>
 
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
+        @change = "selectedInstructorAvailability"
         item-title="Instrument"
         item-value = "instrument"
         item-text="instrument.type"
@@ -473,6 +459,28 @@
         single-line
         filled
     ></v-select>
+
+    <v-text-field class ="mr-4" style= "max-width : 306px"
+        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        label="Instructor's Name"
+        return-object
+        single-line
+        filled
+        :disabled="true"
+    >
+    </v-text-field>
+
+    <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
+        v-model = "selectedAccompanist"
+        @change = "selectedAccompanistAvailability"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    >
+  </v-select>
 
     <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
@@ -548,7 +556,7 @@
           v-model="selectedDate"
           color="primary"
           :type="'day'"
-          first-time = "08:55"
+          :first-time = "initialTime"
           interval-count = "110" 
           :interval-minutes=5
           :short-interval="true"
@@ -561,32 +569,12 @@
 
    
         <!-- ===============Timeslot ==================== -->
-      <v-flex>
-      <v-select class ="mr-4" style= "max-width : 306px"
-        :items=availableAccompanists
-        v-model = "selectedAccompanist"
-        :item-text = "item => `${item.fName} ${item.lName}`"
-        label="Select Accompanist"
-        return-object
-        single-line
-        filled
-    >
-  </v-select>
-
-    <v-select class ="mr-4" style= "max-width : 308px"
-        :items="availableTimeslots"
-        v-model="selectedStartTime"
-        label="Select Start Time"
-        return-object
-        single-line
-        filled
-        @change ="updateText"
-    ></v-select>
-
+  <v-flex>
 
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
+        @change = "selectedInstructorAvailability"
         item-title="Instrument"
         item-value = "instrument"
         item-text="instrument.type"
@@ -595,6 +583,28 @@
         single-line
         filled
     ></v-select>
+
+    <v-text-field class ="mr-4" style= "max-width : 306px"
+        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        label="Instructor's Name"
+        return-object
+        single-line
+        filled
+        :disabled="true"
+    >
+    </v-text-field>
+
+    <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
+        v-model = "selectedAccompanist"
+        @change = "selectedAccompanistAvailability"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    >
+  </v-select>
 
     <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
@@ -666,11 +676,6 @@
       return {
         events: [],
         clickedEvents: [],
-        eventOverrides: {
-          disabled: ({ event }) => {
-            return event.disabled;
-          },
-        },
         selectedDate: null,
       //`2023-04-10`,
  
@@ -725,6 +730,11 @@
 
       timeslots: [],
 
+      availabilitiesForEvent: null,
+      availableInstructor: null,
+      instructors: [],
+      selectedInstructors: [],
+      calendarKey : 0,
       };
     },
     async created() {
@@ -738,6 +748,7 @@
       await this.retrieveSongs();
       await this.getAccompanist();
       await this.retrieveInstrumentRoles();
+      await this.getInstructors();
     },
     methods: {
       refreshCalendar(){
@@ -745,7 +756,7 @@
       },
 
     onEventClick( {event} ) {
-    if (event.disabled == false){
+    if (event.disabled == false && event.instructorAvailable == true && event.accompAvailable == true){
     const index = this.clickedEvents.findIndex(e => e.id === event.id);
     if (index === -1) {
       // Event not found in clickedEvents, so add it and change its color to dark blue
@@ -759,7 +770,6 @@
   }
     this.refreshCalendar();
   },
-
 
     computedTitle(item){
         const temp = this.listOfEvents.filter(event =>  event.id == item.id)
@@ -829,10 +839,8 @@
       async retrieveInstrumentRoles() {
         await instrumentRoleServices.getAllForUser(this.role.id)
           .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
             this.instrumentRole = response.data;
-            console.log('instrumentRole');
-            console.log(this.instrumentRole);
           })
           .catch((e) => {
             this.message = e.response.data.message;
@@ -841,7 +849,6 @@
       updateText(){
         const index = this.start.indexOf(this.selectedStartTime)
         if(this.role.studentMajor === "Music" && this.role.studentPrivateHours === 2){
-          
           if(index !== -1 && index + 1 <= this.start.length) {
             const nextTime = this.start[index];
             const date = new Date (`1/1/2000 ${nextTime}`);
@@ -889,10 +896,16 @@
           }
         }
       },
+
+
       async retrieveRole(){
         await roleServices.getRoleForUser(this.user.userId)
         .then((response) => {
-          this.role = response.data[0];
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
         })
         .catch((e) => {
           this.message = e.response.data.message;
@@ -994,14 +1007,31 @@
             }
           }
         },
+        async getInstructors(){
+          for (let i = 0; i < this.listOfRoles.length; i++){
+            if (this.listOfRoles[i].facultyType === 'Instructor'){
+              await userServices.get(this.listOfRoles[i].id)
+              .then((response) => {
+                this.instructors.push(response.data)
+              })
+            }
+          }
+        },
         getAvailablitiesForEvent(item){
           return this.availabilities.filter((availability)=> availability.eventId === item.id)
         },
         getAvailableAccompanists(availabilities){
+          console.log("Testing the getAvailableAccompanists", availabilities)
           const accompanistsIds = availabilities.map((availability) => availability.accompanistId);
           const uniqueIds = [...new Set(accompanistsIds)]
-          console.log("List of Accompanists", this.accompanists)
+          //console.log("List of Accompanists", this.accompanists)
           return this.accompanists.filter((accompanist) => uniqueIds.includes(accompanist.id));
+        },
+        getAvailableInstructors(availabilities){
+          const facultyIds = availabilities.map((availability) => availability.facultyId);
+          const uniqueIds = [...new Set(facultyIds)]
+          console.log("Testing the this.instructors", this.instructors)
+          return this.instructors.filter((instructor) => uniqueIds.includes(instructor.id));
         },
 
     async showSelectedDialog(item) {
@@ -1017,16 +1047,20 @@
         const calendarDate = new Date(item.date)
         const CalendarDateString = calendarDate.toISOString().substring(0, 10)
         this.selectedDate = CalendarDateString     //  Date is put into selectedDate, which is the v-model for the calendar
-        console.log("THE VCALENDAR DATE", this.selectedDate)
-        console.log("THE DATE", item.date)
         
       //Function call for retrieving event session
       await this.retrieveEventSessions(item)
 
       // Function call for getting the available accompanists depending on the specific events
       const availabilities = this.getAvailablitiesForEvent(item)
+      console.log("Filtered Accompanists", availabilities)
+      this.availabilitiesForEvent = availabilities
+      console.log(this.availabilitiesForEvent, "TESTING THIS OUT")
+
+
       this.availableAccompanists = this.getAvailableAccompanists(availabilities)
-        console.log("Filtered Accompanists", this.availableAccompanists)
+
+      this.availableInstructor = this.getAvailableInstructors(availabilities)
 
       // Function call for getting the start time and end time for each specific events 
       this.start = await this.availableStartTime(item) 
@@ -1059,13 +1093,19 @@
 
       console.log("Start Time: ", item.startTime, "   End Time: ", item.endTime)
       const takenSlots = [];
-      // For each event sessions within our database 
+      // For each event sessions within the event, make a 5 minute timeslot and push it into takenSlots from startTime to endTime
       this.eventsSession.forEach(event => {
         const startSession = new Date (event.startTime)
         const endSession = new Date(event.endTime)
-        for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
-          //startTimes.push(startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
-          takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+
+        if (this.selectedEventType === 'Jury'){
+          for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 15)){
+            takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))}
+        }
+        else{
+          for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
+            takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+        }
         }
       })
       const uniqueTimes = [...new Set(takenSlots)]
@@ -1092,7 +1132,7 @@
         startTime.setMinutes(startTime.getMinutes() + 5);
       }
 
-      console.log("TESTING THE BUG WITH AM AND PM", timeslots)
+      //console.log("TESTING THE BUG WITH AM AND PM", timeslots)
       
         // For the calendar -- calendar requires the start, end, color, and name of events to populate 
         this.events = [];
@@ -1125,11 +1165,10 @@
     timed: true,
     color: '#4169E1',
     disabled: false,
+    accompAvailable: false,
+    instructorAvailable: false
   });
 }
-      console.log("This is the events for the calendar", this.events)
-
-
       // For each taken slots, if the takenslots matches the timeslots time, change the available to true. 
       for (let i = 0; i < uniqueTimes.length; i++) {
         const uniquetime = uniqueTimes[i];
@@ -1140,39 +1179,130 @@
     }
   }
 }
-
-//endTime.toLocaleString('en-US',{hour: 'numeric', minute: 'numeric', hour12: true})
 for (let i = 0; i < uniqueTimes.length - 1; i++) {
         const uniquetime = uniqueTimes[i];
-        console.log("THis is start", uniquetime)
         for (let j = 0; j < this.events.length; j++) {
           if (this.events[j].start.toLocaleString('en-US',{hour: '2-digit', minute: '2-digit'}) === uniquetime) {
-            console.log(this.events[j].end.toLocaleString('en-US',{hour: '2-digit', minute: '2-digit'}))
             this.events[i].disabled = true;
-            console.log(this.events[i].disabled)
     }
   }
 }
-
-
-      console.log("All the starttimes filtered", timeslots)
-      console.log("This is the events for the calendar", this.events)
-
-
       this.timeslotTemp = timeslots
       // Return the timeslots filtered by whats already taken up and whats not
       return timeslots.filter((slot) => slot.available === false).map((slot) => slot.time);
   },
+
+
+  selectedInstructorAvailability(){
+    
+    console.log("This is the id for selectedInstrument.",this.selectedInstrument.privateInstructorId)
+    for (let i = 0; i < this.availableInstructor.length; i++) {
+      if (this.availableInstructor[i].id == this.selectedInstrument.privateInstructorId) {
+        console.log('Found matching instructor:', this.availableInstructor[i]);
+        this.selectedInstructors = this.availableInstructor[i]
+    }
+    else{
+      console.log('No matching instructor')
+      this.selectedInstructors = null;
+      }
+    }
+
+    const available = []; 
+    const takenSlots = [];  
+    // For each event sessions within the event, make a 5 minute timeslot and push it into takenSlots from startTime to endTime
+      this.availabilitiesForEvent.forEach(a => {
+        if(a.facultyId === this.selectedInstrument.privateInstructorId){
+          available.push(a)
+        }
+      })
+      console.log("Testing the Instructor Availability Function; the 'available' array", available)
+      for (let i = 0; i < available.length; i++){
+        const startSession = new Date("01/01/2022 " + available[i].startTime)
+        const endSession = new Date("01/01/2022 " + available[i].endTime)
+        for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
+          //takenSlots.push(new Date(time))
+          takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+          //console.log("Instructor", time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+        }
+      }
+
+      for (let i = 0; i < takenSlots.length - 1; i++) {
+        const takenSlot = takenSlots[i];
+        for (let j = 0; j < this.events.length; j++) {
+          if (this.events[j].start.toLocaleString('en-US',{hour: '2-digit', minute: '2-digit'}) === takenSlot) {
+            this.events[i].instructorAvailable = true;
+    }
+  }
+}
+
   },
+  selectedAccompanistAvailability(){
+    const available = []; // all the availability times for the selectedAccompanist
+    const takenSlots = [];  
+    // For each event sessions within the event, make a 5 minute timeslot and push it into takenSlots from startTime to endTime
+      this.availabilitiesForEvent.forEach(a => {
+        if(a.accompanistId === this.selectedAccompanist.id){
+          available.push(a)
+        }
+      })
+      console.log("Testing the Accompanist Availability Function, the avaiable array", available)
+      for (let i = 0; i < available.length; i++){
+        const startSession = new Date("01/01/2022 " + available[i].startTime)
+        const endSession = new Date("01/01/2022 " + available[i].endTime)
+        for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
+          //takenSlots.push(new Date(time))
+          takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+          //console.log(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+        }
+      }
+
+        
+      console.log("Testing the Accompanist Availability Function")
+
+    for (let i = 0; i < takenSlots.length - 1; i++) {
+        const takenSlot = takenSlots[i];
+        for (let j = 0; j < this.events.length; j++) {
+          if (this.events[j].start.toLocaleString('en-US',{hour: '2-digit', minute: '2-digit'}) === takenSlot) {
+            this.events[i].accompAvailable = true;
+    }
+  }
+}
+},},
 
 
 computed: {
+  initialTime(){
+    if(this.events.length > 0){
+      let startTime = this.events[0].start.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+      return startTime;
+    }
+    else{
+      console.log("Testing the initialtime function")
+      return new Date();
+    }
+  },
+
 
 
   filteredEvents(){
     return this.events.map((event) => {
       if (event.disabled == false) {
-        return event;
+        if(event.instructorAvailable == true){
+          if (event.accompAvailable == true){
+            return event;
+            }
+          else{
+              return { ...event, color: '#999999', name: 'Select Accompanist'};
+          }
+        }
+        else{
+          if (this.selectedInstrument !== null){
+            return {...event, color: '#999999', name: 'Instructor Not Available'}
+          }
+          else{
+            return { ...event, color: '#999999', name: 'Select Instrument'}
+          }
+        }
       } else {
         return { ...event, color: '#999999', name: 'Not Available'};
       }
@@ -1187,7 +1317,7 @@ computed: {
 },
 },
 mounted() {
-    this.$refs.calendar.setDay(this.selectedDate);
+    //this.$refs.calendar.setDay(this.selectedDate);
   },
 };
   </script>
@@ -1201,11 +1331,6 @@ mounted() {
     font-family: 'Karla', sans-serif;
   }
 /* Css for the calendar date picker */
-
-.vc-event.disabled {
-  opacity: 0.5;
-  pointer-events: none
-}
 
 .calendar-container {
   width: 350px;

@@ -215,11 +215,11 @@
                 >
                   <template v-slot:[`item.actions`]="{ item }">
                     <div>
-                      <v-icon small class="mx-4" @click="viewNotification(item)">
+                      <!-- <v-icon small class="mx-4" @click="viewNotification(item)">
                         mdi-format-list-bulleted-type
-                      </v-icon>
+                      </v-icon> -->
                       <v-icon small class="mx-4" @click="deleteNotification(item)">
-                        mdi-trash-can
+                        mdi-close
                       </v-icon>
                     </div>
                   </template>
@@ -243,9 +243,10 @@
 <script>
     import EventServices from "../services/eventServices";
     import roleServices from "@/services/roleServices";
+    import NotificationServices from "../services/notificationServices";
     import Utils from "@/config/utils.js";
     export default {
-      name: "home-page",
+      name: "home-page-admin",
       data() {
         return {
           notificationsearch: "",
@@ -287,8 +288,9 @@
       },
       async mounted() {
         this.resetMenu();
-        this.retrieveRole();
+        await this.retrieveRole();
         this.retrieveEvents();
+        await this.retrieveNotifications(); 
       },
       methods: {
         resetMenu() {
@@ -300,12 +302,13 @@
           this.name = this.user.fName + " " + this.user.lName;
         }
       },
-      retrieveRole() {
-      roleServices.getRoleForUser(this.user.userId)
+      async retrieveRole() {
+      await roleServices.getRoleForUser(this.user.userId)
         .then((response) => {
           for (let i = 0; i < response.data.length; i++){
               if (response.data[i].roleType == this.user.selectedRole) {
                 this.role = response.data[i];
+            
               }
             }
           console.log("role: " + this.role.roleType);
@@ -313,6 +316,7 @@
         .catch((e) => {
           this.message = e.response.data.message;
         });
+        
       },
       retrieveEvents() {
       EventServices.getAll()
@@ -332,7 +336,41 @@
           this.message = e.response.data.message;
         });
       },
+      // editTutorial(tutorial) {
+      //   this.$router.push({ name: "edit", params: { id: tutorial.id } });
+      // },
+      // viewTutorial(tutorial) {
+      //   this.$router.push({ name: "view", params: { id: tutorial.id } });
+      // },
+      deleteNotification(notification) {
+        NotificationServices.delete(notification.id)
+          .then(() => {
+            this.retrieveNotifications();
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
       },
+      async retrieveNotifications() {
+        await NotificationServices.getNotificationsForRole(this.role.id)
+          .then((response) => {
+            this.notifications = response.data;
+            console.log(this.notifications)
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      // refreshList() {
+      //   this.retrieveNotifications();
+      //   this.currentNotification = null;
+      //   this.currentIndex = -1;
+      // },
+      // setActiveNotification(notification, index) {
+      //   this.currentNotification = notification;
+      //   this.currentIndex = notification ? index : -1;
+      // },
+    },
     };
 </script>
     
