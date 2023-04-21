@@ -104,8 +104,9 @@
       
                       <!--  Event Type Below -->
                       <v-text-field class=" mr-4" width = "260"
-                          item-title=""
-                          item-value=""
+                            item-title=""
+                            item-value=""
+                            v-model="selectedEventType"
                           label="Event Type"
                           return-object
                           single-line
@@ -444,6 +445,11 @@ export default {
     async retrieveRole() {
         await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
+            // for (let i = 0; i < response.data.length; i++){
+            //   if (response.data[i].roleType == this.user.selectedRole) {
+            //     this.role = response.data[i];
+            //   }
+            // }
             this.role = response.data[0];
             if (response.data[0].roleType == "Faculty"){
               this.isFaculty=true
