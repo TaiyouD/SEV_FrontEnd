@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if = "this.role.roleType  == 'Student' || this.role.roleType == 'Incoming Student' || this.role.roleType == 'Accompanist'">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -36,7 +36,7 @@
         <v-menu>
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" color="primary" class="ml-2">
-              {{ selectedDate || "All Dates" }}
+              {{ selectedDate || "Upcoming" }}
               <v-icon>mdi-menu-down</v-icon>
             </v-btn>
           </template>
@@ -305,15 +305,18 @@ export default {
         { text: "", sortable: false}      
       ],
       filteredEventsSession: [],
+      //filteredEvents: [],
     };
   },
   mounted() {
     //this.retrieveEvents();
     this.retrieveEventSessions();
+    
   },
   async created(){
     this.user = Utils.getStore("user");
     await this.retrieveRole();
+    
     //await this.retrieveThisEvent();
     //await this.retrieveEventSessions();
 
@@ -330,8 +333,6 @@ export default {
             console.log("This is the filteredEvents", this.filteredEvents)
             this.filteredDates.push(response.data[i])
           }}
-
-
             resolve();
         })
         .catch((e) => {
@@ -352,14 +353,26 @@ export default {
     async retrieveEventSessions(){
         await EventSessionServices.getAll()
         .then((response) => {
+          const now = new Date();
+          //const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
+          //const today = new Date(now.getTime() - timezoneOffset).toDateString();
+          const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+          
           for(let i = 0; i < response.data.length; i++){
           if (response.data[i].studentId == this.role.id){
             this.events.push(response.data[i])
-            this.filteredEvents.push(response.data[i])
+            //this.filteredEvents.push(response.data[i])
             this.filteredDates.push(response.data[i])
             // this.eventsessionsevent = response.data;
           }
-          }
+          } 
+            console.log("tomorrow", tomorrow)
+            this.upcomingList = this.events.filter((event => new Date(event.event.date) >= tomorrow));
+            this.filteredEvents = this.upcomingList;
+            this.isUpcoming = true;
+            console.log('filtered events', this.filteredEvents)
+
+
           console.log('event session2', this.events[0])
         })
         .catch((e) => {
@@ -445,11 +458,11 @@ export default {
     async retrieveRole() {
         await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
-            // for (let i = 0; i < response.data.length; i++){
-            //   if (response.data[i].roleType == this.user.selectedRole) {
-            //     this.role = response.data[i];
-            //   }
-            // }
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
             this.role = response.data[0];
             if (response.data[0].roleType == "Faculty"){
               this.isFaculty=true
