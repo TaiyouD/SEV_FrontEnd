@@ -8,7 +8,6 @@
 
 <script>
 import AuthServices from "@/services/authServices";
-import roleServices from "@/services/roleServices";
 import Utils from "@/config/utils.js";
 
 export default {
@@ -20,6 +19,7 @@ export default {
       roleCounter: 0,
       user: {},
       role: {},
+      access:{}
     };
   },
   created() {},
@@ -50,34 +50,38 @@ export default {
         }
       );
     },
-    handleCredentialResponse(response) {
+    async handleCredentialResponse(response) {
       let token = {
         credential: response.credential,
       };
-      AuthServices.loginUser(token)
+      await AuthServices.loginUser(token)
         .then((response) => {
           console.log(response.data)
           this.user = response.data;
           Utils.setStore("user", this.user);
           this.fName = this.user.fName;
           this.lName = this.user.lName;
-          // check what role they are
-          // based on role, go to different home pages
-          this.$router.push({ name: "homestudent" });
+          this.access = this.user.access[0];
+          console.log('access: ', this.access);
+          console.log('access specific: ', this.access[0]);
+
+          // check what role they are based on role, go to different home pages
+          if(this.access[0] === 'Admin'){
+            this.$router.push({ name: "homeadmin" });
+          }
+          else if(this.access[0] === 'Faculty'){
+            this.$router.push({ name: "homefaculty" });
+          }
+          else if(this.access[0] === 'Incoming Student'){
+            this.$router.push({ name: "home" });
+          }
+          else{
+            this.$router.push({ name: "homestudent" });
+          }
         })
         .catch((error) => {
           console.log("error", error);
         });
-    },
-    retrieveRole() {
-      roleServices.getRoleForUser(this.user.userId)
-      .then((response) => {
-        this.role = response.data[0];
-        console.log("role: " + this.role.roleType);
-      })
-      .catch((e) => {
-        this.message = e.response.data.message;
-      });
     },
   },
 };

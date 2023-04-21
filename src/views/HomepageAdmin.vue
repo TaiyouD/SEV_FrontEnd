@@ -1,6 +1,6 @@
 <template>
   
-    <div>
+  <div v-if="this.role.roleType == 'Admin'">
       <v-parallax src="../assets/music-notes-bg1.jpg" height="100" />
       <v-container>
         
@@ -57,7 +57,7 @@
                   :headers="eventHeaders"
                   :search="eventsearch"
                   :items="eventstemp"
-                  :items-per-page="50"
+                  :items-per-page="5"
                 >
                   <!-- <template v-slot:[`item.actions`]="{ item }">
                     <div>
@@ -273,11 +273,13 @@
           ],
           title: "",
           user: {},
+          role:{},
           message: "Welcome to the Music Department",
           model: 0,
           alert: true,
           name: "",
           initials: "",
+          search:""
         };
       },
       async created() {
@@ -301,7 +303,11 @@
       retrieveRole() {
       roleServices.getRoleForUser(this.user.userId)
         .then((response) => {
-          this.role = response.data[0];
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
           console.log("role: " + this.role.roleType);
         })
         .catch((e) => {
@@ -311,97 +317,21 @@
       retrieveEvents() {
       EventServices.getAll()
         .then((response) => {
-          this.eventstemp = response.data;
+          const now = new Date();
+          const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
+          const today = new Date(now.getTime() - timezoneOffset).toDateString();
+              
+          this.events = response.data;
+
+          // filter upcoming events
+          this.eventstemp = this.events.filter((event) => {
+              const eventDate = new Date(event.date);
+              return eventDate > new Date(today + " 23:59:59");});
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
-        // for (let i = 0; i < this.eventstemp.length; i++) {
-        //   console.log("events dates");
-        //   console.log(this.eventstemp[i].date);
-        // }
-        console.log(this.eventstemp[0].date);
       },
-    //   retrieveEventsPerRole(){
-    //   if (this.role.roleType == "Faculty"){
-    //     for (let i = 0; i < this.eventstemp.length; i++) {
-    //       if (this.eventstemp[i].privateInstructorId == this.role.id){
-    //         this.events.push(this.eventstemp[i]);
-    //       }
-    //     }
-    //   }
-    //   if (this.role.roleType == "Accompanist"){
-    //     for (let i = 0; i < this.eventstemp.length; i++) {
-    //       if (this.eventstemp[i].studentId == this.role.id){
-    //         this.events.push(this.eventstemp[i]);
-    //       }
-    //     }
-    //   }
-    //   if (this.role.roleType == "Student" || this.role.roleType == "Incoming Student"){
-    //     for (let i = 0; i < this.eventstemp.length; i++) {
-    //       if (this.eventstemp[i].accompanistId == this.role.id){
-    //         this.events.push(this.eventstemp[i]);
-    //       }
-    //     }
-    //   this.filteredEvents = this.events;
-    //   }
-    //   console.log('event per role', this.events);
-    // },
-    // convertTime(time) {
-    //   const date = new Date(`1/1/2000 ${time}`);
-    //   const formattedTime = date.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'});
-    //   return formattedTime;
-    // },
-    // filterEvents(filter) {
-    //   this.selectedEvent = filter;
-    //   this.selectedFilter = filter;
-    //   this.filterData();
-    // },
-    // filterDates(filter) {
-    //   this.selectedDate = filter;
-    //   this.selectedFilter = filter;
-    //   this.filterData();
-    // },
-    // filterData() {
-    //   this.dateCondition();
-    //   let filteredData = this.events;
-    //   if (this.selectedEvent && this.selectedEvent !== "All Events") {
-    //     filteredData = filteredData.filter(event => event.eventType === this.selectedEvent);
-    //   }
-    //   if (this.selectedDate && this.selectedDate !== "All Dates") {
-    //     if (this.selectedDate === "Current") {
-    //       const now = new Date();
-    //       const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
-    //       const today = new Date(now.getTime() - timezoneOffset).toDateString();
-    //       filteredData = filteredData.filter(event => new Date(event.date).toDateString() === today);
-    //     } else if (this.selectedDate === "Past") {
-    //       const now = new Date();
-    //       const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
-    //       const today = new Date(now.getTime() - timezoneOffset).toDateString();
-    //       filteredData = filteredData.filter(event => new Date(event.date) < new Date(today));
-    //     } else if (this.selectedDate === "Upcoming ") {
-    //       const now = new Date();
-    //       const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
-    //       const today = new Date(now.getTime() - timezoneOffset).toDateString();
-    //       filteredData = filteredData.filter(event => new Date(event.date) > new Date(today + " 23:59:59")); // Need to include" 23:59:59" to not show the current date
-    //     }
-    //   }
-    //   this.filteredEvents = filteredData;
-    //   this.filteredDates = filteredData;
-    // },
-
-
-
-
-      // refreshList() {
-      //   this.retrieveEvents();
-      //   this.currentEvent = null;
-      //   this.currentIndex = -1;
-      // },
-      // setActiveEvent(event, index) {
-      //   this.currentEvent = event;
-      //   this.currentIndex = event ? index : -1;
-      // },
       },
     };
 </script>
