@@ -97,7 +97,7 @@ const router = new Router({
       component: AddComposers
     },
     {
-      path: "/addcritique",
+      path: "/addcritique/:eventSessionId",
       name: "addcritique",
       component: AddCritique,
       props: true
@@ -199,8 +199,7 @@ const router = new Router({
     {
       path: "/maintainevent",
       name: "maintainevent",
-      component: MaintainEvents,
-      props: true
+      component: MaintainEvents
     },
     {
       path: "/maintaineventsession/:eventId",
