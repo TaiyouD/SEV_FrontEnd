@@ -80,6 +80,7 @@ export default {
     this.currentUser = Utils.getStore("user");
     await this.retrieveRole();
   },
+  methods: {
     async retrieveRole() {
           await RoleServices.getRoleForUser(this.user.userId)
             .then((response) => {
