@@ -39,7 +39,7 @@
             :items="[{ text: 'Accompanist', value: 'Accompanist' }, 
                     { text: 'Admin', value: 'Admin' },
                     { text: 'Faculty', value: 'Faculty' },
-                    { text: 'Prospective Student', value: 'Prospective Student' },
+                    { text: 'Prospective Student', value: 'Incoming Student' },
                     { text: 'Student', value: 'Student' }
                     ]"
         ></v-select>
@@ -205,9 +205,13 @@
     },
     methods: {
       async retrieveRole() {
-        await RoleServices.getRoleForUser(this.user.currentUser)
+        await RoleServices.getRoleForUser(this.currentUser.userId)
           .then((response) => {
-            this.currentRole = response.data[0];
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.currentUser.selectedRole) {
+                this.currentRole = response.data[i];
+              }
+            }
           })
           .catch((e) => {
             this.message = e.response.data.message;

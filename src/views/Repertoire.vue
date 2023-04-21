@@ -154,9 +154,11 @@ export default {
     async retrieveRole() {
       await RoleServices.getRoleForUser(this.user.userId)
         .then((response) => {
-          this.tempRole = response.data[0];
-          /*this.roleId2 = this.role.map(function(el) {
-              return el.id;});*/
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.tempRole = response.data[i];
+              }
+            }
           console.log('tempRole');
           console.log(this.tempRole);
         })
