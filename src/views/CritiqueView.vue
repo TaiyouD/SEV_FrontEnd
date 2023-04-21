@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="this.role.roleType != null">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -517,6 +517,7 @@ export default {
       testcritiqueId: '1',
       valid: false,
       user: {},
+      role:{},
       facultyRole:{},
       facultyUser:{},
       studentRole:{},
@@ -535,12 +536,28 @@ export default {
       this.user = Utils.getStore("user");
       console.log("critique ID");
       console.log(this.critiqueId);
+      await this.retrieveRole();
       await this.retrieveCritique();
       await this.retrieveStudentRole();
       await this.retrieveFacultyRole();
       await this.retrieveEventSongs();
   },
   methods: {
+    async retrieveRole() {
+      await RoleServices.getRoleForUser(this.user.userId)
+        .then((response) => {
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
+          console.log('role');
+          console.log(this.role);
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+    },
   async retrieveEventSession() {
       await EventSessionServices.get(this.critique.eventsessionId)
       .then((response) => {

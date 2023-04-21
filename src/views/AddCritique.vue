@@ -427,7 +427,11 @@
     async retrieveFacultyRole() {
       await RoleServices.getRoleForUser(this.user.userId)
         .then((response) => {
-          this.facultyRole = response.data[0];
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.facultyRole = response.data[i];
+              }
+            }
           console.log('faculty role');
           console.log(this.facultyRole);
         })
@@ -505,8 +509,6 @@
         
     },
       saveCritique() { 
-        console.log('role faculty', this.facultyRole.id)
-        console.log('role student', this.studentRole.id)
         var data = {
           date: this.event.date,
           deportment: this.critique.deportment,
@@ -526,7 +528,7 @@
           performSuggest: this.critique.performSuggest,
           hasPassed:this.critique.hasPassed,
           facultyId: this.facultyRole.id,
-          eventSessionId: this.eventSessionId,
+          eventsessionId: this.eventSessionId,
           studentId: this.studentRole.id
         };
         console.log('data',data);
