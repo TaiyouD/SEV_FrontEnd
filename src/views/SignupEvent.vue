@@ -1,6 +1,5 @@
 <template>
     <div v-if = "this.role.roleType  == 'Student' || this.role.roleType == 'Incoming Student'">
-
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
         <v-container>
             <v-toolbar>
@@ -54,21 +53,48 @@
 
           <div style="text-align: center;">
           <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+<!-- ===========Testing a date picker of sorts =============== -->  
 
+<template>
+  <div class = calendar-container>
+    <v-flex>
+  <v-sheet height = "400">
+        <v-calendar
+         ref = "calendar"
+          :key = "calendarKey"
+          :events="filteredEvents"
+          :event-overrides="eventOverrides"
+          @click:event="onEventClick"
+          v-model="selectedDate"
+          color="primary"
+          :type="'day'"
+          first-time = "08:55"
+          interval-count = "110" 
+          :interval-minutes=5
+          :short-interval="true"
+        >
+        <!-- :event-color="getEventColor"  -->
+        </v-calendar>
+      </v-sheet>
+      </v-flex>
+    </div>
+      </template>
 
+   
         <!-- ===============Timeslot ==================== -->
-        <v-row>
-          <v-col>
-      <v-select  class=" mr-4"  width = "380" 
-        :items= "availableAccompanists"
+      <v-flex>
+      <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
         v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
         filled
-    ></v-select>
-    <v-select class ="mr-4" width = "390"
+    >
+  </v-select>
+
+    <!-- <v-select class ="mr-4" style= "max-width : 308px"
         :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
@@ -76,18 +102,10 @@
         single-line
         filled
         @change ="updateText"
-    ></v-select>
-    </v-col>
-  </v-row>
-    <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
-    </div>
-    </div>
-                    <!--  Instrument Select Below -->
-                    <div style="text-align: center;">
-          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-      <v-row>
-          <v-col>
-    <v-select  class=" mr-4"  width = "380" 
+    ></v-select> -->
+
+
+    <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
         item-title="Instrument"
@@ -99,7 +117,7 @@
         filled
     ></v-select>
 
-    <v-select  class=" mr-4"  width = "380" 
+    <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
@@ -111,18 +129,17 @@
         single-line
         filled
      ></v-select>
-    </v-col>
-  </v-row>
+    </v-flex>
 </div>
     </div>
-    <v-card-text>
+    <!-- <v-card-text>
         <v-checkbox v-model = "showTextField" label = "Duet Or Ensemble?"/>
         <v-text-field v-if="showTextField" label = "Other Member's Name"/>
-      </v-card-text>
+      </v-card-text> -->
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
+  <v-btn @click="submitForm" :disabled="!selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -156,17 +173,19 @@
         <v-card-text>
         <v-container> 
       <div style="text-align: center;">
-      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+      <div class="d-flex flex-row bg-surface-variant" style="max-width : 780; max-height : 780"  >
 <!-- ===========Testing a date picker of sorts =============== -->  
+
 <template>
   <div class = calendar-container>
+    <v-flex>
   <v-sheet height = "400">
         <v-calendar
-          :events="events"
-          @click:event ="selectEvent"
-          @event-mouseover="handleEventMouseover"
-          :event-color="getEventColor" 
-          ref = "calendar"
+         ref = "calendar"
+          :key = "calendarKey"
+          :events="filteredEvents"
+          :event-overrides="eventOverrides"
+          @click:event="onEventClick"
           v-model="selectedDate"
           color="primary"
           :type="'day'"
@@ -175,16 +194,17 @@
           :interval-minutes=5
           :short-interval="true"
         >
+        <!-- :event-color="getEventColor"  -->
         </v-calendar>
       </v-sheet>
+      </v-flex>
     </div>
       </template>
-      
-      <div style="max-width: 380;">
+
+   
         <!-- ===============Timeslot ==================== -->
-        <v-row>
-          <v-col>
-      <v-select class ="mr-4" width = "380"
+      <v-flex>
+      <v-select class ="mr-4" style= "max-width : 306px"
         :items=availableAccompanists
         v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
@@ -193,9 +213,9 @@
         single-line
         filled
     >
-    
   </v-select>
-    <v-select class ="mr-4" width = "380"
+
+    <!-- <v-select class ="mr-4" style= "max-width : 308px"
         :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
@@ -203,8 +223,10 @@
         single-line
         filled
         @change ="updateText"
-    ></v-select>
-    <v-select  class=" mr-4"  width = "380" 
+    ></v-select> -->
+
+
+    <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
         item-title="Instrument"
@@ -215,7 +237,8 @@
         single-line
         filled
     ></v-select>
-    <v-select  class=" mr-4"  width = "380" 
+
+    <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
@@ -227,16 +250,15 @@
         single-line
         filled
      ></v-select>
-  </v-col>
-  </v-row>
+    </v-flex>
 
-  </div>
+
     </div>
   </div>
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
+  <v-btn @click="submitForm" :disabled="!selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -271,19 +293,48 @@
           <div style="text-align: center;">
           <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
 
+        <!-- ===========Testing a date picker of sorts =============== -->  
+
+<template>
+  <div class = calendar-container>
+    <v-flex>
+  <v-sheet height = "400">
+        <v-calendar
+         ref = "calendar"
+          :key = "calendarKey"
+          :events="filteredEvents"
+          :event-overrides="eventOverrides"
+          @click:event="onEventClick"
+          v-model="selectedDate"
+          color="primary"
+          :type="'day'"
+          first-time = "08:55"
+          interval-count = "110" 
+          :interval-minutes=5
+          :short-interval="true"
+        >
+        <!-- :event-color="getEventColor"  -->
+        </v-calendar>
+      </v-sheet>
+      </v-flex>
+    </div>
+      </template>
+
+   
         <!-- ===============Timeslot ==================== -->
-        <v-row>
-          <v-col>
-      <v-select  class=" mr-4"  width = "380" 
-        :items= "availableAccompanists"
+      <v-flex>
+      <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
         v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
         filled
-    ></v-select>
-    <v-select class ="mr-4" width = "390"
+    >
+  </v-select>
+
+    <!-- <v-select class ="mr-4" style= "max-width : 308px"
         :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
@@ -291,18 +342,10 @@
         single-line
         filled
         @change ="updateText"
-    ></v-select>
-    </v-col>
-  </v-row>
-  <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
-    </div>
-    </div>
-                    <!--  Instrument Select Below -->
-                    <div style="text-align: center;">
-          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-      <v-row>
-          <v-col>
-    <v-select  class=" mr-4"  width = "380" 
+    ></v-select> -->
+
+
+    <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
         item-title="Instrument"
@@ -314,7 +357,7 @@
         filled
     ></v-select>
 
-    <v-select  class=" mr-4"  width = "380" 
+    <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
@@ -326,14 +369,13 @@
         single-line
         filled
      ></v-select>
-    </v-col>
-  </v-row>
+    </v-flex>
 </div>
     </div>
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
+  <v-btn @click="submitForm" :disabled="!selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -368,19 +410,48 @@
           <div style="text-align: center;">
           <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
 
+<!-- ===========Testing a date picker of sorts =============== -->  
+
+<template>
+  <div class = calendar-container>
+    <v-flex>
+  <v-sheet height = "400">
+        <v-calendar
+         ref = "calendar"
+          :key = "calendarKey"
+          :events="filteredEvents"
+          :event-overrides="eventOverrides"
+          @click:event="onEventClick"
+          v-model="selectedDate"
+          color="primary"
+          :type="'day'"
+          first-time = "08:55"
+          interval-count = "110" 
+          :interval-minutes=5
+          :short-interval="true"
+        >
+        <!-- :event-color="getEventColor"  -->
+        </v-calendar>
+      </v-sheet>
+      </v-flex>
+    </div>
+      </template>
+
+   
         <!-- ===============Timeslot ==================== -->
-        <v-row>
-          <v-col>
-      <v-select  class=" mr-4"  width = "380" 
-        :items= "availableAccompanists"
+      <v-flex>
+      <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
         v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
         single-line
         filled
-    ></v-select>
-    <v-select class ="mr-4" width = "390"
+    >
+  </v-select>
+
+    <!-- <v-select class ="mr-4" style= "max-width : 308px"
         :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
@@ -388,18 +459,10 @@
         single-line
         filled
         @change ="updateText"
-    ></v-select>
-    </v-col>
-  </v-row>
-  <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
-    </div>
-    </div>
-                    <!--  Instrument Select Below -->
-                    <div style="text-align: center;">
-          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-      <v-row>
-          <v-col>
-    <v-select  class=" mr-4"  width = "380" 
+    ></v-select> -->
+
+
+    <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
         item-title="Instrument"
@@ -411,7 +474,7 @@
         filled
     ></v-select>
 
-    <v-select  class=" mr-4"  width = "380" 
+    <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
@@ -423,19 +486,18 @@
         single-line
         filled
      ></v-select>
-    </v-col>
-  </v-row>
+    </v-flex>
 </div>
     </div>
-    <v-card-text>
+    <!-- <v-card-text>
         <v-checkbox v-model = "showTextField" label = "Duet Or Ensemble?"/>
         <v-text-field v-if="showTextField" label = "Other Member's Name"/>
-      </v-card-text>
+      </v-card-text> -->
 
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
+  <v-btn @click="submitForm" :disabled="!selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -472,10 +534,35 @@
         <v-container> 
       <div style="text-align: center;">
       <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+ <!-- ===========Testing a date picker of sorts =============== -->  
+
+<template>
+  <div class = calendar-container>
+    <v-flex>
+  <v-sheet height = "400">
+        <v-calendar
+         ref = "calendar"
+          :key = "calendarKey"
+          :events="filteredEvents"
+          @click:event="onEventClick"
+          v-model="selectedDate"
+          color="primary"
+          :type="'day'"
+          first-time = "08:55"
+          interval-count = "110" 
+          :interval-minutes=5
+          :short-interval="true"
+        >
+        </v-calendar>
+      </v-sheet>
+      </v-flex>
+    </div>
+      </template>
+
+   
         <!-- ===============Timeslot ==================== -->
-        <v-row>
-          <v-col>
-      <v-select class ="mr-4" width = "380"
+      <v-flex>
+      <v-select class ="mr-4" style= "max-width : 306px"
         :items=availableAccompanists
         v-model = "selectedAccompanist"
         :item-text = "item => `${item.fName} ${item.lName}`"
@@ -484,9 +571,9 @@
         single-line
         filled
     >
-    
   </v-select>
-    <v-select class ="mr-4" width = "390"
+
+    <v-select class ="mr-4" style= "max-width : 308px"
         :items="availableTimeslots"
         v-model="selectedStartTime"
         label="Select Start Time"
@@ -495,18 +582,9 @@
         filled
         @change ="updateText"
     ></v-select>
-  </v-col>
-  </v-row>
-    <p2> <br><br> Based on your major <br>  and private lesson hours, <br> your appoint ends <br> at {{ EndTime }} </p2>
 
-  </div>
-    </div>
-    <div style="text-align: center;">
-      <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-                    <!--  Instrument Select Below -->
-        <v-row>
-          <v-col>
-    <v-select  class=" mr-4"  width = "380" 
+
+    <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
         item-title="Instrument"
@@ -518,7 +596,7 @@
         filled
     ></v-select>
 
-    <v-select  class=" mr-4"  width = "380" 
+    <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
         v-model="selectedSongs"
         item-text = "song.title"
@@ -530,15 +608,14 @@
         single-line
         filled
      ></v-select>
-    </v-col>
-  </v-row>
+    </v-flex>
     </div>
 </div>
 
     <!-- ===========Button for missing song, composer, and submit =================-->
     <div style="text-align: center;">
 <div style="display:inline-block; margin:auto;">
-<v-btn @click="submitForm" :disabled="!selectedStartTime || !selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
+  <v-btn @click="submitForm" :disabled="!selectedInstrument || !selectedSongs" color="success" variant="tonal" style="text-align: center;">
     Submit
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
@@ -588,7 +665,13 @@
     data() {
       return {
         events: [],
-      selectedDate: null,
+        clickedEvents: [],
+        eventOverrides: {
+          disabled: ({ event }) => {
+            return event.disabled;
+          },
+        },
+        selectedDate: null,
       //`2023-04-10`,
  
       selectedEvents: [],
@@ -656,37 +739,26 @@
       await this.getAccompanist();
       await this.retrieveInstrumentRoles();
     },
-    // watch:{
-    //   selectedStartTime: function(){
-    //     this.EndText = null
-    //   },
-    //   showSelectedDialog: function(){
-    //     this.EndText = null;
-    //   }
-
-    // },
     methods: {
+      refreshCalendar(){
+          this.calendarKey += 1
+      },
 
-      getEventColor(event) {
-      return event.selected ? 'green' : 'blue';
-    },
-    selectEvent(event) {
-      event.selected = !event.selected;
-    },
-
-      handleEventClick({ event }) {
-      // Toggle the selected state of the clicked event
-      event.selected = !event.selected;
-
-      // Update the list of selected events
-      this.selectedEvents = this.events.filter(e => e.selected);
-    },
-    handleEventMouseover({ event }) {
-      // Highlight the event when the user hovers over it
-      console.log("Does this work?")
-      event.highlighted = true;
-    },
-
+    onEventClick( {event} ) {
+    if (event.disabled == false){
+    const index = this.clickedEvents.findIndex(e => e.id === event.id);
+    if (index === -1) {
+      // Event not found in clickedEvents, so add it and change its color to dark blue
+      this.clickedEvents.push(event);
+      event.color = '#001F33';
+    } else {
+      // Event found in clickedEvents, so remove it and change its color back to blue
+      this.clickedEvents.splice(index, 1);
+      event.color = '#4169E1'
+    }
+  }
+    this.refreshCalendar();
+  },
 
 
     computedTitle(item){
@@ -699,12 +771,28 @@
           let eventSessionId
           const selectedSongs = this.selectedSongs
           // Make the data to put into eventSession table
+          let startTime = null;
+          let endTime = null;
+          for (let i = 0; i < this.clickedEvents.length; i++){
+            const event = this.clickedEvents[i]
+            if (!startTime || event.start < startTime) {
+              startTime = event.start;
+            }
+            if (!endTime || event.end > endTime){
+              endTime = event.end;
+            }
+          }
+
+          startTime = startTime.toLocaleString('en-US',{hour: 'numeric', minute: 'numeric', hour12: true})
+          endTime = endTime.toLocaleString('en-US',{hour: 'numeric', minute: 'numeric', hour12: true})
+          console.log(startTime, endTime)
+
           const data ={
             eventId: this.selectedEvent.id,
             accompanistId: this.selectedAccompanist.id,
             privateInstructorId: this.selectedInstrument.privateInstructorId,
-            startTime: this.selectedStartTime,
-            endTime: this.selectedEndTime,
+            startTime,
+            endTime,
             studentId: this.user.userId,
           }
           // Create a new entry into the eventSesssion table 
@@ -736,7 +824,7 @@
               console.log('Error for creating eventSongs:', error)
             })
           }
-          //this.$router.go(0); //This is just a force refresh 
+          this.$router.go(0); //This is just a force refresh 
       },
       async retrieveInstrumentRoles() {
         await instrumentRoleServices.getAllForUser(this.role.id)
@@ -829,21 +917,28 @@
         })
       },
       async retrieveEvents() {
-        await eventServices.getAll()
-          .then((response) => {
-          if (this.role.studentClassification === "Incoming Student"){
-            this.listOfEvents = response.data.filter(event =>  event.isReady !== false && event.eventType !== "Scholarship")
-           
-          }
-          else{
-            this.listOfEvents = response.data.filter(event => event.isReady !== false);
-            console.log("I dont know why this activates in RetrieveEvents", this.listOfEvents)
-          }} 
-          )
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
+  const today = new Date(); // get the current date and time
+  
+  await eventServices.getAll()
+    .then((response) => {
+      if (this.role.studentClassification === "Incoming Student"){
+        this.listOfEvents = response.data.filter(event =>  
+          event.isReady !== false && 
+          event.eventType !== "Scholarship" && 
+          new Date(event.date) >= today
+        );
+      } else {
+        this.listOfEvents = response.data.filter(event => 
+          event.isReady !== false && 
+          new Date(event.date) >= today
+        );
+      }
+    })
+    .catch((e) => {
+      this.message = e.response.data.message;
+    });
+},
+
       async retrieveEventSessions(item) {
         await eventSessionServices.getAll()
           .then((response) => {
@@ -919,7 +1014,11 @@
         this.EndTime = null;
 
         this.selectedEvent = item
-        this.selectedDate = new Date(item.date)     //  Date is put into selectedDate, which is the v-model for the calendar
+        const calendarDate = new Date(item.date)
+        const CalendarDateString = calendarDate.toISOString().substring(0, 10)
+        this.selectedDate = CalendarDateString     //  Date is put into selectedDate, which is the v-model for the calendar
+        console.log("THE VCALENDAR DATE", this.selectedDate)
+        console.log("THE DATE", item.date)
         
       //Function call for retrieving event session
       await this.retrieveEventSessions(item)
@@ -958,9 +1057,9 @@
       const startTimeStr = item.startTime
       const endTimeStr = item.endTime
 
-      console.log("Start Time: ", item, "   End Time: ", item.endTime)
+      console.log("Start Time: ", item.startTime, "   End Time: ", item.endTime)
       const takenSlots = [];
-      // For each event sessions within our database, 
+      // For each event sessions within our database 
       this.eventsSession.forEach(event => {
         const startSession = new Date (event.startTime)
         const endSession = new Date(event.endTime)
@@ -993,32 +1092,73 @@
         startTime.setMinutes(startTime.getMinutes() + 5);
       }
 
+      console.log("TESTING THE BUG WITH AM AND PM", timeslots)
+      
         // For the calendar -- calendar requires the start, end, color, and name of events to populate 
         this.events = [];
-      timeslots.forEach(event =>{
-        const dateParts = item.date.split('/');
-        const startTime = new Date(`${dateParts[2]}-${dateParts[0]}-${dateParts[1]} ${event.time}`);
-        const endTime = new Date(startTime.getTime() + 5 * 60 * 1000);
-        this.events.push({
-          name: 'Available',
-          start: startTime,
-          end: endTime,
-          color: 'green',
-        })
-      })
+        console.log("This is the item thats passed in", item)
+        for (let i = 0; i < timeslots.length - 1; i++) {
+  const event = timeslots[i];
+  let startTime;
+
+  // check if date is in format mm/dd/yyyy
+  const datePartsMDY = item.date.split('/');
+  if (datePartsMDY.length === 3) {
+    startTime = new Date(`${datePartsMDY[2]}-${datePartsMDY[0]}-${datePartsMDY[1]} ${event.time}`);
+  } else {
+    // check if date is in format yyyy-mm-dd
+    const datePartsYMD = item.date.split('-');
+    if (datePartsYMD.length === 3) {
+      startTime = new Date(`${datePartsYMD[0]}-${datePartsYMD[1]}-${datePartsYMD[2]} ${event.time}`);
+    } else {
+      console.error(`Invalid date format: ${item.date}`);
+      continue; // skip to next iteration if date format is invalid
+    }
+  }
+
+  const endTime = new Date(startTime.getTime() + 5 * 60 * 1000);
+  this.events.push({
+    id: startTime.getTime(),
+    name: 'Available',
+    start: startTime,
+    end: endTime,
+    timed: true,
+    color: '#4169E1',
+    disabled: false,
+  });
+}
       console.log("This is the events for the calendar", this.events)
 
 
       // For each taken slots, if the takenslots matches the timeslots time, change the available to true. 
-      uniqueTimes.forEach(uniquetime =>{
-         //console.log(uniquetime)
-        timeslots.forEach(timeslot =>{
-          if(timeslot.time === uniquetime){
+      for (let i = 0; i < uniqueTimes.length; i++) {
+        const uniquetime = uniqueTimes[i];
+        for (let j = 0; j < timeslots.length; j++) {
+          const timeslot = timeslots[j];
+          if (timeslot.time === uniquetime) {
             timeslot.available = true;
-            //console.log("testing", timeslot)
-            }
-      })})
+    }
+  }
+}
+
+//endTime.toLocaleString('en-US',{hour: 'numeric', minute: 'numeric', hour12: true})
+for (let i = 0; i < uniqueTimes.length - 1; i++) {
+        const uniquetime = uniqueTimes[i];
+        console.log("THis is start", uniquetime)
+        for (let j = 0; j < this.events.length; j++) {
+          if (this.events[j].start.toLocaleString('en-US',{hour: '2-digit', minute: '2-digit'}) === uniquetime) {
+            console.log(this.events[j].end.toLocaleString('en-US',{hour: '2-digit', minute: '2-digit'}))
+            this.events[i].disabled = true;
+            console.log(this.events[i].disabled)
+    }
+  }
+}
+
+
       console.log("All the starttimes filtered", timeslots)
+      console.log("This is the events for the calendar", this.events)
+
+
       this.timeslotTemp = timeslots
       // Return the timeslots filtered by whats already taken up and whats not
       return timeslots.filter((slot) => slot.available === false).map((slot) => slot.time);
@@ -1027,12 +1167,24 @@
 
 
 computed: {
+
+
+  filteredEvents(){
+    return this.events.map((event) => {
+      if (event.disabled == false) {
+        return event;
+      } else {
+        return { ...event, color: '#999999', name: 'Not Available'};
+      }
+    });
+  },
+
   availableTimeslots(){
     //console.log("This will be the this.start", this.start)
     this.start.filter((slot) => slot.available === false).map((slot) => slot.time)
     console.log(this.start)
     return this.start
-}
+},
 },
 mounted() {
     this.$refs.calendar.setDay(this.selectedDate);
@@ -1049,6 +1201,11 @@ mounted() {
     font-family: 'Karla', sans-serif;
   }
 /* Css for the calendar date picker */
+
+.vc-event.disabled {
+  opacity: 0.5;
+  pointer-events: none
+}
 
 .calendar-container {
   width: 350px;
