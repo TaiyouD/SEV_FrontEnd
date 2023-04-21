@@ -82,6 +82,13 @@
    
         <!-- ===============Timeslot ==================== -->
       <v-flex>
+        <div>
+Sign Up Process: <br>
+1. Select an instrument <br>
+2. Select an accompanist <br>
+3. Select open timeslots on the left <br>
+</div>
+
 
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
@@ -97,7 +104,7 @@
     ></v-select>
 
     <v-text-field class ="mr-4" style= "max-width : 306px"
-        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        :value= "selectedInstructors  == null ? 'No Instructor' : selectedInstructors.fName + ' ' + selectedInstructors.lName "
         label="Instructor's Name"
         return-object
         single-line
@@ -181,6 +188,7 @@
           :key = "calendarKey"
           :events="filteredEvents"
           @click:event="onEventClick"
+          @click:event2="slotSelection"
           v-model="selectedDate"
           color="primary"
           :type="'day'"
@@ -199,6 +207,13 @@
         <!-- ===============Timeslot ==================== -->
       <v-flex>
 
+<div>
+Sign Up Process: <br>
+1. Select an instrument <br>
+2. Select an accompanist <br>
+3. Select open timeslots on the left <br>
+</div>
+
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
@@ -213,7 +228,7 @@
     ></v-select>
 
     <v-text-field class ="mr-4" style= "max-width : 306px"
-        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        :value= "selectedInstructors  == null ? 'No Instructor' : selectedInstructors.fName + ' ' + selectedInstructors.lName "
         label="Instructor's Name"
         return-object
         single-line
@@ -318,6 +333,12 @@
    
         <!-- ===============Timeslot ==================== -->
       <v-flex>
+        <div>
+Sign Up Process: <br>
+1. Select an instrument <br>
+2. Select an accompanist <br>
+3. Select open timeslots on the left <br>
+</div>
 
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
@@ -333,7 +354,7 @@
     ></v-select>
 
     <v-text-field class ="mr-4" style= "max-width : 306px"
-        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+    :value= "selectedInstructors  == null ? 'No Instructor' : selectedInstructors.fName + ' ' + selectedInstructors.lName "
         label="Instructor's Name"
         return-object
         single-line
@@ -446,7 +467,12 @@
    
         <!-- ===============Timeslot ==================== -->
  <v-flex>
-
+  <div>
+Sign Up Process: <br>
+1. Select an instrument <br>
+2. Select an accompanist <br>
+3. Select open timeslots on the left <br>
+</div>
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
@@ -461,7 +487,7 @@
     ></v-select>
 
     <v-text-field class ="mr-4" style= "max-width : 306px"
-        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+    :value= "selectedInstructors  == null ? 'No Instructor' : selectedInstructors.fName + ' ' + selectedInstructors.lName "
         label="Instructor's Name"
         return-object
         single-line
@@ -570,7 +596,12 @@
    
         <!-- ===============Timeslot ==================== -->
   <v-flex>
-
+    <div>
+Sign Up Process: <br>
+1. Select an instrument <br>
+2. Select an accompanist <br>
+3. Select open timeslots on the left <br>
+</div>
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
@@ -585,7 +616,7 @@
     ></v-select>
 
     <v-text-field class ="mr-4" style= "max-width : 306px"
-        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+    :value= "selectedInstructors  == null ? 'No Instructor' : selectedInstructors.fName + ' ' + selectedInstructors.lName "
         label="Instructor's Name"
         return-object
         single-line
@@ -733,8 +764,11 @@
       availabilitiesForEvent: null,
       availableInstructor: null,
       instructors: [],
-      selectedInstructors: [],
+      selectedInstructors: null,
       calendarKey : 0,
+
+      selectedEvent2: {},
+      showDialog: false
       };
     },
     async created() {
@@ -756,6 +790,11 @@
       },
 
     onEventClick( {event} ) {
+      if (event.selected == true){
+        event.selected = false
+      }
+      else{
+        event.selected = true}
     if (event.disabled == false && event.instructorAvailable == true && event.accompAvailable == true){
     const index = this.clickedEvents.findIndex(e => e.id === event.id);
     if (index === -1) {
@@ -769,6 +808,17 @@
     }
   }
     this.refreshCalendar();
+  },
+
+  slotSelection({event}){
+    if (event.disabled != false){
+      this.selectedEvent2 = event
+      this.showDialog = true
+    }
+  },
+  closeDialog() {
+    this.showDialog = false;
+    this.selectedEvent2 = {};
   },
 
     computedTitle(item){
@@ -839,7 +889,7 @@
       async retrieveInstrumentRoles() {
         await instrumentRoleServices.getAllForUser(this.role.id)
           .then((response) => {
-            // console.log(response.data);
+            // console.log("Testong the instrumentRoles", response.data);
             this.instrumentRole = response.data;
           })
           .catch((e) => {
@@ -960,18 +1010,10 @@
 
             // eventsSession dates are in the wrong format, so this section changes it to the proper date format
             this.eventsSession.forEach(event =>{
-              const startTimeStr = event.startTime
-              const endTimeStr = event.endTime
-              
-              const [startHour, startMinute] = startTimeStr.split (':')
-              const [endHour, endMinute] = endTimeStr.split(':')
-              const startDate = new Date();
-              startDate.setHours(parseInt(startHour), parseInt(startMinute), 0, 0);
-              const endDate = new Date();
-              endDate.setHours(parseInt(endHour), parseInt(endMinute), 0, 0);
-              event.startTime = new Date(startDate);
-              console.log(event.startTime)
-              event.endTime= new Date(endDate);
+              event.startTime = this.convertTimeToMilitary(event.startTime)
+              event.endTime = this.convertTimeToMilitary(event.endTime)
+              console.log(event.endTime)
+              event.startTime =  this.convertMilitaryTimeToDate(event.startTime, new Date())
             })
             
           })
@@ -979,6 +1021,25 @@
             this.message = e.response.data.message;
           });
       },
+      convertTimeToMilitary(timeStr){
+        const [time, modifier] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':');
+        if (hours === '12'){
+          hours = '00';
+        }
+        if (modifier === 'PM'){
+          hours = parseInt(hours, 10) + 12;
+        }
+        return `${hours}:${minutes}`
+      },
+      convertMilitaryTimeToDate(militaryTimeStr, date){
+        const[hours,minutes] = militaryTimeStr.split(':');
+        const newDate = new Date(date);
+        newDate.setHours(parseInt(hours,10));
+        newDate.setMinutes(parseInt(minutes, 10))
+        return newDate
+      },
+
       async retrieveAllRoles(){
         await roleServices.getAll()
           .then((response) => {
@@ -1010,7 +1071,7 @@
         async getInstructors(){
           for (let i = 0; i < this.listOfRoles.length; i++){
             if (this.listOfRoles[i].facultyType === 'Instructor'){
-              await userServices.get(this.listOfRoles[i].id)
+              await userServices.get(this.listOfRoles[i].userId)
               .then((response) => {
                 this.instructors.push(response.data)
               })
@@ -1042,6 +1103,7 @@
         this.selectedStartTime = null;
         this.selectedEndTime = null;
         this.EndTime = null;
+        this.selectedInstructors = null;
 
         this.selectedEvent = item
         const calendarDate = new Date(item.date)
@@ -1053,9 +1115,9 @@
 
       // Function call for getting the available accompanists depending on the specific events
       const availabilities = this.getAvailablitiesForEvent(item)
-      console.log("Filtered Accompanists", availabilities)
+     // console.log("Filtered Accompanists", availabilities)
       this.availabilitiesForEvent = availabilities
-      console.log(this.availabilitiesForEvent, "TESTING THIS OUT")
+      //console.log(this.availabilitiesForEvent, "TESTING THIS OUT")
 
 
       this.availableAccompanists = this.getAvailableAccompanists(availabilities)
@@ -1087,7 +1149,8 @@
 
     // This function retrieves every event session available for the student to sign up for
     async availableStartTime(item){
-      
+      console.log("available start Time item",item)
+
       const startTimeStr = item.startTime
       const endTimeStr = item.endTime
 
@@ -1095,17 +1158,13 @@
       const takenSlots = [];
       // For each event sessions within the event, make a 5 minute timeslot and push it into takenSlots from startTime to endTime
       this.eventsSession.forEach(event => {
+        console.log(event)
         const startSession = new Date (event.startTime)
         const endSession = new Date(event.endTime)
+        console.log("Start Time: ", startSession, "   End Time: ", endSession)
 
-        if (this.selectedEventType === 'Jury'){
-          for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 15)){
-            takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))}
-        }
-        else{
           for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
-            takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
-        }
+            takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false}))
         }
       })
       const uniqueTimes = [...new Set(takenSlots)]
@@ -1124,66 +1183,72 @@
       // This loops makes a new array of objects called timeslots the objects contain the availablitiy and the time. 
       let timeslots = [];
       while (startTime <= endTime){ 
-        let timeslot = {
-        time: startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+      let timeslot = {
+        time: startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false}),
         available: false
         }
         timeslots.push(timeslot);
         startTime.setMinutes(startTime.getMinutes() + 5);
-      }
+    }
 
       //console.log("TESTING THE BUG WITH AM AND PM", timeslots)
       
         // For the calendar -- calendar requires the start, end, color, and name of events to populate 
         this.events = [];
-        console.log("This is the item thats passed in", item)
         for (let i = 0; i < timeslots.length - 1; i++) {
-  const event = timeslots[i];
-  let startTime;
+          const event = timeslots[i];
+          let startTime;
+          // check if date is in format mm/dd/yyyy
+          const datePartsMDY = item.date.split('/');
+          if (datePartsMDY.length === 3) {
+            startTime = new Date(`${datePartsMDY[2]}-${datePartsMDY[0]}-${datePartsMDY[1]} ${event.time}`);
+          } else {
+            // check if date is in format yyyy-mm-dd
+            const datePartsYMD = item.date.split('-');
+            if (datePartsYMD.length === 3) {
+              startTime = new Date(`${datePartsYMD[0]}-${datePartsYMD[1]}-${datePartsYMD[2]} ${event.time}`);
+            } else {
+              console.error(`Invalid date format: ${item.date}`);
+              continue; // skip to next iteration if date format is invalid
+            }
+          }
 
-  // check if date is in format mm/dd/yyyy
-  const datePartsMDY = item.date.split('/');
-  if (datePartsMDY.length === 3) {
-    startTime = new Date(`${datePartsMDY[2]}-${datePartsMDY[0]}-${datePartsMDY[1]} ${event.time}`);
-  } else {
-    // check if date is in format yyyy-mm-dd
-    const datePartsYMD = item.date.split('-');
-    if (datePartsYMD.length === 3) {
-      startTime = new Date(`${datePartsYMD[0]}-${datePartsYMD[1]}-${datePartsYMD[2]} ${event.time}`);
-    } else {
-      console.error(`Invalid date format: ${item.date}`);
-      continue; // skip to next iteration if date format is invalid
-    }
-  }
+          const endTime = new Date(startTime.getTime() + 5 * 60 * 1000);
 
-  const endTime = new Date(startTime.getTime() + 5 * 60 * 1000);
-  this.events.push({
-    id: startTime.getTime(),
-    name: 'Available',
-    start: startTime,
-    end: endTime,
-    timed: true,
-    color: '#4169E1',
-    disabled: false,
-    accompAvailable: false,
-    instructorAvailable: false
-  });
-}
+          //console.log(endTime, startTime)
+          this.events.push({
+            id: startTime.getTime(),
+            name: 'Available',
+            start: startTime,
+            end: endTime,
+            timed: true,
+            color: '#4169E1',
+            disabled: false,
+            accompAvailable: false,
+            instructorAvailable: false,
+            selected: false,
+          });
+        }
       // For each taken slots, if the takenslots matches the timeslots time, change the available to true. 
+      uniqueTimes.pop();
       for (let i = 0; i < uniqueTimes.length; i++) {
         const uniquetime = uniqueTimes[i];
+        //console.log("uniqueTime", uniquetime)
         for (let j = 0; j < timeslots.length; j++) {
           const timeslot = timeslots[j];
           if (timeslot.time === uniquetime) {
+            //console.log("true")
             timeslot.available = true;
     }
   }
 }
-for (let i = 0; i < uniqueTimes.length - 1; i++) {
+for (let i = 0; i < uniqueTimes.length; i++) {
         const uniquetime = uniqueTimes[i];
         for (let j = 0; j < this.events.length; j++) {
-          if (this.events[j].start.toLocaleString('en-US',{hour: '2-digit', minute: '2-digit'}) === uniquetime) {
-            this.events[i].disabled = true;
+          //console.log(this.events[j].start.toLocaleString('en-US',{hour: '2-digit', minute: '2-digit', hour12: false}))
+          if (this.events[j].start.toLocaleString('en-US',{hour: '2-digit', minute: '2-digit', hour12: false}) == uniquetime) {
+            console.log(this.events[j])
+            this.events[j].disabled = true;
     }
   }
 }
@@ -1194,7 +1259,12 @@ for (let i = 0; i < uniqueTimes.length - 1; i++) {
 
 
   selectedInstructorAvailability(){
-    
+    this.events.map((event) => {
+      event.instructorAvailable = false
+      event.accompAvailable = false
+      })
+        this.selectedAccompanist = null;
+
     console.log("This is the id for selectedInstrument.",this.selectedInstrument.privateInstructorId)
     for (let i = 0; i < this.availableInstructor.length; i++) {
       if (this.availableInstructor[i].id == this.selectedInstrument.privateInstructorId) {
@@ -1273,7 +1343,8 @@ for (let i = 0; i < uniqueTimes.length - 1; i++) {
 computed: {
   initialTime(){
     if(this.events.length > 0){
-      let startTime = this.events[0].start.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+      let startTime = this.events[0].start.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false})
+      console.log(startTime, "Iniitial time")
       return startTime;
     }
     else{
