@@ -238,7 +238,6 @@
                   <v-list-item-icon>
                     <v-icon>mdi-account-box</v-icon>
                   </v-list-item-icon>
-
                   <v-list-item-content>
                     <v-list-item-title>Profile</v-list-item-title>
                   </v-list-item-content>
@@ -249,7 +248,6 @@
                   <v-list-item-icon>
                     <v-icon>mdi-account-box</v-icon>
                   </v-list-item-icon>
-
                   <v-list-item-content>
                     <v-list-item-title>Profile</v-list-item-title>
                   </v-list-item-content>
@@ -324,7 +322,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item v-if="role.roleType == 'Admin' || role.roleType == 'Faculty' " link @click="$router.push({ path: '/notificationlist' })">
+        <v-list-item link @click="$router.push({ path: '/notificationlist' })">
           <v-list-item-icon>
             <v-icon>mdi-bell-outline</v-icon>
           </v-list-item-icon>
@@ -346,7 +344,6 @@
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
-
           <v-list-item-content>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
@@ -361,7 +358,6 @@
 import Utils from "@/config/utils.js";
 import AuthServices from "@/services/authServices";
 import roleServices from "@/services/roleServices";
-
 import {
     mdiAccountCircle,
     mdiPencil,
@@ -371,7 +367,6 @@ import {
     mdiApps,
     mdiDotsVertical,
   } from '@mdi/js'
-
 export default {
   name: "menu-bar",
   data: () => ({
@@ -461,7 +456,6 @@ export default {
       else{
           this.$router.push({ name: "homestudent" });
         }
-
       //this.resetMenu();
     },
     logout() {
