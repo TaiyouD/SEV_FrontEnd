@@ -1,42 +1,47 @@
 <template>
-    <div v-if="this.role.roleType != null">
+    <div v-if="this.currentRole.roleType != null">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
           <v-toolbar-title>New Accompanist</v-toolbar-title>
-          <!-- <v-spacer></v-spacer>
-          <v-toolbar-title>{{this.message}}</v-toolbar-title> -->
         </v-toolbar>
-  
         <br />
         <h4>{{ message }}</h4>
         <br />
         <v-form ref="form" v-model="valid" lazy validation>
           <v-text-field
-            v-model="user.firstName"
-            id="firstName"
-            :counter="50"
+            v-model="user.fName"
+            id="fName"
             label="First Name"
             required
-          ></v-text-field>
-          <v-text-field
-            v-model="user.lastName"
-            id="lastName"
-            :counter="50"
+        ></v-text-field>
+        <v-text-field
+            v-model="user.lName"
+            id="lName"
             label="Last Name"
             required
-            ></v-text-field>
+        ></v-text-field>
+        <v-text-field
+            v-model="user.email"
+            id="email"
+            label="Email"
+            required
+        ></v-text-field>
               
-          <v-btn
-            :disabled="!valid"
-            color="success"
-            class="mr-4"
-            @click="saveAccompanist()"
-          >
-            Save
-          </v-btn>
-  
-          <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+        <div class="d-flex align-center">
+            <div class="ml-auto">
+              <v-btn
+                :disabled="!valid"
+                color="success"
+                class="mr-4"
+                @click="saveUserAndRole"
+              >
+                Save
+              </v-btn>
+
+                <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
+              </div>
+            </div>
         </v-form>
       </v-container>
     </div>
@@ -44,8 +49,11 @@
 
 <script>
 
+// I am getting an error that says this.saveUser is not a function. Why?
+
 import RoleServices from "../services/roleServices";
 import Utils from "@/config/utils.js";
+import UserServices from "../services/userServices";
 
 export default {
   name: "addaccompanist",
@@ -53,54 +61,67 @@ export default {
     return {
       valid: false,
       user: {
-        id: null,
-        firstName:"",
-        lastName:"",
-        isApproved: false
-      },
+          id: null,
+          fName: '',
+          lName: '',
+          email: '',
+        },
       role: {
         id: null,
         roleType: "Accompanist",
         isApproved: false
       },
+      currentUser:{},
+      currentRole:{},
       message: "Enter data and click save.",
     };
   },
   async created(){
-    this.user = Utils.getStore("user");
+    this.currentUser = Utils.getStore("user");
     await this.retrieveRole();
   },
   methods: {
-    async retrieveRole() {
-          await RoleServices.getRoleForUser(this.user.userId)
-            .then((response) => {
-              this.role = response.data[0];
-              /*this.roleId2 = this.role.map(function(el) {
-                  return el.id;});*/
-              console.log('role');
-              console.log(this.role);
-            })
-            .catch((e) => {
-              this.message = e.response.data.message;
-            });
-        },
-    saveAccompanist() {
-        //send notification to admin
-      var data = {
-        //firstName: this.user.firstName,
-        //lastName: this.user.lastName,
-        roleType: this.role.roleType,
-        isApproved: this.role.isApproved
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.currentUser.userId)
+          .then((response) => {
+            this.currentRole = response.data[0];
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async saveUserAndRole() {
+        await this.saveUser();
+        await this.saveRole();
+      },
+      async saveUser() {
+      var userData = {
+          fName: this.user.fName,
+          lName: this.user.lName,
+          email: this.user.email,
       };
-      RoleServices.create(data)
+      await UserServices.create(userData)
         .then((response) => {
-          this.role.id = response.data.id;
-          console.log("add " + response.data);
-          this.$router.push({ name: "signupevents" });
+        this.user.id = response.data.id;
         })
         .catch((e) => {
-          this.message = e.response.data.message;
-        });
+        this.message = e.response.data.message;
+      });
+    },
+    async saveRole() {
+        var roleData = {
+            roleType: this.role.roleType,
+            isApproved: this.role.isApproved,
+            userId: this.user.id
+        }; 
+        await RoleServices.create(roleData)
+        .then((response) => {
+            this.role.id = response.data.id;
+            this.$router.push({ name: "signupevents" });
+            })
+            .catch((e) => {
+            this.message = e.response.data.message;
+            });
     },
     cancel() {
       this.$router.push({ name: "signupevents" });
@@ -108,4 +129,3 @@ export default {
   },
 };
 </script>
-<style></style>
