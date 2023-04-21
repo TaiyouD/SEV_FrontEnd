@@ -12,9 +12,11 @@
           <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       </v-toolbar>
       <br />
+
+
       <v-card>
         <v-card-title>
-          {{ "All Events" }}
+          {{ "All Events Sessions" }}
           <v-icon class="ml-1">mdi-calendar-check</v-icon>
           <v-spacer></v-spacer>
           <v-menu>
@@ -53,12 +55,12 @@
               <template #item="{ item }">
                 <tr>
 
-                  <td>{{ item.eventTitle }}</td>
-                  <td>{{ item.eventType }}</td>
-                  <td>{{ item.date }}</td>
+                  <td>{{ item.event.eventTitle }}</td>
+                  <td>{{ item.event.eventType }}</td>
+                  <td>{{ item.event.date }}</td>
                   <td>{{ convertTime(item.startTime) }}</td>
                   <td>{{ convertTime(item.endTime) }}</td>
-                  <td>{{ item.duration }}</td>
+                  <!-- <td>{{ item.duration }}</td> -->
    
                   <td>
                     <template item-value="critique">
@@ -102,8 +104,9 @@
       
                       <!--  Event Type Below -->
                       <v-text-field class=" mr-4" width = "260"
-                          item-title=""
-                          item-value=""
+                            item-title=""
+                            item-value=""
+                            v-model="selectedEventType"
                           label="Event Type"
                           return-object
                           single-line
@@ -290,28 +293,29 @@ export default {
       selectedFilter: null,
       message: "Add, Edit or Delete Events",
       headersStudent: [
-        { text: "Event Title", value: "eventTitle", sortable: false },
-        { text: "Event Type", value: "eventType", sortable: false },
-        { text: "Date", value: "date", sortable: false },
+        { text: "Event Title", value: "event.eventTitle", sortable: false },
+        { text: "Event Type", value: "event.eventType", sortable: false },
+        { text: "Date", value: "event.date", sortable: false },
         { text: "Start Time", value: "startTime", sortable: false },
         { text: "End Time", value: "endTime", sortable: false },
-        { text: "Duration", value: "duration", sortable: false },
+        //{ text: "Duration", value: "duration", sortable: false },
         // { text: "Faculty", value: "faculty", sortable: false },
         // { text: "Accompanist", value: "accompanist", sortable: false },
-        { text: "Critique", value: "critique", sortable: false }        
+        { text: "Critique", value: "critique", sortable: false },
+        { text: "", sortable: false}      
       ],
-      userSessions: [],
+      filteredEventsSession: [],
     };
   },
   mounted() {
-    this.retrieveEvents();
+    //this.retrieveEvents();
+    this.retrieveEventSessions();
   },
   async created(){
     this.user = Utils.getStore("user");
     await this.retrieveRole();
-    await this.sessions();
-    await this.retrieveThisEvent();
-    await this.retrieveEventSessions();
+    //await this.retrieveThisEvent();
+    //await this.retrieveEventSessions();
 
   },
   methods: {
@@ -319,9 +323,15 @@ export default {
     return new Promise((resolve, reject) => {
         EventServices.getAll()
         .then((response) => {
-            this.events = response.data;
-            this.filteredEvents = response.data;
-            this.filteredDates = response.data;
+          for(let i = 0; i < response.data.length; i++){
+          if (response.data[i].studentId == this.role.id){
+            this.events.push(response.data[i])
+            this.filteredEvents.push(response.data[i])
+            console.log("This is the filteredEvents", this.filteredEvents)
+            this.filteredDates.push(response.data[i])
+          }}
+
+
             resolve();
         })
         .catch((e) => {
@@ -340,33 +350,23 @@ export default {
     //     });
     // },
     async retrieveEventSessions(){
-      await EventSessionServices.getAllForEvent(this.eventId)
+        await EventSessionServices.getAll()
         .then((response) => {
-            console.log('event session', response.data)
-            this.eventsessionsevent = response.data;
-            
+          for(let i = 0; i < response.data.length; i++){
+          if (response.data[i].studentId == this.role.id){
+            this.events.push(response.data[i])
+            this.filteredEvents.push(response.data[i])
+            this.filteredDates.push(response.data[i])
+            // this.eventsessionsevent = response.data;
+          }
+          }
+          console.log('event session2', this.events[0])
         })
         .catch((e) => {
             this.message = e.response.data.message;
         });
       await this.retrieveEventSessionPerRole();
     },
-    async sessions() {
-        await EventSessionServices.getAll()
-        .then((response) => {
-
-            console.log('event session', response.data)
-            let temp = response.data
-            this.userSessions = temp.filter(u => u.studentId === this.user.userId); 
-            console.log("User event session", this.userSessions)
-            console.log("Events", this.events)
-            //this.events = this.events.filter(event =>  event.id === this.userSessions.eventId)
-            console.log("stuff2", this.events)           
-        })
-        .catch((e) => {
-            this.message = e.response.data.message;
-        });
-      },
     retrieveEventSessionPerRole(){
       if (this.role.roleType == "Faculty"){
         for (let i = 0; i < this.eventsessionsevent.length; i++) {
@@ -377,18 +377,19 @@ export default {
       }
       if (this.role.roleType == "Accompanist"){
         for (let i = 0; i < this.eventsessionsevent.length; i++) {
-          if (this.eventsessionsevent[i].studentId == this.role.id){
+          if (this.eventsessionsevent[i].accompanistId == this.role.id){
             this.eventsessions.push(this.eventsessionsevent[i]);
           }
         }
       }
       if (this.role.roleType == "Student" || this.role.roleType == "Incoming Student"){
         for (let i = 0; i < this.eventsessionsevent.length; i++) {
-          if (this.eventsessionsevent[i].accompanistId == this.role.id){
+          if (this.eventsessionsevent[i].studentId == this.role.id){
+            //console.log("Testing" , this.eventsessionsevent[i].studentId)
             this.eventsessions.push(this.eventsessionsevent[i]);
           }
         }
-      this.filteredEvents = this.eventsessions;
+      this.filteredEventsSession = this.eventsessions;
       }
       console.log('event per role', this.eventsessions);
     },
@@ -409,27 +410,27 @@ export default {
     },
     filterData() {
       this.dateCondition();
-      let filteredData = this.events//.filter(event => event.id === this.eventsessions.eventId);
+      let filteredData = this.events 
       console.log("fiter", this.filteredEvents)
       if (this.selectedEvent && this.selectedEvent !== "All Events") {
-        filteredData = filteredData.filter(event => event.eventType === this.selectedEvent);
+        filteredData = filteredData.filter(event => event.event.eventType === this.selectedEvent);
       }
       if (this.selectedDate && this.selectedDate !== "All Dates") {
         if (this.selectedDate === "Current") {
           const now = new Date();
           const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
           const today = new Date(now.getTime() - timezoneOffset).toDateString();
-          filteredData = filteredData.filter(event => new Date(event.date).toDateString() === today);
+          filteredData = filteredData.filter(event => new Date(event.event.date).toDateString() === today);
         } else if (this.selectedDate === "Past") {
           const now = new Date();
           const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
           const today = new Date(now.getTime() - timezoneOffset).toDateString();
-          filteredData = filteredData.filter(event => new Date(event.date) < new Date(today));
+          filteredData = filteredData.filter(event => new Date(event.event.date) < new Date(today));
         } else if (this.selectedDate === "Upcoming ") {
           const now = new Date();
           const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
           const today = new Date(now.getTime() - timezoneOffset).toDateString();
-          filteredData = filteredData.filter(event => new Date(event.date) > new Date(today + " 23:59:59")); // Need to include" 23:59:59" to not show the current date
+          filteredData = filteredData.filter(event => new Date(event.event.date) > new Date(today + " 23:59:59")); // Need to include" 23:59:59" to not show the current date
         }
       }
       this.filteredEvents = filteredData;
@@ -444,6 +445,11 @@ export default {
     async retrieveRole() {
         await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
+            // for (let i = 0; i < response.data.length; i++){
+            //   if (response.data[i].roleType == this.user.selectedRole) {
+            //     this.role = response.data[i];
+            //   }
+            // }
             this.role = response.data[0];
             if (response.data[0].roleType == "Faculty"){
               this.isFaculty=true
@@ -473,9 +479,9 @@ export default {
         this.vAddCritique=true
       }
     },
-    viewEventSessions(event){
-      this.$router.push({ name: "maintaineventsession", params: { eventId: event.id } });
-    },
+    // viewEventSessions(event){
+    //   this.$router.push({ name: "maintaineventsession", params: { eventId: event.id } });
+    // },
     displayDialog(){
       this.display_dialog = true;
     },
