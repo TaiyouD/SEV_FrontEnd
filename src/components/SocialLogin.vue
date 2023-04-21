@@ -9,6 +9,7 @@
 <script>
 import AuthServices from "@/services/authServices";
 import Utils from "@/config/utils.js";
+
 export default {
   name: "login_signup_social",
   data() {
@@ -17,11 +18,14 @@ export default {
       lName: "",
       roleCounter: 0,
       user: {},
+      role: {},
+      access:{}
     };
   },
   created() {},
   mounted() {
     this.loginWithGoogle();
+
   },
   methods: {
     async loginWithGoogle() {
@@ -46,18 +50,37 @@ export default {
         }
       );
     },
-    handleCredentialResponse(response) {
+    async handleCredentialResponse(response) {
       let token = {
         credential: response.credential,
       };
-      AuthServices.loginUser(token)
+      await AuthServices.loginUser(token)
         .then((response) => {
+          console.log(response.data)
           this.user = response.data;
           Utils.setStore("user", this.user);
           this.fName = this.user.fName;
           this.lName = this.user.lName;
-          this.$router.push({ name: "home" });
-          this.$router.go();
+          this.access = this.user.access[0];
+          console.log('access: ', this.access);
+          console.log('access specific: ', this.access[0]);
+
+          // check what role they are based on role, go to different home pages
+          if(this.access[0] === 'Admin'){
+            this.$router.push({ name: "homeadmin" });
+          }
+          else if(this.access[0] === 'Faculty'){
+            this.$router.push({ name: "homefaculty" });
+          }
+          else if(this.access[0] === 'Accompanist'){
+            this.$router.push({ name: "homeaccomp" });
+          }
+          else if(this.access[0] === 'Incoming Student'){
+            this.$router.push({ name: "home" });
+          }
+          else{
+            this.$router.push({ name: "homestudent" });
+          }
         })
         .catch((error) => {
           console.log("error", error);

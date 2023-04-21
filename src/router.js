@@ -1,11 +1,13 @@
-
-
 import Vue from "vue";
 import Router from "vue-router";
 
 import Login from "./views/Login.vue";
 
 import Homepage from "./views/Homepage.vue";
+import HomepageStudent from "./views/HomepageStudent.vue";
+import HomepageFaculty from "./views/HomepageFaculty.vue";
+import HomepageAdmin from "./views/HomepageAdmin.vue";
+import HomepageAccompanist from "./views/HomepageAccompanist.vue";
 import AddAccompanist from "./views/AddAccompanist.vue";
 import AddComposers from "./views/AddComposer.vue";
 import AddCritique from "./views/AddCritique.vue";
@@ -15,6 +17,7 @@ import AddRoles from "./views/AddRole.vue";
 import AddSongs from "./views/AddSong.vue";
 import AddSongRepertoire from "./views/AddSongRepertoire.vue";
 import Critique from "./views/Critique.vue";
+import CritiqueView from "./views/CritiqueView.vue";
 import EditComposers from "./views/EditComposer.vue";
 import EditEvents from "./views/EditEvent.vue";
 import EditInstruments from "./views/EditInstrument.vue";
@@ -22,9 +25,6 @@ import EditLevels from "./views/EditLevel.vue";
 import EditRoles from "./views/EditRole.vue";
 import EditSongs from "./views/EditSong.vue";
 import EventEvaluation from "./views/EventEvaluation.vue";
-import EventPastList from "./views/EventPastList.vue";
-import EventUpcomingList from "./views/EventUpcomingList.vue";
-import EventView from "./views/EventView.vue";
 import Maintain from "./views/Maintain.vue";
 import MaintainAvailability from "./views/MaintainAvailability.vue";
 import MaintainComposers from "./views/MaintainComposer.vue";
@@ -35,12 +35,14 @@ import MaintainInstruments from "./views/MaintainInstrument.vue";
 import MaintainLevels from "./views/MaintainLevel.vue";
 import MaintainRoles from "./views/MaintainRole.vue";
 import MaintainSongs from "./views/MaintainSong.vue";
+import NotificationList from "./views/NotificationList.vue";
 import ProfileIncomingStudent from "./views/ProfileIncomingStudent.vue";
 import ProfileFaculty from "./views/ProfileFaculty.vue";
 import ProfileStudent from "./views/ProfileStudent.vue";
 import Repertoire from "./views/Repertoire.vue";
 import SignupEvent from "./views/SignupEvent.vue";
 import ViewStudents from "./views/ViewStudentsInstructor.vue";
+import ViewStudentsEvent from "./views/ViewStudentsEvent.vue";
 
 
 import TutorialsList from "./views/TutorialsList.vue";
@@ -71,6 +73,26 @@ const router = new Router({
       component: Homepage,
     },
     {
+      path: "/homestudent",
+      name: "homestudent",
+      component: HomepageStudent,
+    },
+    {
+      path: "/homefaculty",
+      name: "homefaculty",
+      component: HomepageFaculty,
+    },
+    {
+      path: "/homeadmin",
+      name: "homeadmin",
+      component: HomepageAdmin,
+    },
+    {
+      path: "/homeaccomp",
+      name: "homeaccomp",
+      component: HomepageAccompanist,
+    },
+    {
       path: "/addaccompanist",
       name: "addaccompanist",
       component: AddAccompanist
@@ -81,7 +103,7 @@ const router = new Router({
       component: AddComposers
     },
     {
-      path: "/addcritique",
+      path: "/addcritique/:eventSessionId",
       name: "addcritique",
       component: AddCritique,
       props: true
@@ -112,9 +134,16 @@ const router = new Router({
       component: AddSongRepertoire,
     },
     {
-      path: "/critique",
+      path: "/critique/:eventSessionId",
       name: "critique",
       component: Critique,
+      props: true
+    },
+    {
+      path: "/critiqueview/:critiqueId",
+      name: "critiqueview",
+      component: CritiqueView,
+      props: true
     },
     {
       path: "/editcomposer",
@@ -158,28 +187,12 @@ const router = new Router({
       props: true
     },
     {
-      path: "/eventpast",
-      name: "eventpast",
-      component: EventPastList,
-      props: true,
-    },
-    {
-      path: "/eventupcoming",
-      name: "eventupcoming",
-      component: EventUpcomingList,
-    },
-    {
-      path: "/eventview",
-      name: "eventview",
-      component: EventView
-    },
-    {
       path: "/maintain",
       name: "maintain",
       component: Maintain
     },
     {
-      path: "/maintainavailability",
+      path: "/maintainavailability/:eventId",
       name: "maintainavailability",
       component: MaintainAvailability,
       props: true
@@ -195,7 +208,7 @@ const router = new Router({
       component: MaintainEvents
     },
     {
-      path: "/maintaineventsession",
+      path: "/maintaineventsession/:eventId",
       name: "maintaineventsession",
       component: MaintainEventSessions,
       props: true
@@ -224,6 +237,11 @@ const router = new Router({
       path: "/maintainsong",
       name: "maintainsong",
       component: MaintainSongs
+    },
+    {
+      path: "/notificationlist",
+      name: "notificationlist",
+      component: NotificationList
     },
     {
       path: "/profileincomingstudent",
@@ -258,6 +276,12 @@ const router = new Router({
       path: "/viewstudents",
       name: "viewstudents",
       component: ViewStudents
+    },
+    {
+      path: "/viewstudentsevent",
+      name: "viewstudentsevent",
+      component: ViewStudentsEvent,
+      props: true,
     },
     {
       path: "/tutorials",

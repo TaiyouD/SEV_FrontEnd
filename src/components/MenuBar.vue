@@ -11,7 +11,43 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-if="user != null" :to="{ name: 'home' }">
+      <router-link v-if="user != null && role.roleType == 'Incoming Student'" :to="{ name: 'home' }">
+        <v-img 
+          class="mx-2"
+          src="../assets/oc-logo.png"
+          max-height="50"
+          max-width="50"
+          contain
+        ></v-img>
+      </router-link>
+      <router-link v-if="user != null && (role.roleType == 'Student')" :to="{ name: 'homestudent' }">
+        <v-img 
+          class="mx-2"
+          src="../assets/oc-logo.png"
+          max-height="50"
+          max-width="50"
+          contain
+        ></v-img>
+      </router-link>
+      <router-link v-if="user != null && (role.roleType == 'Faculty')" :to="{ name: 'homefaculty' }">
+        <v-img 
+          class="mx-2"
+          src="../assets/oc-logo.png"
+          max-height="50"
+          max-width="50"
+          contain
+        ></v-img>
+      </router-link>
+      <router-link v-if="user != null && (role.roleType == 'Accompanist')" :to="{ name: 'homeaccomp' }">
+        <v-img 
+          class="mx-2"
+          src="../assets/oc-logo.png"
+          max-height="50"
+          max-width="50"
+          contain
+        ></v-img>
+      </router-link>
+      <router-link v-if="user != null && (role.roleType == 'Admin')" :to="{ name: 'homeadmin' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
@@ -67,7 +103,7 @@
           </v-btn>
         </template>
       </v-menu> -->
-      <v-toolbar-items v-if="user != null && (role.facultyType == 'Instructor')">
+      <v-toolbar-items v-if="user != null && (role.roleType == 'Faculty')">
         <v-menu offset-y :close-on-click="true" >
           <template v-slot:activator="{ on, attrs }">
             <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintainevent' }">
@@ -83,8 +119,21 @@
         </template>
       </v-menu>
     </v-toolbar-items>
+
+    <v-toolbar-items v-if="user != null && (role.roleType == 'Accompanist')">
+      <v-menu offset-y :close-on-click="true" >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn plain id="navbar-maroon" dark v-bind="attrs" v-on="on" exact :to="{ name: 'maintainevent' }">
+            Events
+          </v-btn>
+        </template>
+      </v-menu>
+      </v-toolbar-items>
+
+
+
     <v-toolbar-items v-if="user != null && (role.roleType == 'Admin')" >
-      
+<!--       
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain id="navbar-maroon" v-bind="attrs" v-on="on" 
@@ -92,7 +141,7 @@
             Events
           </v-btn>
         </template>
-      </v-menu>
+      </v-menu> -->
       <v-menu offset-y :close-on-click="true" >
         <template v-slot:activator="{ on, attrs }">
           <v-btn plain  dark v-bind="attrs" v-on="on" 
@@ -104,6 +153,38 @@
       </v-menu>
 
     </v-toolbar-items>
+
+    <!-- <v-menu
+    v-if="showListMenu"
+    offset-y
+  > -->
+  <v-menu v-if="user!=null" offset-y>
+    <template #activator="{ on, attrs }">
+      <v-btn color="accent" dark v-bind="attrs" class="mr-4 ml-4" v-on="on">
+        {{ user.selectedRole }}
+      </v-btn>
+    </template>
+  
+    <v-list>
+      <template #activator>
+        <v-list-item-title>{{ selectedRole }}</v-list-item-title>
+      </template>
+  
+      <v-list-item
+      v-for="(role, index) in access"
+      :key="index"
+        @click="
+          selectedRole = role;
+          saveRole();"
+      >
+        <v-list-item-content>
+          <v-list-item-title >{{ role }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </v-menu>
+
+    
         
     <div v-if="user != null">
       <v-menu bottom min-width="200" rounded offset-y v-if="user != null">
@@ -150,7 +231,7 @@
                   </v-list-item-content>
                 </v-list-item>
                 </div>
-                <div v-else-if="role.roleType == 'Faculty' || 'Admin' || (role.roleType == 'Accompanist' && role.facultyType != null)">
+                <div v-else-if="role.roleType == 'Faculty' || 'Admin'">
                 <v-list-item link @click="$router.push({ path:'/profilefaculty' })">
                   <v-list-item-icon>
                     <v-icon>mdi-account-box</v-icon>
@@ -166,7 +247,6 @@
                   <v-list-item-icon>
                     <v-icon>mdi-account-box</v-icon>
                   </v-list-item-icon>
-
                   <v-list-item-content>
                     <v-list-item-title>Profile</v-list-item-title>
                   </v-list-item-content>
@@ -177,7 +257,6 @@
                   <v-list-item-icon>
                     <v-icon>mdi-account-box</v-icon>
                   </v-list-item-icon>
-
                   <v-list-item-content>
                     <v-list-item-title>Profile</v-list-item-title>
                   </v-list-item-content>
@@ -196,7 +275,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon x-large v-on="on" v-bind="attrs">
             <v-avatar v-if="user == null">
-              <v-icon color ="secondary">
+              <v-icon color="secondary">
                 {{ icons.mdiAccountCircle }}
               </v-icon>
             </v-avatar>
@@ -222,7 +301,7 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-list dense nav v-if="(role.roleType == 'Student') || (role.roleType == 'Accompanist' && role.facultyType == null)">
+      <v-list dense nav v-if="(role.roleType == 'Student')">
         <v-list-item link @click="$router.push({ path: '/repertoire' })">
           <v-list-item-icon>
             <v-icon>mdi-music-box-outline</v-icon>
@@ -242,13 +321,23 @@
       </v-list-item>
       
       <v-list dense nav>
-        <v-list-item v-if="role.roleType == 'Admin'" link @click="$router.push({ path: '/maintainlevel' })">
+        <v-list-item v-if="role.roleType != 'Admin'" link @click="$router.push({ path: '/maintainlevel' })">
           <v-list-item-icon>
             <v-icon>mdi-receipt</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
             <v-list-item-title>Vocal Level Info</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item link @click="$router.push({ path: '/notificationlist' })">
+          <v-list-item-icon>
+            <v-icon>mdi-bell-outline</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Notifications</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item link @click="$router.push({ path: '/repertoire' })">
@@ -264,7 +353,6 @@
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
-
           <v-list-item-content>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
@@ -279,7 +367,6 @@
 import Utils from "@/config/utils.js";
 import AuthServices from "@/services/authServices";
 import roleServices from "@/services/roleServices";
-
 import {
     mdiAccountCircle,
     mdiPencil,
@@ -289,7 +376,6 @@ import {
     mdiApps,
     mdiDotsVertical,
   } from '@mdi/js'
-
 export default {
   name: "menu-bar",
   data: () => ({
@@ -315,38 +401,74 @@ export default {
     title: "Music Department",
     initials: "",
     name: "",
+    access:{},
+    selectedRole: "",
   }),
   async created() {
-    this.resetMenu();
+    await this.resetMenu();
   },
   async mounted() {
-    this.resetMenu();
-    this.retrieveRole();
+    await this.resetMenu();
+    await this.retrieveRole();
   },
   computed: {
+    showListMenu() {
+      return this.access.length > 1;
+      }
     // _link() {
     //     return "/" + this.selectedRoles.toLowerCase() + "Home/" + this.currentPersonRoleID;
     // }
-  },
+ },
   methods: {
-    retrieveRole() {
-      roleServices.getRoleForUser(this.user.userId)
+    async retrieveRole() {
+      await roleServices.getRoleForUser(this.user.userId)
       .then((response) => {
-        this.role = response.data[0];
+        for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
         console.log("role: " + this.role.roleType);
       })
       .catch((e) => {
         this.message = e.response.data.message;
       });
     },
-    resetMenu() {
+    async resetMenu() {
       this.user = null;
       // ensures that their name gets set properly from store
       this.user = Utils.getStore("user");
       if (this.user != null) {
         this.initials = this.user.fName[0] + this.user.lName[0];
         this.name = this.user.fName + " " + this.user.lName;
+        //transform access list ([]) in access object ({}) so I can use v-for on the menu bar
+        this.access = this.user.access[0].reduce((acc, value, index) => {
+        acc[index] = value;
+        return acc;
+        }, {});
       }
+    },
+    saveRole() {
+      this.user.selectedRole = this.selectedRole; 
+      Utils.setStore("user", this.user);
+      console.log("user here", this.user);
+      //redirect to the right menu according to role
+      if(this.selectedRole === 'Admin'){ 
+          this.$router.push({ name: "homeadmin" });
+        }
+      else if(this.selectedRole === 'Faculty'){
+          this.$router.push({ name: "homefaculty" });
+        }
+      else if(this.selectedRole === 'Accompanist'){
+          this.$router.push({ name: "homeaccomp" });
+       }
+      else if(this.selectedRole === 'Incoming Student'){
+          this.$router.push({ name: "home" });
+        }
+      else{
+          this.$router.push({ name: "homestudent" });
+        }
+      //this.resetMenu();
     },
     logout() {
       AuthServices.logoutUser(this.user)

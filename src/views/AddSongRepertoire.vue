@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="this.role.roleType != null">
   <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
   <v-container>
     <v-toolbar>
@@ -78,10 +78,8 @@ data() {
     role:{}
   };
 },
-mounted() {
-  this.user = Utils.getStore("user");
-},
 async created(){
+  this.user = Utils.getStore("user");
   const result = await SongServices.getAll();
   this.song = result.data;
   await this.retrieveRole();
@@ -111,7 +109,11 @@ methods: {
   async retrieveRole() {
       await RoleServices.getRoleForUser(this.user.userId)
         .then((response) => {
-          this.role = response.data[0];
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
           console.log('role');
           console.log(this.role.id);
         })

@@ -1,10 +1,10 @@
 
 <template>
-    <div>
+    <div v-if="this.currentRole.roleType == 'Admin'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
-          <v-toolbar-title>Add Role</v-toolbar-title>
+          <v-toolbar-title>Add User</v-toolbar-title>
         </v-toolbar>
         <br />
         <h4>{{ message }}</h4>
@@ -39,7 +39,7 @@
             :items="[{ text: 'Accompanist', value: 'Accompanist' }, 
                     { text: 'Admin', value: 'Admin' },
                     { text: 'Faculty', value: 'Faculty' },
-                    { text: 'Incoming Student', value: 'Incoming Student' },
+                    { text: 'Prospective Student', value: 'Incoming Student' },
                     { text: 'Student', value: 'Student' }
                     ]"
         ></v-select>
@@ -97,6 +97,16 @@
         required
       ></v-text-field>
       <v-select
+        v-model="role.studentPrivateHours"
+            id="studentPrivateHours"
+            label="Student Private Hours"
+            required
+            :items="[{ text: 'None', value: 0 }, 
+                    { text: 'One Hour', value: 1 } , 
+                    { text: 'Two Hours', value: 2 }
+                    ]"
+        ></v-select>
+      <v-select
         v-model="role.studentLevel"
             id="studentLevel"
             label="Student Level"
@@ -106,9 +116,9 @@
                     { text: 'Level III', value: 3 },
                     { text: 'Level IV', value: 4 },
                     { text: 'Level V', value: 5 },
-                    { text: 'Level VI', value: 7 },
-                    { text: 'Level VII', value: 8 },
-                    { text: 'Level VIII', value: 9 }
+                    { text: 'Level VI', value: 6 },
+                    { text: 'Level VII', value: 7 },
+                    { text: 'Level VIII', value: 8 }
                     ]"
         ></v-select>
     </div>
@@ -138,6 +148,7 @@
                 <v-btn color="error" class="mr-4" @click="cancel()"> Cancel </v-btn>
               </div>
             </div>
+            <br>
         </v-form>
       </v-container>
     </div>
@@ -145,6 +156,7 @@
 
   <script>
   import RoleServices from "../services/roleServices";
+  import Utils from "@/config/utils.js";
   import UserServices from "../services/userServices";
   
   export default {
@@ -167,11 +179,18 @@
           studentClassification: null,
           studentSemester: null,
           studentMajor: '',
+          studentPrivateHours: null,
           isApproved: null,
           studentLevel: null
         },
+        currentUser:{},
+        currentRole:{},
         message: "Enter Data and Click Save.",
       }
+    },
+    async created(){
+      this.currentUser = Utils.getStore("user");
+      await this.retrieveRole();
     },
     computed: {
       addFaculty() {
@@ -185,6 +204,19 @@
       },
     },
     methods: {
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.currentUser.userId)
+          .then((response) => {
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.currentUser.selectedRole) {
+                this.currentRole = response.data[i];
+              }
+            }
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
     async saveUserAndRole() {
       await this.saveUser();
       await this.saveRole();
@@ -212,6 +244,7 @@
             studentClassification: this.role.studentClassification,
             studentSemester: this.role.studentSemester,
             studentMajor: this.role.studentMajor,
+            studentPrivateHours: this.role.studentPrivateHours,
             isApproved: this.role.isApproved,
             studentLevel: this.role.studentLevel,
             userId: this.user.id

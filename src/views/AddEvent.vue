@@ -1,6 +1,5 @@
-
 <template>
-    <div>
+    <div v-if="this.role.roleType == 'Admin'">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
@@ -10,12 +9,17 @@
         <h4>{{ message }}</h4>
         <br />
         <v-form ref="form" v-model="valid" lazy validation>
-            <v-select
+            <v-text-field
+            v-model="event.eventTitle"
+            id="eventTitle"
+            label="Event Title"
+          ></v-text-field>
+          <v-select
             v-model="event.eventType"
             id="eventType"
             :items="[{ text: 'Junior', value: 'Junior' },
                      { text: 'Jury', value: 'Jury' },
-                     { text: 'Recital', value: 'Recital' },
+                     { text: 'Hearing', value: 'Hearing' },
                      { text: 'Scholarship', value: 'Scholarship' },
                      { text: 'Senior', value: 'Senior' }]"
             label="Event Type"
@@ -24,7 +28,6 @@
           <v-row>
           <v-col cols="4">
             <v-menu
-              v-model="datePicker"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -41,12 +44,11 @@
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker v-model="event.date" @input="datePicker = false" class="custom-picker-add"></v-date-picker>
+              <v-date-picker v-model="event.date" class="custom-picker-add"></v-date-picker>
             </v-menu>
           </v-col>
           <v-col cols="4">
             <v-menu
-              v-model="startTimePicker"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -66,14 +68,14 @@
               <v-time-picker
                 v-model="event.startTime"
                 format="ampm"
-                @input="startTimePicker = false"
                 class="custom-picker-add"
+                :minutes-step="5"
+                :allowed-minutes="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]"
               ></v-time-picker>
             </v-menu>
           </v-col>
           <v-col cols="4">
             <v-menu
-              v-model="endTimePicker"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -93,8 +95,9 @@
               <v-time-picker
                 v-model="event.endTime"
                 format="ampm"
-                @input="endTimePicker = false"
                 class="custom-picker-add"
+                :minutes-step="5"
+                :allowed-minutes="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]"
               ></v-time-picker>
             </v-menu>
           </v-col>
@@ -102,10 +105,10 @@
           <v-select
             v-model="event.duration"
             id="duration"
-            :items="[{ text: '5 Minutes', value: '5' },
+            :items="[{ text: ' Unknown', value: '0' },
+                     { text: '5 Minutes', value: '5' },
                      { text: '10 Minutes', value: '10' },
-                     { text: '15 Minutes', value: '15' },
-                     { text: ' Unknown', value: '0' }]"
+                     { text: '15 Minutes', value: '15' }]"
             label="Duration"
             required
           ></v-select>
@@ -132,6 +135,9 @@
   <script>
 
   import EventServices from "../services/eventServices";
+  import RoleServices from "../services/roleServices";
+  import NotificationServices from "../services/notificationServices";
+  import Utils from "@/config/utils.js";
 
   export default {
     name: "addevent",
@@ -139,6 +145,7 @@
       return {
         valid: false,
         event: {
+          eventTitle: '',
           eventType: '',
           date: '',
           startTime: '',
@@ -146,12 +153,51 @@
           duration: '',
           isReady: false
         },
+        notification: {
+          description: 'Please add availability for this new event',
+          type: 'Faculty',
+        },
+        eventTemp: {},
+        user:{},
+        role:{},
+        rolestemp:[],
+        roles:[],
         message: "Enter Data and Click Save.",
       };
     },
+    watch: {
+      'event.eventType'(newEventType) {
+        if (newEventType === 'Hearing') {
+          this.event.duration = '5';
+        }
+        else if (newEventType === 'Jury') {
+          this.event.duration = '0';
+        }
+      }
+    },
+    async created(){
+      this.user = Utils.getStore("user");
+      await this.retrieveRole();
+      await this.retrieveAllRoles();
+      console.log(this.roles.length);
+    },
     methods: {
+      async retrieveRole() {
+      await RoleServices.getRoleForUser(this.user.userId)
+        .then((response) => {
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+    },
       saveEvent() {
         var data = {
+          eventTitle: this.event.eventTitle,
           eventType: this.event.eventType,
           date: this.event.date,
           startTime: this.event.startTime,
@@ -161,13 +207,54 @@
         };
         EventServices.create(data)
           .then((response) => {
-            this.event.id = response.data.id;
-            console.log("add " + response.data);
-            this.$router.go(-1);
+            //this.event.id = response.data.id;
+            console.log("Event added", response.data);
+            this.createNotification(response.data);
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
+      },
+      createNotification(eventN){
+        for (let i = 0; i < this.roles.length; i++){
+        var data = {
+          title: eventN.eventTitle,
+          description: this.notification.description,
+          type: this.notification.type,
+          eventId: eventN.id,
+          roleId: this.roles[i].id
+    
+        };
+        console.log("roles id",this.roles[i].id);
+
+        console.log(data);
+        NotificationServices.create(data)
+        .then((response) => {
+            //this.event.id = response.data.id;
+            console.log("Notification added", response.data);
+        })
+          .catch((e) => {
+            this.message = e.response.data.message;
+        });
+        }
+        this.$router.go(-1);
+      },
+
+      async retrieveAllRoles() {
+      await RoleServices.getAll()
+        .then((response) => {
+          this.rolestemp = response.data;
+          for (let i = 0; i < this.rolestemp.length; i++){
+            if(this.rolestemp[i].roleType == this.notification.type){
+
+              this.roles.push(this.rolestemp[i]);
+              //console.log("roles",this.roles[i]);
+            }
+          }
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
       },
       cancel() {
         this.$router.go(-1);
@@ -182,7 +269,7 @@
 }
 
 .custom-picker-add {
-height: 405px;
+height: 415px;
 width: 369.8px;
 }
 </style>

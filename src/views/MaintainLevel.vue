@@ -1,6 +1,6 @@
  
 <template>
-  <div>
+  <div v-if="this.role.roleType != null">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -86,7 +86,11 @@ export default {
     retrieveRole() {
       roleServices.getRoleForUser(this.user.userId)
       .then((response) => {
-        this.role = response.data[0];
+        for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
         console.log("role: " + this.role.roleType);
       })
       .catch((e) => {

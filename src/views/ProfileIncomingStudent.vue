@@ -1,5 +1,5 @@
 <template>
-    <div v-if="user != null">
+    <div v-if="this.role.roleType != null">
       <div class=" align-center flex-column">
         <v-img src="../assets/piano-2.jpg" max-height="150" />
         <div class="my-8"></div>
@@ -139,7 +139,11 @@
         retrieveRole() {
           roleServices.getRoleForUser(this.user.userId)
           .then((response) => {
-            this.role = response.data[0];
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
             console.log(this.role.id);
           })
           .catch((e) => {

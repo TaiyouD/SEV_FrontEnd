@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div v-if="this.role.roleType == 'Admin'">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -30,7 +30,6 @@
               <td>
                 <div class="d-flex justify-end">
                   <v-icon color="primary" @click="editInstrument(item)">mdi-pencil</v-icon>
-                  <v-icon color="error" @click="deleteInstrument(item)">mdi-delete</v-icon>
                 </div>
               </td>
             </tr>
@@ -45,12 +44,16 @@
 <script>
 
 import InstrumentServices from "../services/instrumentServices";
+import RoleServices from "../services/roleServices";
+import Utils from "@/config/utils.js";
 
 export default {
   name: "maintaininstrument",
   props: ["id"],
   data() {
     return {
+      user:{},
+      role:{},
       search: "",
       instruments: [],
       message: "Add, Edit or Delete Instruments",
@@ -63,7 +66,24 @@ export default {
   mounted() {
     this.retrieveInstruments();
   },
+  async created() {
+      this.user = Utils.getStore("user");
+      await this.retrieveRole();
+    },
   methods: {
+    async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
     retrieveInstruments() {
       InstrumentServices.getAll()
         .then((response) => {
@@ -78,19 +98,6 @@ export default {
     },
     editInstrument(instrument) {
       this.$router.push({ name: "editinstrument", params: { id: instrument.id } });
-    },
-    deleteInstrument(instrument) {
-      if (confirm(`Are you sure you want to delete ${instrument.type}?`)) {
-        InstrumentServices.delete(instrument.id)
-          .then(() => {
-            const index = this.instruments.indexOf(instrument);
-            this.instruments.splice(index, 1);
-            this.message = `${instrument.type} deleted successfully.`;
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      }
     },
   },
 };

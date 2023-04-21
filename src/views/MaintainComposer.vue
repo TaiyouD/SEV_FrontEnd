@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div v-if="this.role.roleType == 'Admin'">
     <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
     <v-container>
       <v-toolbar>
@@ -33,7 +33,6 @@
               <td>
                 <div class="d-flex justify-end">
                   <v-icon color="primary" @click="editComposer(item)">mdi-pencil</v-icon>
-                  <v-icon color="error" @click="deleteComposer(item)">mdi-delete</v-icon>
                 </div>
               </td>
             </tr>
@@ -47,12 +46,16 @@
 <script>
 
 import ComposerServices from "../services/composerServices";
+import RoleServices from "../services/roleServices";
+import Utils from "@/config/utils.js";
 
 export default {
   name: "maintaincomposer",
   props: ["id"],
   data() {
     return {
+      user:{},
+      role:{},
       search: "",
       composers: [],
       message: "Add, Edit or Delete Composers",
@@ -68,7 +71,24 @@ export default {
   mounted() {
     this.retrieveComposers();
   },
+  async created(){
+    this.user = Utils.getStore("user");
+    await this.retrieveRole();
+  },
   methods: {
+    async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
+           })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
     retrieveComposers() {
       ComposerServices.getAll()
         .then((response) => {
@@ -83,19 +103,6 @@ export default {
     },
     editComposer(composer) {
       this.$router.push({ name: "editcomposer", params: { id: composer.id } });
-    },
-    deleteComposer(composer) {
-      if (confirm(`Are you sure you want to delete ${composer.firstName} ${composer.lastName}?`)) {
-        ComposerServices.delete(composer.id)
-          .then(() => {
-            const index = this.composers.indexOf(composer);
-            this.composers.splice(index, 1);
-            this.message = `${composer.firstName} ${composer.lastName} deleted successfully.`;
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      }
     },
   },
 };
