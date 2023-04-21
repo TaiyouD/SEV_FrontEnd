@@ -8,7 +8,7 @@
           <v-btn icon>
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
-          </router-link>
+        </router-link>
           <v-toolbar-title>Create Critique</v-toolbar-title>
         </v-toolbar>
         <br/>
@@ -19,9 +19,28 @@
         <v-card>
         <br>
         <div style="display: flex; justify-content: space-between; text-align: center;">
-            <h4 class="ml-5">Date: {{critique.date}}</h4>
+          <v-row>
+            <v-col class="mx-9" cols="3">
+            <h4 class="ml-5">Date: {{event.date}}</h4>
+            </v-col>
+            <v-col class="mx-5" cols="3">
             <h4>Performer: {{studentRole.user.fName}} {{studentRole.user.lName}}</h4>
-            <h4 class="mr-5">Piece: </h4>
+            </v-col>
+            <v-col class="mr-n16" cols="2">
+              <h4 class="">Piece(s):</h4>
+            </v-col>
+            <v-col class="mx-1 mt-n5" cols="2">
+              <v-select
+                      v-model="song"
+                      :items="songs"
+                      item-text="title"
+                      item-value="id"
+                      label="Select"
+                      persistent-hint
+                      single-line      
+                  ></v-select>
+              </v-col>
+            </v-row>
         </div>
         <div class="line"></div>
         <v-form ref="form" v-model="valid" lazy validation>
@@ -335,16 +354,18 @@
 </template>
   
 <script>
-
   import CritiqueServices from "../services/critiqueServices";
   import RoleServices from "../services/roleServices";
   import EventSessionServices from "../services/eventSessionServices";
   import EventServices from "../services/eventServices";
+  import EventSongServices from "../services/eventSongservices";
+  import RepertoireSongServices from "../services/repertoireSongServices";
+  import SongServices from "../services/songServices";
   import Utils from "@/config/utils.js";
   
   export default {
     name: "addcritique",
-    props: ["eventsessionId"],
+    props: ["eventSessionId"],
     data() {
       return {
         critique: {
@@ -384,7 +405,14 @@
             }
         },
         eventSession:{},
-        event:{},
+        event:{
+          id:null
+        },
+        eventSongs:[],
+        repertoireSongs:[],
+        songs:[],
+        song:{},
+        songTitle: [],
         message: "Fill out the form below to critique the performance. Once completed, click the 'Save' button.",
       };
     },
@@ -393,12 +421,17 @@
       await this.retrieveFacultyRole();
       await this.retrieveEventSession();
       await this.retrieveStudentRole();
+      await this.retrieveEventSongs();
     },
     methods: {
     async retrieveFacultyRole() {
       await RoleServices.getRoleForUser(this.user.userId)
         .then((response) => {
-          this.facultyRole = response.data[0];
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.facultyRole = response.data[i];
+              }
+            }
           console.log('faculty role');
           console.log(this.facultyRole);
         })
@@ -407,19 +440,19 @@
         });
     },
     async retrieveEventSession() {
-        //await EventSessionServices.get(this.eventsessionId)
-      await EventSessionServices.get(1)
+      await EventSessionServices.get(this.eventSessionId)
         .then((response) => {
-          this.eventSession = response.data[0];
+          this.eventSession = response.data;
           console.log('event session');
           console.log(this.eventSession);
         })
         .catch((e) => {
           this.message = e.response.data.message;
         });
-        this.retrieveThisEvent();
+        await this.retrieveThisEvent();
     },
     async retrieveThisEvent() {
+      console.log('event session', this.eventSession)
         await EventServices.get(this.eventSession.eventId)
         .then((response) => {
             this.event = response.data;
@@ -431,8 +464,7 @@
         });
     },
     async retrieveStudentRole() {
-    //   await RoleServices.get(this.eventSession.studentId)
-      await RoleServices.get(10)
+      await RoleServices.get(this.eventSession.studentId)
         .then((response) => {
           this.studentRole = response.data;
           console.log('student role');
@@ -442,9 +474,43 @@
           this.message = e.response.data.message;
         });
     },
+    async retrieveEventSongs() {
+      await EventSongServices.getAllForEventSession(this.eventSession.id)
+        .then((response) => {
+          this.eventSongs = response.data;
+          console.log('Event Songs');
+          console.log(this.eventSongs);
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+        this.retrieveRepertoireSongs();
+    },
+    async retrieveRepertoireSongs() {
+        for (let i = 0; i < this.eventSongs.length; i++) {
+          const repertoire = await RepertoireSongServices.get(this.eventSongs[i].repertoireSongId);
+          this.repertoireSongs.push(repertoire.data);
+        }
+        console.log('Repertoire Songs');
+        console.log(this.repertoireSongs);
+        this.retrieveSongs();
+    },
+    async retrieveSongs() {
+        for (let i = 0; i < this.repertoireSongs.length; i++) {
+          const song = await SongServices.get(this.repertoireSongs[i].songId);
+          this.songs.push(song.data);
+          this.songTitle[i] = this.songs[i].title;
+        }
+        this.song = this.songs[0];
+        console.log('Songs');
+        console.log(this.songs);
+        console.log(this.song);
+        console.log(this.songTitle);
+        
+    },
       saveCritique() { 
         var data = {
-          date: this.critique.date,
+          date: this.event.date,
           deportment: this.critique.deportment,
           deportmentGrade: this.critique.deportmentGrade,
           tone: this.critique.tone,
@@ -462,35 +528,30 @@
           performSuggest: this.critique.performSuggest,
           hasPassed:this.critique.hasPassed,
           facultyId: this.facultyRole.id,
-          eventsessionId: this.eventsessionId,
-          studentId: this.eventsessionStudentId
+          eventsessionId: this.eventSessionId,
+          studentId: this.studentRole.id
         };
-        CritiqueServices.create(this.eventsessionId, data)
-        .then((response) => {
-          this.critique.id = response.data.id;
-          this.$router.push({ name: "maintaineventsession", params: { eventId: this.eventsessionId.eventId } });
-        })
-        .catch((e) => {
-          this.message = e.response.data.message;
-        });
+        console.log('data',data);
+        CritiqueServices.create(data)
+          .then((response) => {
+            console.log("add ",response.data);
+            this.$router.push({ name: "maintaineventsession", params: { eventId: this.eventSession.eventId } });
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
     },
     cancel() {
-      this.$router.push({ name: "maintaineventsession", params: { eventId: this.eventsessionId.eventId } });
+      this.$router.push({ name: "maintaineventsession", params: { eventId: this.eventSession.eventId } });
     },
     },
   };
 </script>
 
 <style>
-
 .line {
   border-top: 1.5px solid black;
   margin: 10px auto;
   width: 96.5%;
 }
-
-.routerLink{
-     text-decoration: none;
- }
 </style>
-

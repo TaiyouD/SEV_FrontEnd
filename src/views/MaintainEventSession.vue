@@ -1808,6 +1808,7 @@ export default {
     },
     maintainCritique(item){
       if(this.isUpcomingEvent|| this.isCurrentEvent){
+        console.log('ITEM', item)
         this.$router.push({ name: "addcritique", params: { eventSessionId: item.id } });
       }
       else{

@@ -4,11 +4,11 @@
     <v-container>
       <v-toolbar>
         <router-link class="routerLink" :to="{ name: 'maintaineventsession', params: { eventId: event.id } }">
-        <v-btn  v-if="role.roleType=='Faculty' || role.facultyType=='Instructor' || role.roleType=='Admin' || (role.roleType == 'Accompanist' && role.facultyType != null)" icon>
+        <v-btn  v-if="role.roleType=='Faculty' || role.facultyType=='Instructor' || role.roleType=='Admin'" icon>
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         </router-link>
-        <v-btn v-if="role.roleType=='Student' || role.roleType=='Incoming Student' || (role.roleType == 'Accompanist' && role.facultyType == null)" icon to="/maintaineventstudent">
+        <v-btn v-if="role.roleType=='Student' || role.roleType=='Incoming Student'" icon to="/maintaineventstudent">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-toolbar-title>View Critiques</v-toolbar-title>
@@ -21,7 +21,7 @@
         <br>
       <div style="display: flex; justify-content: space-between; text-align: center;">
         <v-spacer><h4>Event Title: {{event.eventTitle}} </h4> </v-spacer>
-        <v-spacer><h4>Event Type: {{event.eventType}} </h4> </v-spacer>
+        <v-spacer><h4>Student: {{studentRole[0].user.fName}} {{studentRole[0].user.lName}} </h4> </v-spacer>
         <v-spacer><h4>Date: {{event.date}} </h4> </v-spacer>
         <v-spacer><h4>Time: {{ eventSession.startTime }} - {{eventSession.endTime}}</h4> </v-spacer>
       </div>
@@ -48,14 +48,17 @@
           :headers="headers"
           :search="search"
           :items="critiques"
-          :items-per-page="50"
+          :items-per-page="10"
         >
+        <template v-slot:[`item.facultyInfo.fName`]="{ item }">
+          {{ item.facultyInfo.user.fName }} {{ item.facultyInfo.user.lName }}
+        </template>
           <template v-slot:[`item.view`]="{ item }">
-              <v-icon color="primary" class="mx-4" @click="viewCritique(item)">
+              <v-icon color="primary" class="mx-1" @click="viewCritique(item)">
                 mdi-archive-eye-outline
               </v-icon>
           </template>
-          <template v-if="role.roleType == Admin" v-slot:[`item.delete`]="{ item }">
+          <template v-if="role.roleType == isAdmin" v-slot:[`item.delete`]="{ item }">
 
             <v-icon color="primary" class="mx-4" @click="deleteCritique(item)">
                 mdi-trash-can-outline
@@ -91,16 +94,7 @@ export default {
       viewDialog: false, 
       view_critique_jury_dialog: false,
       view_critique_recital_dialog: false,
-      // editedStudent: {
-      //   user:{
-      //     fName:"",
-      //     lName:"",
-      //     email:""
-      //   },
-      //   level:{
-      //     levelNumber:""
-      //   }
-      // }, 
+      isAdmin: false,
       testeventSessionId: 1,
       instrumentRole:[],
       selected: [],
@@ -109,8 +103,8 @@ export default {
       event:{},
       eventSession:{},
       student:{},
-      // instructorRole:[],
       studentRole:[],
+      studentName: '',
       facultyInfo:[],
       facultyUser:[],
       critiques:[],
@@ -120,11 +114,10 @@ export default {
       user: {},
       message: "Search, Delete, or View Critique Information",
       headers: [
-        { text: "Faculty Id", value: "facultyInfo.id" },
-        { text: "Faculty", value: "facultyUser.fname" + "facultyUser.lname" },
-        // { text: "Passed", value: "critiques.hasPassed" },
+        { text: "Faculty First Name", value: "facultyInfo.user.fName"},
+        { text: "Faculty Last Name", value: "facultyInfo.user.lName"},
         { text: "View", value: "view", sortable: false },
-        { text: "Delete", value: "delete", sortable: false }
+       // { text: "Delete", value: "delete", sortable: false }
       ]
     };
   },
@@ -134,9 +127,7 @@ export default {
     console.log('eventSessionId');
     console.log(this.eventSessionId);
     await this.retrieveThisEventSession();
-    // await this.retrieveInstructorInstrumentRoles();
     await this.retrieveCritiquesForEventSession();
-    // await this.makeHoursZero();
   },
   methods: {
     async retrieveRole() {
@@ -165,7 +156,6 @@ export default {
             this.message = e.response.data.message;
         });           
         await this.retrieveThisEvent();
-
     },
     async retrieveThisEvent() {
         await EventServices.get(this.eventSession.eventId)
@@ -178,26 +168,6 @@ export default {
             this.message = e.response.data.message;
         });
     },
-    // async retrieveInstructorInstrumentRoles() {
-    //   await instrumentRoleServices.getAll()
-    //     .then((response) => {
-    //       this.instrumentRole = response.data;
-    //       console.log('instrumentRole');
-    //       console.log(this.instrumentRole[0]);
-    //       for(let i = 0; i < this.instrumentRole.length; i++)
-    //       {
-    //         if (this.instrumentRole[i].privateInstructorId == this.role.id)
-    //         {
-    //           this.instructorRole.push(this.instrumentRole[i]);
-    //         }
-    //       }
-    //       console.log('instructorRole');
-    //       console.log(this.instructorRole);
-    //     })
-    //     .catch((e) => {
-    //       this.message = e.response.data.message;
-    //     });
-    // },
     async retrieveCritiquesForEventSession() {
       await critiqueServices.getAll()
         .then((response) => {
@@ -210,7 +180,6 @@ export default {
             console.log(this.critiqueSort[i].eventsessionId)
             if (this.critiqueSort[i].eventsessionId == this.eventSessionId)
             {
-              //this.studentRole.push(this.critiqueSort1[i].id);
               this.critiques.push(this.critiqueSort[i]);
             }
           }
@@ -226,12 +195,12 @@ export default {
       for (let i = 0; i < this.critiques.length; i++) {
           const role = await RoleServices.get(this.critiques[i].facultyId);
           this.facultyInfo.push(role.data);
-        }
-        console.log('facultyInfo');
-        // var parsedobj = JSON.parse(JSON.stringify(this.studentInfo))
-        console.log(this.facultyInfo);
-        // console.log(parsedobj);
-        await this.retrieveFacultyUser();
+          this.critiques[i].facultyInfo = role.data; // add facultyInfo property to the critique object
+      }
+      console.log('facultyInfo');
+      console.log(this.facultyInfo);
+      await this.retrieveFacultyUser();
+      await this.retrieveStudent();
     },
     async retrieveFacultyUser() {
       for (let i = 0; i < this.critiques.length; i++) {
@@ -239,67 +208,22 @@ export default {
           this.facultyUser.push(role.data);
         }
         console.log('facultyUser');
-        // var parsedobj = JSON.parse(JSON.stringify(this.studentInfo))
         console.log(this.facultyUser);
     },
     async retrieveStudent() {
-        const role = await RoleServices.get(this.critiques.studentId);
-        this.student.push(role.data);
+
+          const role = await RoleServices.get(this.eventSession.studentId);
+          this.studentRole.push(role.data);
         console.log('student');
-        // var parsedobj = JSON.parse(JSON.stringify(this.studentInfo))
-        console.log(this.student);
-        // console.log(parsedobj);
+        console.log(this.studentRole);
+        this.studentName = this.studentRole.user.fname + this.studentRole.user.lname;
     },
-    // async makeHoursZero(){
-    //   for (let i = 0; i < this.studentInfo.length; i++) {
-    //       const role = await RoleServices.get(this.studentInfo[i].id);
-    //       if(role.data.studentPrivateHours == null){
-    //         this.studentInfo[i].studentPrivateHours = 0;
-    //       }          
-    //     }
-    // },
     viewCritique(critique) {
-      // Set the edited student data to the clicked student
       console.log("critique1")
       console.log(critique.id)
-      // this.editedStudent = { ...student };
-      // if (student.studentPrivateHours == null)
-      // {
-      //   this.editedStudent.studentPrivateHours = 0;
-      // }
-      // Show the edit dialog
-      // this.viewDialog = true;
       this.$router.push({ name: "critiqueview", params: { critiqueId: critique.id } });
     },
-    // editCritique(critique) {
-    //   // Set the edited student data to the clicked student
-    //   console.log("critique")
-    //   console.log(critique)
-    //   this.editedStudent = { ...student };
-    //   if (student.studentPrivateHours == null)
-    //   {
-    //     this.editedStudent.studentPrivateHours = 0;
-    //   }
-    //   Show the edit dialog
-    //   this.editDialog = true;
-    // },
-    // saveStudent() {
-    //   RoleServices.update(this.editedStudent.id, this.editedStudent)
-    //       .then(() => {
-    //         this.message = 'The Student was updated successfully!';
-    //       })
-    //       .catch(e => {
-    //         this.message = e.response.data.message;
-    //       });
-    //   // Hide the edit dialog
-    //   this.editDialog = false;
-    //   window.location.reload(); //change
-    //   //this.updateStudent(this.editedStudent);
-    // },
-    // updateStudent(student) {
-    // const index = this.studentInfo.findIndex((s) => s.studentId === student.studentId);
-    // this.studentInfo.splice(index, 1, student);
-    // },
+
     deleteCritique(critique) {
       critiqueServices.delete(critique.id) //change to delete only instructorId?
         .then(() => {
@@ -309,11 +233,6 @@ export default {
           this.message = e.response.data.message;
         });
     },
-    // viewRepertoire(item) {
-    //   console.log("here")
-    //   console.log(item.id)
-    //    this.$router.push({ name: "repertoire", params: { roleId: item.id } });
-    //   },
     refreshList() {
       this.retrieveCritiquesForEventSession();
       this.currentCritique = null;
