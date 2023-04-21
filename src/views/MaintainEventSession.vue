@@ -590,10 +590,8 @@
                 <td>
                   <template item-value="passed">
                   <template v-if="item.hasPassed === null">
+                    <v-btn color="primary" small @click="getNullHasPassed(item)">Add</v-btn>
                     <v-dialog v-model="passed_dialog" persistent max-width="500" :retain-focus="false">
-                      <template v-slot:activator="{ on }">
-                        <v-btn color="primary" small v-on="on">Add</v-btn>
-                      </template>
                       <v-card>
                         <v-card-title>
                         <v-toolbar id="navbar-maroon">
@@ -608,8 +606,8 @@
                             <div style="text-align: center;">
                             <div class=" d-flex flex-row bg-surface-variant" max-width="780" >
                         <v-radio-group v-model="tempHasPassed" row>
-                          <v-radio class=" ml-12 mr-12" label="Pass" value="true" color="green"></v-radio>
-                          <v-radio class=" mr-4" label="Fail" value="false" color="red" ></v-radio>
+                          <v-radio class=" ml-12 mr-12" label="Pass" :value="true" color="green"></v-radio>
+                          <v-radio class=" mr-4" label="Fail" :value="false" color="red" ></v-radio>
                         </v-radio-group>
                         </div></div>
                       </v-form>
@@ -912,7 +910,7 @@
                   <template v-if="item.hasPassed === null">
                     <v-dialog v-model="passed_dialog" persistent max-width="500" :retain-focus="false">
                       <template v-slot:activator="{ on }">
-                        <v-btn color="primary" small v-on="on">Add</v-btn>
+                        <v-btn color="primary" small v-on="on" @click="getHasPassed(item)">Add</v-btn>
                       </template>
                       <v-card>
                         <v-card-title>
@@ -1229,11 +1227,9 @@
   
                   <td>
                     <template item-value="passed">
-                    <template v-if="item.hasPassed === null">
+                    <template v-if="item.hasPassed === null">                      
+                      <v-btn color="primary" small @click="getNullHasPassed(item)">Add</v-btn>
                       <v-dialog v-model="passed_dialog" persistent max-width="500" :retain-focus="false">
-                        <template v-slot:activator="{ on }">
-                          <v-btn color="primary" small v-on="on">Add</v-btn>
-                        </template>
                         <v-card>
                           <v-card-title>
                           <v-toolbar id="navbar-maroon">
@@ -1578,7 +1574,7 @@ export default {
       search: "",
       tempHasPassed: "",
       itemHasPassed: "",
-      tempEventSession: "",
+      tempEventSession: {},
       accompanist:{
         user:{
           fName:"",
@@ -1758,19 +1754,30 @@ export default {
             this.message = e.response.data.message;
           });
       },
+      getNullHasPassed(eventsession){
+       this.tempEventSession = {...eventsession}
+       this.passed_dialog = true; 
+       this.itemHasPassed = eventsession.hasPassed;
+       console.log('here temp event session', this.tempEventSession)
+      },
       getHasPassed(eventsession){
        this.tempEventSession = {...eventsession}
        this.passed_second_dialog = true; 
        this.itemHasPassed = eventsession.hasPassed;
       },
       saveHasPassed(){
+        console.log('tempHasPassed', this.tempHasPassed)
         if(this.tempHasPassed == 'true'){
           this.itemHasPassed = true
+          console.log('here 1')
         }
         else if(this.tempHasPassed == 'false'){
           this.itemHasPassed = false
+          console.log('here 2')
         }
+        console.log('item has passed', this.itemHasPassed)
         this.tempEventSession.hasPassed = this.itemHasPassed;
+        console.log('temp event session', this.tempEventSession)
         EventSessionServices.update(this.tempEventSession.id, this.tempEventSession)
         .then(() => {
             console.log('The has passed value was updated successfully!');
@@ -1780,8 +1787,8 @@ export default {
           });
         this.passed_dialog = false;
         this.passed_second_dialog = false; 
-        this.tempHasPassed = '';
-        this.itemHasPassed = '';
+        this.tempHasPassed = "";
+        this.itemHasPassed = "";
         window.location.reload();
       },
       cancelHasPassed(){
