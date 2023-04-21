@@ -7,6 +7,7 @@ import Homepage from "./views/Homepage.vue";
 import HomepageStudent from "./views/HomepageStudent.vue";
 import HomepageFaculty from "./views/HomepageFaculty.vue";
 import HomepageAdmin from "./views/HomepageAdmin.vue";
+import HomepageAccompanist from "./views/HomepageAccompanist.vue";
 import AddAccompanist from "./views/AddAccompanist.vue";
 import AddComposers from "./views/AddComposer.vue";
 import AddCritique from "./views/AddCritique.vue";
@@ -85,6 +86,11 @@ const router = new Router({
       path: "/homeadmin",
       name: "homeadmin",
       component: HomepageAdmin,
+    },
+    {
+      path: "/homeaccomp",
+      name: "homeaccomp",
+      component: HomepageAccompanist,
     },
     {
       path: "/addaccompanist",
@@ -186,7 +192,7 @@ const router = new Router({
       component: Maintain
     },
     {
-      path: "/maintainavailability",
+      path: "/maintainavailability/:eventId",
       name: "maintainavailability",
       component: MaintainAvailability,
       props: true

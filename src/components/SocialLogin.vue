@@ -72,6 +72,9 @@ export default {
           else if(this.access[0] === 'Faculty'){
             this.$router.push({ name: "homefaculty" });
           }
+          else if(this.access[0] === 'Accompanist'){
+            this.$router.push({ name: "homeaccomp" });
+          }
           else if(this.access[0] === 'Incoming Student'){
             this.$router.push({ name: "home" });
           }

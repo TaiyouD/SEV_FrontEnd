@@ -590,7 +590,7 @@
                 <td>
                   <template item-value="passed">
                   <template v-if="item.hasPassed === null">
-                    <v-btn color="primary" small @click="getNullHasPassed(item)">Add</v-btn>
+                    <v-btn color="primary" small @click="getNullHasPassed(item)">+</v-btn>
                     <v-dialog v-model="passed_dialog" persistent max-width="500" :retain-focus="false">
                       <v-card>
                         <v-card-title>
@@ -1337,7 +1337,7 @@
 
                   <td>
                     <template item-value="faculty">
-                      <v-icon color="primary" class="mx-4" @click="getFaculty(item)">mdi-account-eye</v-icon>
+                      <v-icon color="primary" class="mx-3" @click="getFaculty(item)">mdi-account-eye</v-icon>
                       <v-dialog v-model="faculty_dialog" persistent max-width="700" :retain-focus="false">
                         <v-card>
                           <v-card-title>
@@ -1396,144 +1396,145 @@
                   </td>
              
                   <td>
-                    <template item-value="students"> 
-                    <v-icon color="primary" class="mx-4">mdi-account-eye</v-icon>
-                    <v-dialog v-model="student_dialog" persistent max-width="700" :retain-focus="false">    
-                      <v-card>
-                        <v-card-title>
-                        <v-toolbar id="navbar-maroon">
-                          <span class="text-h5">View Student</span>
-                        </v-toolbar>
-                      </v-card-title>
-                        <v-card-text>
-                          <v-container>
-        
-                          <div style="text-align: center;">
-                          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-        
-                            <!-- Name input field -->
-                            <v-row>
-                              <v-col>
-                                <v-text-field class=" mr-4"  width = "380" 
-                                  v-model="student.user.fName"
-                                  label="First Name"
-                                  disabled
-                                  append-icon="mdi-account"
-                                ></v-text-field>
-                              </v-col>
-                              <v-col>
-                                <v-text-field class=" mr-4"  width = "390" 
-                                  v-model="student.user.lName"
-                                  label="Last Name"
-                                  disabled
-                                  append-icon="mdi-account"
-                                ></v-text-field>
-                              </v-col>
-                            </v-row>
-                            </div></div>
-        
-                          <div style="text-align: center;">
-                          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-                            <!-- Email input field -->
-                            <v-row>
-                              <v-col>
-                                <v-text-field class=" mr-4"  width = "380" 
-                                  v-model="student.user.email"
-                                  label="Email"
-                                  disabled
-                                  append-icon="mdi-email"
-                                ></v-text-field>
-                              </v-col>
-        
-                            <!-- Student ID input field -->
-                              <v-col>
-                                <v-text-field class=" mr-4"  width = "390" 
-                                  v-model="student.studentId"
-                                  label="Student ID"
-                                  disabled
-                                  append-icon="mdi-badge-account-horizontal"
-                                ></v-text-field>
-                              </v-col>
-                            </v-row>
-        
-                            </div></div>
-        
-        
-                          <div style="text-align: center;">
-                          <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-        
-        
-                          <!-- Major input field -->
-                            <v-row>
-                            <v-col>
-                              <v-text-field class=" mr-4" width = "380"
-                                v-model="student.studentMajor"
-                                label="Major"
-                                disabled
-                                append-icon="mdi-school"
-                              ></v-text-field>
-                            </v-col>
-        
-        
-                            <!-- Classification input field -->
-                              <v-col>
-                                <v-text-field class=" mr-4" width = "390"
-                                  v-model="student.studentClassification"
-                                  label="Classification"
-                                  disabled
-                                  append-icon="mdi-bag-personal"
-                                ></v-text-field>
-                              </v-col>              
-                            </v-row>
-        
-                            </div></div>
-        
+                    <template item-value="students">
+                      <v-icon color="primary" class="mx-3"  @click="getStudent(item)">mdi-account-eye</v-icon>
+                      <v-dialog v-model="student_dialog" persistent max-width="700" :retain-focus="false">    
+                        <v-card>
+                          <v-card-title>
+                          <v-toolbar id="navbar-maroon">
+                            <span class="text-h5">View Student</span>
+                          </v-toolbar>
+                        </v-card-title>
+                          <v-card-text>
+                            <v-container>
+          
                             <div style="text-align: center;">
                             <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
-        
-                            <!-- Semester input field -->
-                            <v-row>
-                            <v-col>
-                              <v-text-field class=" mr-4" width = "260"
-                              v-model="student.studentSemester"
-                              label="Semester"
-                              disabled
-                              append-icon="mdi-book-open-page-variant"
-                              ></v-text-field>
-                            </v-col>                    
-                            
-                              <!-- Level input field -->
+          
+                              <!-- Name input field -->
+                              <v-row>
+                                <v-col>
+                                  <v-text-field class=" mr-4"  width = "380" 
+                                    v-model="student.user.fName"
+                                    label="First Name"
+                                    disabled
+                                    append-icon="mdi-account"
+                                  ></v-text-field>
+                                </v-col>
+                                <v-col>
+                                  <v-text-field class=" mr-4"  width = "390" 
+                                    v-model="student.user.lName"
+                                    label="Last Name"
+                                    disabled
+                                    append-icon="mdi-account"
+                                  ></v-text-field>
+                                </v-col>
+                              </v-row>
+                              </div></div>
+          
+                            <div style="text-align: center;">
+                            <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+                              <!-- Email input field -->
+                              <v-row>
+                                <v-col>
+                                  <v-text-field class=" mr-4"  width = "380" 
+                                    v-model="student.user.email"
+                                    label="Email"
+                                    disabled
+                                    append-icon="mdi-email"
+                                  ></v-text-field>
+                                </v-col>
+          
+                              <!-- Student ID input field -->
+                                <v-col>
+                                  <v-text-field class=" mr-4"  width = "390" 
+                                    v-model="student.studentId"
+                                    label="Student ID"
+                                    disabled
+                                    append-icon="mdi-badge-account-horizontal"
+                                  ></v-text-field>
+                                </v-col>
+                              </v-row>
+          
+                              </div></div>
+          
+          
+                            <div style="text-align: center;">
+                            <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+          
+          
+                            <!-- Major input field -->
+                              <v-row>
                               <v-col>
-                                <v-text-field class=" mr-4"  width = "250"
-                                v-model="student.level.levelNumber"
-                                label="Level"
-                                disabled
-                                append-icon="mdi-signal"
-                                ></v-text-field>
-                              </v-col>
-        
-                            <!-- Private hours input field -->
-                              <v-col>
-                                <v-text-field class="mr-4"  width = "250"
-                                  v-model="student.studentPrivateHours"
-                                  label="Private Lesson Hours"
+                                <v-text-field class=" mr-4" width = "380"
+                                  v-model="student.studentMajor"
+                                  label="Major"
                                   disabled
-                                  append-icon="mdi-account-music"
+                                  append-icon="mdi-school"
                                 ></v-text-field>
                               </v-col>
-                            </v-row>
-        
-                            </div></div>
-        
-                          </v-container>
-                        </v-card-text>
-                        <v-card-actions>
-                         <v-spacer></v-spacer>
-                          <v-btn color="primary" @click=" student_dialog = false">Back</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
-                    </template>
+          
+          
+                              <!-- Classification input field -->
+                                <v-col>
+                                  <v-text-field class=" mr-4" width = "390"
+                                    v-model="student.studentClassification"
+                                    label="Classification"
+                                    disabled
+                                    append-icon="mdi-bag-personal"
+                                  ></v-text-field>
+                                </v-col>              
+                              </v-row>
+          
+                              </div></div>
+          
+                              <div style="text-align: center;">
+                              <div class="d-flex flex-row bg-surface-variant" max-width = "780" >
+          
+                              <!-- Semester input field -->
+                              <v-row>
+                              <v-col>
+                                <v-text-field class=" mr-4" width = "260"
+                                v-model="student.studentSemester"
+                                label="Semester"
+                                disabled
+                                append-icon="mdi-book-open-page-variant"
+                                ></v-text-field>
+                              </v-col>                    
+                              
+                                <!-- Level input field -->
+                                <v-col>
+                                  <v-text-field class=" mr-4"  width = "250"
+                                  v-model="student.level.levelNumber"
+                                  label="Level"
+                                  disabled
+                                  append-icon="mdi-signal"
+                                  ></v-text-field>
+                                </v-col>
+          
+                              <!-- Private hours input field -->
+                                <v-col>
+                                  <v-text-field class="mr-4"  width = "250"
+                                    v-model="student.studentPrivateHours"
+                                    label="Private Lesson Hours"
+                                    disabled
+                                    append-icon="mdi-account-music"
+                                  ></v-text-field>
+                                </v-col>
+                              </v-row>
+          
+                              </div></div>
+          
+                            </v-container>
+                          </v-card-text>
+                          <v-card-actions>
+                           <v-spacer></v-spacer>
+                            <v-btn color="primary" @click=" student_dialog = false">Back</v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+      
+                      </template>
                   </td>
                 </tr>
                 </template>
@@ -1666,9 +1667,12 @@ export default {
 
             const eventDate = new Date(response.data.date);
             const now = new Date();
-            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000;
-            const today = new Date(now.getTime() - timezoneOffset);
-            const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+            const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+            const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+            // const now = new Date();
+            // const timezoneOffset = now.getTimezoneOffset() * 60 * 1000;
+            // const today = new Date(now.getTime() - timezoneOffset);
+            // const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
 
             // check if it is a past event
             if (eventDate < today) {
@@ -1676,12 +1680,12 @@ export default {
             }
 
             // check if it is a current event
-            if (eventDate >= today && eventDate <= midnight) {
+            if (eventDate >= today && eventDate <= (today.getTime() + 24 * 60 * 60 * 1000)) {
               this.isCurrentEvent = true;
             }
 
             // check if it is an upcoming event
-            if (eventDate > midnight) {
+            if (eventDate >= tomorrow) {
               this.isUpcomingEvent = true;
             }
           })
@@ -1709,7 +1713,7 @@ export default {
       }
       if (this.role.roleType == "Accompanist"){
         for (let i = 0; i < this.eventsessionsevent.length; i++) {
-          if (this.eventsessionsevent[i].studentId == this.role.id){
+          if (this.eventsessionsevent[i].accompanistId == this.role.id){
             this.eventsessions.push(this.eventsessionsevent[i]);
           }
         }
@@ -1809,6 +1813,7 @@ export default {
     maintainCritique(item){
       if(this.isUpcomingEvent|| this.isCurrentEvent){
         console.log('ITEM', item)
+        console.log('this.isCurrentEvent', this.isCurrentEvent)
         this.$router.push({ name: "addcritique", params: { eventSessionId: item.id } });
       }
       else{
