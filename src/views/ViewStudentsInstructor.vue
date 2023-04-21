@@ -191,9 +191,9 @@
             </v-dialog>
 
 
-              <v-icon small class="mx-4" @click="deleteStudent(item)">
+              <!-- <v-icon small class="mx-4" @click="deleteStudent(item)">
                 mdi-trash-can
-              </v-icon>
+              </v-icon> -->
             </div>
           </template>
           <template v-slot:[`item.repertoire`]="{ item }">
