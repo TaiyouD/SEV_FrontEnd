@@ -82,32 +82,11 @@
    
         <!-- ===============Timeslot ==================== -->
       <v-flex>
-      <v-select class ="mr-4" style= "max-width : 306px"
-        :items=availableAccompanists
-        @change = "selectedAccompanistAvailability"
-        v-model = "selectedAccompanist"
-        :item-text = "item => `${item.fName} ${item.lName}`"
-        label="Select Accompanist"
-        return-object
-        single-line
-        filled
-    >
-  </v-select>
-
-    <!-- <v-select class ="mr-4" style= "max-width : 308px"
-        :items="availableTimeslots"
-        v-model="selectedStartTime"
-        label="Select Start Time"
-        return-object
-        single-line
-        filled
-        @change ="updateText"
-    ></v-select> -->
-
 
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
+        @change = "selectedInstructorAvailability"
         item-title="Instrument"
         item-value = "instrument"
         item-text="instrument.type"
@@ -116,6 +95,28 @@
         single-line
         filled
     ></v-select>
+
+    <v-text-field class ="mr-4" style= "max-width : 306px"
+        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        label="Instructor's Name"
+        return-object
+        single-line
+        filled
+        :disabled="true"
+    >
+    </v-text-field>
+
+    <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
+        v-model = "selectedAccompanist"
+        @change = "selectedAccompanistAvailability"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    >
+  </v-select>
 
     <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
@@ -317,9 +318,34 @@
    
         <!-- ===============Timeslot ==================== -->
       <v-flex>
-      <v-select class ="mr-4" style= "max-width : 306px"
+
+    <v-select  class=" mr-4"  style= "max-width : 308px"
+        :items = "instrumentRole"
+        v-model = "selectedInstrument"
+        @change = "selectedInstructorAvailability"
+        item-title="Instrument"
+        item-value = "instrument"
+        item-text="instrument.type"
+        label="Select Voice or Instrument"
+        return-object
+        single-line
+        filled
+    ></v-select>
+
+    <v-text-field class ="mr-4" style= "max-width : 306px"
+        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        label="Instructor's Name"
+        return-object
+        single-line
+        filled
+        :disabled="true"
+    >
+    </v-text-field>
+
+    <v-select class ="mr-4" style= "max-width : 306px"
         :items=availableAccompanists
         v-model = "selectedAccompanist"
+        @change = "selectedAccompanistAvailability"
         :item-text = "item => `${item.fName} ${item.lName}`"
         label="Select Accompanist"
         return-object
@@ -337,20 +363,7 @@
         filled
         @change ="updateText"
     ></v-select> -->
-
-
-    <v-select  class=" mr-4"  style= "max-width : 308px"
-        :items = "instrumentRole"
-        v-model = "selectedInstrument"
-        item-title="Instrument"
-        item-value = "instrument"
-        item-text="instrument.type"
-        label="Select Voice or Instrument"
-        return-object
-        single-line
-        filled
-    ></v-select>
-
+    
     <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
         v-model="selectedSongs"
@@ -432,32 +445,12 @@
 
    
         <!-- ===============Timeslot ==================== -->
-      <v-flex>
-      <v-select class ="mr-4" style= "max-width : 306px"
-        :items=availableAccompanists
-        v-model = "selectedAccompanist"
-        :item-text = "item => `${item.fName} ${item.lName}`"
-        label="Select Accompanist"
-        return-object
-        single-line
-        filled
-    >
-  </v-select>
-
-    <!-- <v-select class ="mr-4" style= "max-width : 308px"
-        :items="availableTimeslots"
-        v-model="selectedStartTime"
-        label="Select Start Time"
-        return-object
-        single-line
-        filled
-        @change ="updateText"
-    ></v-select> -->
-
+ <v-flex>
 
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
+        @change = "selectedInstructorAvailability"
         item-title="Instrument"
         item-value = "instrument"
         item-text="instrument.type"
@@ -466,6 +459,28 @@
         single-line
         filled
     ></v-select>
+
+    <v-text-field class ="mr-4" style= "max-width : 306px"
+        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        label="Instructor's Name"
+        return-object
+        single-line
+        filled
+        :disabled="true"
+    >
+    </v-text-field>
+
+    <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
+        v-model = "selectedAccompanist"
+        @change = "selectedAccompanistAvailability"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    >
+  </v-select>
 
     <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
@@ -554,32 +569,12 @@
 
    
         <!-- ===============Timeslot ==================== -->
-      <v-flex>
-      <v-select class ="mr-4" style= "max-width : 306px"
-        :items=availableAccompanists
-        v-model = "selectedAccompanist"
-        :item-text = "item => `${item.fName} ${item.lName}`"
-        label="Select Accompanist"
-        return-object
-        single-line
-        filled
-    >
-  </v-select>
-
-    <!-- <v-select class ="mr-4" style= "max-width : 308px"
-        :items="availableTimeslots"
-        v-model="selectedStartTime"
-        label="Select Start Time"
-        return-object
-        single-line
-        filled
-        @change ="updateText"
-    ></v-select> -->
-
+  <v-flex>
 
     <v-select  class=" mr-4"  style= "max-width : 308px"
         :items = "instrumentRole"
         v-model = "selectedInstrument"
+        @change = "selectedInstructorAvailability"
         item-title="Instrument"
         item-value = "instrument"
         item-text="instrument.type"
@@ -588,6 +583,28 @@
         single-line
         filled
     ></v-select>
+
+    <v-text-field class ="mr-4" style= "max-width : 306px"
+        :value="selectedInstructors ? selectedInstructors.fName + ' ' + selectedInstructors.lName : ''"
+        label="Instructor's Name"
+        return-object
+        single-line
+        filled
+        :disabled="true"
+    >
+    </v-text-field>
+
+    <v-select class ="mr-4" style= "max-width : 306px"
+        :items=availableAccompanists
+        v-model = "selectedAccompanist"
+        @change = "selectedAccompanistAvailability"
+        :item-text = "item => `${item.fName} ${item.lName}`"
+        label="Select Accompanist"
+        return-object
+        single-line
+        filled
+    >
+  </v-select>
 
     <v-select  class=" mr-4" style= "max-width : 308px" 
         :items = repertoireSongs
@@ -739,7 +756,7 @@
       },
 
     onEventClick( {event} ) {
-    if (event.disabled == false){
+    if (event.disabled == false && event.instructorAvailable == true && event.accompAvailable == true){
     const index = this.clickedEvents.findIndex(e => e.id === event.id);
     if (index === -1) {
       // Event not found in clickedEvents, so add it and change its color to dark blue
@@ -832,7 +849,6 @@
       updateText(){
         const index = this.start.indexOf(this.selectedStartTime)
         if(this.role.studentMajor === "Music" && this.role.studentPrivateHours === 2){
-          
           if(index !== -1 && index + 1 <= this.start.length) {
             const nextTime = this.start[index];
             const date = new Date (`1/1/2000 ${nextTime}`);
@@ -1077,8 +1093,15 @@
       this.eventsSession.forEach(event => {
         const startSession = new Date (event.startTime)
         const endSession = new Date(event.endTime)
-        for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
-          takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+
+        if (this.selectedEventType === 'Jury'){
+          for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 15)){
+            takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))}
+        }
+        else{
+          for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
+            takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+        }
         }
       })
       const uniqueTimes = [...new Set(takenSlots)]
@@ -1105,7 +1128,7 @@
         startTime.setMinutes(startTime.getMinutes() + 5);
       }
 
-      console.log("TESTING THE BUG WITH AM AND PM", timeslots)
+      //console.log("TESTING THE BUG WITH AM AND PM", timeslots)
       
         // For the calendar -- calendar requires the start, end, color, and name of events to populate 
         this.events = [];
@@ -1164,11 +1187,12 @@ for (let i = 0; i < uniqueTimes.length - 1; i++) {
       // Return the timeslots filtered by whats already taken up and whats not
       return timeslots.filter((slot) => slot.available === false).map((slot) => slot.time);
   },
+
+
   selectedInstructorAvailability(){
     
     console.log("This is the id for selectedInstrument.",this.selectedInstrument.privateInstructorId)
     for (let i = 0; i < this.availableInstructor.length; i++) {
-      console.log(this.availableInstructor[i].id)
       if (this.availableInstructor[i].id == this.selectedInstrument.privateInstructorId) {
         console.log('Found matching instructor:', this.availableInstructor[i]);
         this.selectedInstructors = this.availableInstructor[i]
@@ -1183,7 +1207,6 @@ for (let i = 0; i < uniqueTimes.length - 1; i++) {
     const takenSlots = [];  
     // For each event sessions within the event, make a 5 minute timeslot and push it into takenSlots from startTime to endTime
       this.availabilitiesForEvent.forEach(a => {
-        console.log(a, "testing this out")
         if(a.facultyId === this.selectedInstrument.privateInstructorId){
           available.push(a)
         }
@@ -1195,7 +1218,7 @@ for (let i = 0; i < uniqueTimes.length - 1; i++) {
         for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
           //takenSlots.push(new Date(time))
           takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
-          console.log("Instructor", time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+          //console.log("Instructor", time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
         }
       }
 
@@ -1214,7 +1237,6 @@ for (let i = 0; i < uniqueTimes.length - 1; i++) {
     const takenSlots = [];  
     // For each event sessions within the event, make a 5 minute timeslot and push it into takenSlots from startTime to endTime
       this.availabilitiesForEvent.forEach(a => {
-        console.log(a, "testing this out")
         if(a.accompanistId === this.selectedAccompanist.id){
           available.push(a)
         }
@@ -1223,11 +1245,10 @@ for (let i = 0; i < uniqueTimes.length - 1; i++) {
       for (let i = 0; i < available.length; i++){
         const startSession = new Date("01/01/2022 " + available[i].startTime)
         const endSession = new Date("01/01/2022 " + available[i].endTime)
-        console.log("If this changes to am man...", startSession)
         for (let time = startSession; time <= endSession; time.setMinutes(time.getMinutes() + 5)){
           //takenSlots.push(new Date(time))
           takenSlots.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
-          console.log(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
+          //console.log(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}))
         }
       }
 
