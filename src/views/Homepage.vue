@@ -116,11 +116,11 @@
               >
                 <template v-slot:[`item.actions`]="{ item }">
                   <div>
-                    <v-icon small class="mx-4" @click="viewNotification(item)">
+                    <!-- <v-icon small class="mx-4" @click="viewNotification(item)">
                       mdi-format-list-bulleted-type
-                    </v-icon>
+                    </v-icon> -->
                     <v-icon small class="mx-4" @click="deleteNotification(item)">
-                      mdi-trash-can
+                      mdi-close
                     </v-icon>
                   </div>
                 </template>
@@ -251,6 +251,7 @@
   
 <script>
   import RoleServices from "../services/roleServices";
+  import NotificationServices from "../services/notificationServices";
   import Utils from "@/config/utils.js";
   export default {
     name: "home-page",
@@ -277,7 +278,8 @@
     },
     async created() {
     this.resetMenu();
-    this.retrieveRole();
+    await this.retrieveRole();
+    await this.retrieveNotifications(); 
     },
     mounted() {
       this.user = Utils.getStore("user");
@@ -305,46 +307,37 @@
       // editTutorial(tutorial) {
       //   this.$router.push({ name: "edit", params: { id: tutorial.id } });
       // },
-      // viewNotification(notification) {
-      //   this.$router.push({ name: "view", params: { id: notification.id } });
+      // viewTutorial(tutorial) {
+      //   this.$router.push({ name: "view", params: { id: tutorial.id } });
       // },
-      // deleteTutorial(tutorial) {
-      //   TutorialServices.delete(tutorial.id)
-      //     .then(() => {
-      //       this.retrieveTutorials();
-      //     })
-      //     .catch((e) => {
-      //       this.message = e.response.data.message;
-      //     });
-      // },
-      // retrieveNotifications() {
-      //   NotificationServices.getAllForUser(this.user.userId)
-      //     .then((response) => {
-      //       this.notifications = response.data;
-      //     })
-      //     .catch((e) => {
-      //       this.message = e.response.data.message;
-      //     });
-      // },
-      // refreshList() {
-      //   this.retrieveNotifications();
-      //   this.currentNotification = null;
-      //   this.currentIndex = -1;
-      // },
-      // setActiveNotification(notification, index) {
-      //   this.currentNotification = notification;
-      //   this.currentIndex = notification ? index : -1;
-      // },
-      // removeAllTutorials() {
-      //   TutorialServices.deleteAll()
-      //     .then((response) => {
-      //       console.log(response.data);
-      //       this.refreshList();
-      //     })
-      //     .catch((e) => {
-      //       this.message = e.response.data.message;
-      //     });
-      // },
+      deleteNotification(notification) {
+        NotificationServices.delete(notification.id)
+          .then(() => {
+            this.retrieveNotifications();
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      async retrieveNotifications() {
+        await NotificationServices.getNotificationsForRole(this.role.id)
+          .then((response) => {
+            this.notifications = response.data;
+            console.log(this.notifications)
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
+      refreshList() {
+        this.retrieveNotifications();
+        this.currentNotification = null;
+        this.currentIndex = -1;
+      },
+      setActiveNotification(notification, index) {
+        this.currentNotification = notification;
+        this.currentIndex = notification ? index : -1;
+      },
     },
   };
   </script>

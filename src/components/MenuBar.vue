@@ -158,7 +158,7 @@
   
     <v-list>
       <template #activator>
-        <v-list-item-title v-text="selectedRole"></v-list-item-title>
+        <v-list-item-title>{{ selectedRole }}</v-list-item-title>
       </template>
   
       <v-list-item
@@ -169,7 +169,7 @@
           saveRole();"
       >
         <v-list-item-content>
-          <v-list-item-title v-text="role"></v-list-item-title>
+          <v-list-item-title >{{ role }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
