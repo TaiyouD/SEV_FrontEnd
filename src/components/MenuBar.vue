@@ -29,7 +29,16 @@
           contain
         ></v-img>
       </router-link>
-      <router-link v-if="user != null && (role.roleType == 'Faculty' || (role.roleType == 'Accompanist'))" :to="{ name: 'homefaculty' }">
+      <router-link v-if="user != null && (role.roleType == 'Faculty')" :to="{ name: 'homefaculty' }">
+        <v-img 
+          class="mx-2"
+          src="../assets/oc-logo.png"
+          max-height="50"
+          max-width="50"
+          contain
+        ></v-img>
+      </router-link>
+      <router-link v-if="user != null && (role.roleType == 'Accompanist')" :to="{ name: 'homeaccomp' }">
         <v-img 
           class="mx-2"
           src="../assets/oc-logo.png"
@@ -222,7 +231,7 @@
                   </v-list-item-content>
                 </v-list-item>
                 </div>
-                <div v-else-if="role.roleType == 'Faculty' || 'Admin' || (role.roleType == 'Accompanist' && role.facultyType != null)">
+                <div v-else-if="role.roleType == 'Faculty' || 'Admin'">
                 <v-list-item link @click="$router.push({ path:'/profilefaculty' })">
                   <v-list-item-icon>
                     <v-icon>mdi-account-box</v-icon>
@@ -292,7 +301,7 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-list dense nav v-if="(role.roleType == 'Student') || (role.roleType == 'Accompanist' && role.facultyType == null)">
+      <v-list dense nav v-if="(role.roleType == 'Student')">
         <v-list-item link @click="$router.push({ path: '/repertoire' })">
           <v-list-item-icon>
             <v-icon>mdi-music-box-outline</v-icon>
@@ -450,6 +459,9 @@ export default {
       else if(this.selectedRole === 'Faculty'){
           this.$router.push({ name: "homefaculty" });
         }
+      else if(this.selectedRole === 'Accompanist'){
+          this.$router.push({ name: "homeaccomp" });
+       }
       else if(this.selectedRole === 'Incoming Student'){
           this.$router.push({ name: "home" });
         }

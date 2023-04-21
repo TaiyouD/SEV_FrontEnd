@@ -677,9 +677,10 @@ export default {
       this.readyEvent.isReady = true;
       console.log('event', this.readyEvent)
       EventServices.update(this.readyEvent.id, this.readyEvent)
-      this.showReadyDialog = false;
-      window.location.reload(); 
+      this.showReadyDialog = false; 
+      //this.retrieveEvents();
       this.createNotification(this.readyEvent);
+      window.location.reload();
     },
     createNotification(eventN){
         for (let i = 0; i < this.roles.length; i++){
@@ -700,10 +701,9 @@ export default {
             console.log("Notification added", response.data);
         })
           .catch((e) => {
-            this.message = e.response.data.message;
+            console.log(e.response.data.message);
         });
         }
-        this.$router.go(-1);
       },
       async retrieveAllRoles() {
       await RoleServices.getAll()

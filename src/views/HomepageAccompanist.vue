@@ -1,6 +1,6 @@
 <template>
   
-  <div v-if="this.role.roleType == 'Faculty'">
+  <div v-if="this.role.roleType == 'Accompanist'">
       <v-parallax src="../assets/music-notes-bg1.jpg" height="100" />
       <v-container>
         
@@ -121,26 +121,10 @@
                   </template>
                   <v-carousel-item>
                     <h3>
-                      Add Private Hours for Student
-                    </h3>
-                    <p>
-                      If you are a OC instructor you should follow this proccess to add private hours to your students:
-                      <br>
-                      <br>1. Click on the View Students Button on the Menu Bar.
-                      <br>2. From the View Students page search the list of students to find the desired student.
-                      <br>3. Once you have found the desired student on the actions column of the students click on the pencil.
-                      <br>4. Then you can edit the student's level and change the private hours.
-                      <br>5. After all information has been filled out click Save.
-                      <br>6. Then you can view the changed hours on the View Students page.
-                      <br><br> If you are missing a student click on the add student button on the bottom left of the View Student page.
-                    </p>
-                  </v-carousel-item>
-                  <v-carousel-item>
-                    <h3>
                       Add Availability for an Event
                     </h3>
                     <p>
-                      An OC faculty you should follow this proccess to add availability for a Event:
+                      An OC accompanist you should follow this proccess to add availability for a Event:
                       <br>
                       <br>1. Click on the Events Button on the Menu Bar.
                       <br>2. From the Events page you can view the Upcoming Events with the help of the dropdown on the right side of the page.
@@ -148,23 +132,6 @@
                       <br>4. Then add the time(s) you are availability to attend the event.
                       <br>5. Click Save after all information has been filled out.
                       <br><br> If you can't find the event you are looking for use the search bar to find it.
-                    </p>
-                  </v-carousel-item>
-                  <v-carousel-item>
-                    <h3>
-                      Add Critique for Student's Performance
-                    </h3>
-                    <p>
-                      An OC Faculty member you should follow this proccess to add a critique for a student's performance:
-                      <br>
-                      <br>1. Click on the Events Button on the Menu Bar.
-                      <br>2. From the Events page you can view the Current Events with the help of the dropdown on the right side of the page.
-                      <br>3. When you find the Event you are looking click the Event Session icon for the event you wish to view.
-                      <br>3. After that you will be taken to the eventsession page .
-                      <br>4. From that page find the performance you are looking for than click on the icon Critique column.
-                      <br>5. Than you will be taken to the page to add your critique of the performance.
-                      <br>6. Fill out the information you find neccessary for the critique than click the save button on the bottom of the page.
-                      <br><br> If you can't find the event or event session you are looking for use the search bar to find it.
                     </p>
                   </v-carousel-item>
                 </v-carousel>
@@ -245,7 +212,7 @@
     import roleServices from "@/services/roleServices";
     import Utils from "@/config/utils.js";
     export default {
-      name: "home-page-faculty",
+      name: "home-page-accompanist",
       data() {
         return {
           notificationsearch: "",
@@ -319,7 +286,7 @@
       EventSessionServices.getAll()
         .then((response) => {
           for(let i = 0; i < response.data.length; i++){
-            if (response.data[i].privateInstructorId == this.role.id){
+            if (response.data[i].accompanistId == this.role.id){
               this.found = false;
               for(let j = 0; j < this.events.length; j++){
                 if(response.data[i].eventId == this.events[j].eventId){
