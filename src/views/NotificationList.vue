@@ -30,14 +30,11 @@
           >
             <template v-slot:[`item.actions`]="{ item }">
               <div>
-                <v-icon small class="mx-4" @click="editTutorial(item)">
-                  mdi-pencil
-                </v-icon>
-                <v-icon small class="mx-4" @click="viewTutorial(item)">
+                <!-- <v-icon small class="mx-4" @click="viewTutorial(item)">
                   mdi-format-list-bulleted-type
-                </v-icon>
-                <v-icon small class="mx-4" @click="deleteTutorial(item)">
-                  mdi-trash-can
+                </v-icon> -->
+                <v-icon  class="mx-4" @click="deleteNotification(item)">
+                  mdi-close
                 </v-icon>
               </div>
             </template>
@@ -96,15 +93,15 @@
       // viewTutorial(tutorial) {
       //   this.$router.push({ name: "view", params: { id: tutorial.id } });
       // },
-      // deleteTutorial(tutorial) {
-      //   TutorialServices.delete(tutorial.id)
-      //     .then(() => {
-      //       this.retrieveTutorials();
-      //     })
-      //     .catch((e) => {
-      //       this.message = e.response.data.message;
-      //     });
-      // },
+      deleteNotification(notification) {
+        NotificationServices.delete(notification.id)
+          .then(() => {
+            this.retrieveNotifications();
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
       async retrieveNotifications() {
         await NotificationServices.getNotificationsForRole(this.role.id)
           .then((response) => {

@@ -136,6 +136,7 @@
 
   import EventServices from "../services/eventServices";
   import RoleServices from "../services/roleServices";
+  import NotificationServices from "../services/notificationServices";
   import Utils from "@/config/utils.js";
 
   export default {
@@ -152,8 +153,15 @@
           duration: '',
           isReady: false
         },
+        notification: {
+          description: 'Please add availability for this new event',
+          type: 'Faculty',
+        },
+        eventTemp: {},
         user:{},
         role:{},
+        rolestemp:[],
+        roles:[],
         message: "Enter Data and Click Save.",
       };
     },
@@ -170,6 +178,8 @@
     async created(){
       this.user = Utils.getStore("user");
       await this.retrieveRole();
+      await this.retrieveAllRoles();
+      console.log(this.roles.length);
     },
     methods: {
       async retrieveRole() {
@@ -193,13 +203,54 @@
         };
         EventServices.create(data)
           .then((response) => {
-            this.event.id = response.data.id;
-            console.log("add " + response.data);
-            this.$router.go(-1);
+            //this.event.id = response.data.id;
+            console.log("Event added", response.data);
+            this.createNotification(response.data);
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
+      },
+      createNotification(eventN){
+        for (let i = 0; i < this.roles.length; i++){
+        var data = {
+          title: eventN.eventTitle,
+          description: this.notification.description,
+          type: this.notification.type,
+          eventId: eventN.id,
+          roleId: this.roles[i].id
+    
+        };
+        console.log("roles id",this.roles[i].id);
+
+        console.log(data);
+        NotificationServices.create(data)
+        .then((response) => {
+            //this.event.id = response.data.id;
+            console.log("Notification added", response.data);
+        })
+          .catch((e) => {
+            this.message = e.response.data.message;
+        });
+        }
+        this.$router.go(-1);
+      },
+
+      async retrieveAllRoles() {
+      await RoleServices.getAll()
+        .then((response) => {
+          this.rolestemp = response.data;
+          for (let i = 0; i < this.rolestemp.length; i++){
+            if(this.rolestemp[i].roleType == this.notification.type){
+
+              this.roles.push(this.rolestemp[i]);
+              //console.log("roles",this.roles[i]);
+            }
+          }
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
       },
       cancel() {
         this.$router.go(-1);

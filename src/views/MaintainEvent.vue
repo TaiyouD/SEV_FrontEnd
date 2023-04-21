@@ -457,6 +457,7 @@ import EventServices from "../services/eventServices.js";
 import Utils from "@/config/utils.js";
 import RoleServices from "../services/roleServices.js";
 import AvailabilityServices from "../services/availabilityServices.js";
+import NotificationServices from "../services/notificationServices";
 
 export default {
   name: "maintainevent",
@@ -518,6 +519,12 @@ export default {
       upcomingList:[],
       currentList:[],
       pastList:[],
+      notificationStudent: {
+          description: 'A new event has been availability for sign-up',
+          type: 'Student',
+      },
+      rolestemp:[],
+      roles:[],
       message: "Add, Edit or Delete Events",
       headersAdmin: [
         { text: "Event Title", value: "eventTitle", sortable: false },
@@ -555,9 +562,10 @@ export default {
   mounted() {
     this.retrieveEvents();
   },
-  created(){
+   created(){
     this.user = Utils.getStore("user");
     this.retrieveRole();
+    this.retrieveAllRoles();
   },
   methods: {
       retrieveEvents() {
@@ -739,7 +747,47 @@ export default {
       EventServices.update(this.readyEvent.id, this.readyEvent)
       this.showReadyDialog = false;
       window.location.reload(); 
+      this.createNotification(this.readyEvent);
     },
+    createNotification(eventN){
+        for (let i = 0; i < this.roles.length; i++){
+        var data = {
+          title: eventN.eventTitle,
+          description: this.notificationStudent.description,
+          type: this.notificationStudent.type,
+          eventId: eventN.id,
+          roleId: this.roles[i].id
+    
+        };
+        console.log("roles id",this.roles[i].id);
+
+        console.log(data);
+        NotificationServices.create(data)
+        .then((response) => {
+            //this.event.id = response.data.id;
+            console.log("Notification added", response.data);
+        })
+          .catch((e) => {
+            this.message = e.response.data.message;
+        });
+        }
+        this.$router.go(-1);
+      },
+      async retrieveAllRoles() {
+      await RoleServices.getAll()
+        .then((response) => {
+          this.rolestemp = response.data;
+          for (let i = 0; i < this.rolestemp.length; i++){
+            if(this.rolestemp[i].roleType == this.notificationStudent.type){
+              this.roles.push(this.rolestemp[i]);
+              //console.log("roles",this.roles[i]);
+            }
+          }
+        })
+        .catch((e) => {
+          this.message = e.response.data.message;
+        });
+      },
     //admin direct to maintain availability page 
     goToMaintainAvailability(event){
       this.$router.push({ name: "maintainavailability", params: { eventId: event.id } });
