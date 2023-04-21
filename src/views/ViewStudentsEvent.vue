@@ -1,6 +1,6 @@
 
 <template>
-    <div>
+  <div v-if="this.role.roleType != null">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100"/>
       <v-container>
         <v-toolbar>
@@ -56,7 +56,7 @@
   import EventSessionServices from "../services/eventSessionServices.js";
   import EventServices from "../services/eventServices.js";
   import RoleServices from "../services/roleServices.js";
-  //import LevelServices from "../services/levelServices.js";
+  import Utils from "@/config/utils.js";
   import UserServices from "../services/userServices.js";
   
   export default {
@@ -65,6 +65,8 @@
     data() {
       return {
         search: "",
+        user:{},
+        role:{},
         student: [],
         event: [],
         message: "Students Available For Event",
@@ -83,7 +85,26 @@
       this.retrieveThisEvent();
       this.retrieveEventSession();
     },
+    async created() {
+      this.user = Utils.getStore("user");
+      await this.retrieveRole();
+    },
     methods: {
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
+            console.log('role here');
+            console.log(this.role);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
       retrieveThisEvent() {
         EventServices.get(this.eventId)
         .then((response) => {
