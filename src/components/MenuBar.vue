@@ -449,7 +449,7 @@ export default {
       }
     },
     saveRole() {
-      this.user.selectedRole = this.selectedRole; //how to save the selected role? and don't loose it after refreshing
+      this.user.selectedRole = this.selectedRole; 
       Utils.setStore("user", this.user);
       console.log("user here", this.user);
       //redirect to the right menu according to role

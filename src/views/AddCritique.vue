@@ -44,32 +44,22 @@
         </div>
         <div class="line"></div>
         <v-form ref="form" v-model="valid" lazy validation>
-          <v-col cols="12">
-            <h5 class="text-center">Deportment (Poise, Entrance/Exit Bow)</h5>
+          <v-col cols="14" class="ml-16">
+            <h5>Deportment (Poise, Entrance/Exit Bow)</h5>
           </v-col>
         <v-row align="center" class="ml-2 mr-2">
-          <v-col cols="12" class="ml-16">
+          <v-col cols="4" class="ml-12">
             <v-radio-group v-model="critique.deportmentGrade" name="deportmentGrade" row>
-              <v-col cols="3">
                 <v-radio label="Poor" value="Poor" color="red"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Fair" value="Fair" color="orange"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Good" value="Good" color="yellow"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Excellent" value="Excellent" color="green"></v-radio>
-              </v-col>
             </v-radio-group>
           </v-col>
-          <v-col cols="12">
+          <v-col class="mt-4" cols="7">
             <v-btn block outlined icon @click="showDeportmentTextArea = !showDeportmentTextArea" style="border-radius: 0; height: 22px; margin-top: -22px">
               <v-icon>{{ showDeportmentTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
-          </v-col>
-          <v-col cols="12">
             <v-textarea
               v-if="showDeportmentTextArea"
               v-model="critique.deportment"
@@ -83,32 +73,22 @@
         </v-row>
         <div class="line"></div>
         <br>
-        <v-col cols="12">
-            <h5 class="text-center">Tone (Beauty, Control/Capacity, Vibrato, Warmth)</h5>
+        <v-col cols="14" class="ml-16">
+            <h5>Tone (Beauty, Control/Capacity, Vibrato, Warmth)</h5>
         </v-col>
         <v-row align="center" class="ml-2 mr-2">
-          <v-col cols="12" class="ml-16">
+          <v-col cols="4" class="ml-12">
             <v-radio-group v-model="critique.toneGrade" name="toneGrade" row>
-              <v-col cols="3">
                 <v-radio label="Poor" value="Poor" color="red"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Fair" value="Fair" color="orange"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Good" value="Good" color="yellow"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Excellent" value="Excellent" color="green"></v-radio>
-              </v-col>
             </v-radio-group>
           </v-col>
-          <v-col cols="12">
+          <v-col class="mt-4" cols="7">
             <v-btn block outlined icon @click="showToneTextArea = !showToneTextArea" style="border-radius: 0; height: 22px; margin-top: -22px">
               <v-icon>{{ showToneTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
-          </v-col>
-          <v-col cols="12">
             <v-textarea
               v-if="showToneTextArea"
               v-model="critique.tone"
@@ -122,32 +102,23 @@
         </v-row>
         <div class="line"></div>
         <br>
-        <v-col cols="12">
-            <h5 class="text-center">Accuracy/Intonation (Correct Notes With Correct Rhythm, Tuning With Keyboard And/Or Ensemble)</h5>
+        <v-col cols="14" class="ml-16">
+            <h5>Accuracy/Intonation (Correct Notes With Correct Rhythm, Tuning With Keyboard And/Or Ensemble)</h5>
         </v-col>
         <v-row align="center" class="ml-2 mr-2">
-          <v-col cols="12" class="ml-16">
+          <v-col cols="4" class="ml-12">
             <v-radio-group v-model="critique.accuracyGrade" name="accuracyGrade" row>
-              <v-col cols="3">
                 <v-radio label="Poor" value="Poor" color="red"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Fair" value="Fair" color="orange"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Good" value="Good" color="yellow"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Excellent" value="Excellent" color="green"></v-radio>
-              </v-col>
             </v-radio-group>
           </v-col>
-          <v-col cols="12">
+          <v-col class="mt-4" cols="7">
             <v-btn block outlined icon @click="showAccuracyTextArea = !showAccuracyTextArea" style="border-radius: 0; height: 22px; margin-top: -22px">
               <v-icon>{{ showAccuracyTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
           </v-col>
-          <v-col cols="12">
             <v-textarea
               v-if="showAccuracyTextArea"
               v-model="critique.accuracy"
@@ -157,36 +128,26 @@
               cols="5"
               required
             ></v-textarea>
-          </v-col>
         </v-row>
         <div class="line"></div>
         <br>
-        <v-col cols="12">
-            <h5 class="text-center">Technique (Attacks, Releases, Flexibility, Range, Resonance, Placement, Support, Agility)</h5>
+        <v-col cols="14" class="ml-16">
+            <h5>Technique (Attacks, Releases, Flexibility, Range, Resonance, Placement, Support, Agility)</h5>
         </v-col>
         <v-row align="center" class="ml-2 mr-2">
-          <v-col cols="12" class="ml-16">
+          <v-col cols="4" class="ml-12">
             <v-radio-group v-model="critique.techniqueGrade" name="techniqueGrade" row>
-              <v-col cols="3">
                 <v-radio label="Poor" value="Poor" color="red"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Fair" value="Fair" color="orange"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Good" value="Good" color="yellow"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Excellent" value="Excellent" color="green"></v-radio>
-              </v-col>
             </v-radio-group>
           </v-col>
-          <v-col cols="12">
+          <v-col class="mt-4" cols="7">
             <v-btn block outlined icon @click="showTechniqueTextArea = !showTechniqueTextArea" style="border-radius: 0; height: 22px; margin-top: -22px">
               <v-icon>{{ showTechniqueTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
           </v-col>
-          <v-col cols="12">
             <v-textarea
               v-if="showTechniqueTextArea"
               v-model="critique.technique"
@@ -196,36 +157,25 @@
               cols="5"
               required
             ></v-textarea>
-          </v-col>
         </v-row>
         <div class="line"></div>
         <br>
-        <v-col cols="12">
-            <h5 class="text-center">Interpretation, Musicianship (Phrasing, Tempo, Dynamics Communication, Rapport)</h5>
+        <v-col cols="14" class="ml-16">
+            <h5>Interpretation, Musicianship (Phrasing, Tempo, Dynamics Communication, Rapport)</h5>
         </v-col>
         <v-row align="center" class="ml-2 mr-2">
-          <v-col cols="12" class="ml-16">
+          <v-col cols="4" class="ml-12">
             <v-radio-group v-model="critique.interpretationGrade" name="interpretationGrade" row>
-              <v-col cols="3">
                 <v-radio label="Poor" value="Poor" color="red"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Fair" value="Fair" color="orange"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Good" value="Good" color="yellow"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Excellent" value="Excellent" color="green"></v-radio>
-              </v-col>
             </v-radio-group>
           </v-col>
-          <v-col cols="12">
+          <v-col class="mt-4" cols="7">
             <v-btn block outlined icon @click="showInterpretationTextArea = !showInterpretationTextArea" style="border-radius: 0; height: 22px; margin-top: -22px">
               <v-icon>{{ showInterpretationTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
-          </v-col>
-          <v-col cols="12">
             <v-textarea
               v-if="showInterpretationTextArea"
               v-model="critique.interpretation"
@@ -239,32 +189,22 @@
         </v-row>
         <div class="line"></div>
         <br>
-        <v-col cols="12">
-            <h5 class="text-center">Balance Blend (With Accompanist Or Within Ensemble)</h5>
+        <v-col cols="14" class="ml-16">
+            <h5>Balance Blend (With Accompanist Or Within Ensemble)</h5>
         </v-col>
         <v-row align="center" class="ml-2 mr-2">
-          <v-col cols="12" class="ml-16">
+          <v-col cols="4" class="ml-12">
             <v-radio-group v-model="critique.balanceGrade" name="balanceGrade" row>
-              <v-col cols="3">
                 <v-radio label="Poor" value="Poor" color="red"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Fair" value="Fair" color="orange"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Good" value="Good" color="yellow"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Excellent" value="Excellent" color="green"></v-radio>
-              </v-col>
             </v-radio-group>
           </v-col>
-          <v-col cols="12">
+          <v-col class="mt-4" cols="7">
             <v-btn block outlined icon @click="showBalanceTextArea = !showBalanceTextArea" style="border-radius: 0; height: 22px; margin-top: -22px">
               <v-icon>{{ showBalanceTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
-          </v-col>
-          <v-col cols="12">
             <v-textarea
               v-if="showBalanceTextArea"
               v-model="critique.balance"
@@ -278,32 +218,22 @@
         </v-row>
         <div class="line"></div>
         <br>
-        <v-col cols="12">
-            <h5 class="text-center">Diction (Vocal)/ Articulation (Instrumental) (Vowels; Consonants - Legato, Double/Triple Tongue)</h5>
+        <v-col cols="14" class="ml-16">
+            <h5>Diction (Vocal)/ Articulation (Instrumental) (Vowels; Consonants - Legato, Double/Triple Tongue)</h5>
         </v-col>
         <v-row align="center" class="ml-2 mr-2">
-          <v-col cols="12" class="ml-16">
+          <v-col cols="4" class="ml-12">
             <v-radio-group v-model="critique.dictionGrade" name="dictionGrade" row>
-              <v-col cols="3">
                 <v-radio label="Poor" value="Poor" color="red"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Fair" value="Fair" color="orange"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Good" value="Good" color="yellow"></v-radio>
-              </v-col>
-              <v-col cols="3">
                 <v-radio label="Excellent" value="Excellent" color="green"></v-radio>
-              </v-col>
             </v-radio-group>
           </v-col>
-          <v-col cols="12">
+          <v-col class="mt-4" cols="7">
             <v-btn block outlined icon @click="showDictionTextArea = !showDictionTextArea" style="border-radius: 0; height: 22px; margin-top: -22px">
               <v-icon>{{ showDictionTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
-          </v-col>
-          <v-col cols="12">
             <v-textarea
               v-if="showDictionTextArea"
               v-model="critique.diction"
@@ -317,10 +247,10 @@
         </v-row>
         <div class="line"></div>
         <br>
-        <v-col cols="12">
-            <h5 class="text-center">Performance And Suggestion (Overall Readiness To Perform)</h5>
+        <v-col cols="14" class="ml-16">
+            <h5>Performance And Suggestion (Overall Readiness To Perform)</h5>
         </v-col>
-        <v-textarea class="ml-5 mr-5"
+        <v-textarea class="ml-15 mr-12"
         v-model="critique.performSuggest"
             id="performSuggest"
             label="Comments"
