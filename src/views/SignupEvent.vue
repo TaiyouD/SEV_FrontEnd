@@ -1266,7 +1266,7 @@ for (let i = 0; i < uniqueTimes.length; i++) {
         this.selectedAccompanist = null;
 
     console.log("This is the id for selectedInstrument.",this.selectedInstrument.privateInstructorId)
-    for (let i = 0; i < this.availableInstructor.length; i++) {
+    for (let i = 0; i <= this.availableInstructor.length; i++) {
       if (this.availableInstructor[i].id == this.selectedInstrument.privateInstructorId) {
         console.log('Found matching instructor:', this.availableInstructor[i]);
         this.selectedInstructors = this.availableInstructor[i]
