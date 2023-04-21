@@ -19,7 +19,7 @@
             id="eventType"
             :items="[{ text: 'Junior', value: 'Junior' },
                      { text: 'Jury', value: 'Jury' },
-                     { text: 'Recital', value: 'Recital' },
+                     { text: 'Hearing', value: 'Hearing' },
                      { text: 'Scholarship', value: 'Scholarship' },
                      { text: 'Senior', value: 'Senior' }]"
             label="Event Type"
@@ -159,7 +159,7 @@
     },
     watch: {
       'event.eventType'(newEventType) {
-        if (newEventType === 'Recital') {
+        if (newEventType === 'Hearing') {
           this.event.duration = '5';
         }
         else if (newEventType === 'Jury') {
@@ -175,7 +175,11 @@
       async retrieveRole() {
       await RoleServices.getRoleForUser(this.user.userId)
         .then((response) => {
-          this.role = response.data[0];
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
         })
         .catch((e) => {
           this.message = e.response.data.message;

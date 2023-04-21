@@ -170,8 +170,12 @@
       retrieveRole() {
         roleServices.getRoleForUser(this.user.userId)
         .then((response) => {
-          this.role = response.data[0];
-          if (response.data[0].roleType == "Faculty"){
+          for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
+          if (this.role.roleType == "Faculty"){
             this.isFaculty = true;
           }
           console.log(this.role);

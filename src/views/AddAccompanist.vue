@@ -80,16 +80,21 @@ export default {
     this.currentUser = Utils.getStore("user");
     await this.retrieveRole();
   },
-  methods: {
-      async retrieveRole() {
-        await RoleServices.getRoleForUser(this.currentUser.userId)
-          .then((response) => {
-            this.currentRole = response.data[0];
-          })
-          .catch((e) => {
-            this.message = e.response.data.message;
-          });
-      },
+    async retrieveRole() {
+          await RoleServices.getRoleForUser(this.user.userId)
+            .then((response) => {
+              for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.currentRole = response.data[i];
+              }
+            }
+              console.log('role');
+              console.log(this.role);
+            })
+            .catch((e) => {
+              this.message = e.response.data.message;
+            });
+        },
       async saveUserAndRole() {
         await this.saveUser();
         await this.saveRole();

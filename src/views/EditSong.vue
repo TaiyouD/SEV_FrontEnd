@@ -100,9 +100,9 @@
     props: ['id'],
   data() {
     return {
+      user:{},
+      role:{},
       song: {
-        user:{},
-        role:{},
         title: '',
         language: '',
         translation: ''
@@ -111,25 +111,27 @@
       valid: false,
     }
   },
-  mounted() {
-    this.getSong(this.id);
-  },
   async created(){
     this.user = Utils.getStore("user");
     await this.retrieveRole();
+    await this.getSong(this.id);
   },
   methods: {
     async retrieveRole() {
         await RoleServices.getRoleForUser(this.user.userId)
           .then((response) => {
-            this.role = response.data[0];
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
+            }
           })
           .catch((e) => {
             this.message = e.response.data.message;
           });
       },
-      getSong(id) {
-        SongServices.get(id)
+      async getSong(id) {
+        await SongServices.get(id)
           .then(response => {
             this.song = response.data;
           })

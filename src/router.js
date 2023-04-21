@@ -1,10 +1,12 @@
-
 import Vue from "vue";
 import Router from "vue-router";
 
 import Login from "./views/Login.vue";
 
 import Homepage from "./views/Homepage.vue";
+import HomepageStudent from "./views/HomepageStudent.vue";
+import HomepageFaculty from "./views/HomepageFaculty.vue";
+import HomepageAdmin from "./views/HomepageAdmin.vue";
 import AddAccompanist from "./views/AddAccompanist.vue";
 import AddComposers from "./views/AddComposer.vue";
 import AddCritique from "./views/AddCritique.vue";
@@ -68,6 +70,21 @@ const router = new Router({
       path: "/home",
       name: "home",
       component: Homepage,
+    },
+    {
+      path: "/homestudent",
+      name: "homestudent",
+      component: HomepageStudent,
+    },
+    {
+      path: "/homefaculty",
+      name: "homefaculty",
+      component: HomepageFaculty,
+    },
+    {
+      path: "/homeadmin",
+      name: "homeadmin",
+      component: HomepageAdmin,
     },
     {
       path: "/addaccompanist",

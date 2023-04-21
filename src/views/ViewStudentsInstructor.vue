@@ -264,21 +264,21 @@ export default {
     await this.makeHoursZero();
   },
   methods: {
-    async retrieveRole() {
-      await RoleServices.getRoleForUser(this.user.userId)
-        .then((response) => {
-          for (let i = 0; i < response.data.length; i++){
-            if (response.data[i].roleType == this.user.selectedRole) {
-              this.role = response.data[i];
+      async retrieveRole() {
+        await RoleServices.getRoleForUser(this.user.userId)
+          .then((response) => {
+            for (let i = 0; i < response.data.length; i++){
+              if (response.data[i].roleType == this.user.selectedRole) {
+                this.role = response.data[i];
+              }
             }
-          }
-          console.log('role here');
-          console.log(this.role);
-        })
-        .catch((e) => {
-          this.message = e.response.data.message;
-        });
-    },
+            console.log('role here');
+            console.log(this.role);
+          })
+          .catch((e) => {
+            this.message = e.response.data.message;
+          });
+      },
     // async retrieveInstructorInstrumentRoles() {
     //   await instrumentRoleServices.getAll()
     //     .then((response) => {
@@ -350,20 +350,20 @@ export default {
       // Show the edit dialog
       this.editDialog = true;
     },
-    saveStudent() {
-      RoleServices.update(this.editedStudent.id, this.editedStudent)
-          .then(() => {
-            this.message = 'The Student was updated successfully!';
-          })
-          .catch(e => {
-            this.message = e.response.data.message;
-          });
-      // Hide the edit dialog
-      this.editDialog = false;
-      // this.retrieveStudentsforInstructor()
-      window.location.reload(); //change
-      //this.updateStudent(this.editedStudent);
-    },
+      saveStudent() {
+        RoleServices.update(this.editedStudent.id, this.editedStudent)
+            .then(() => {
+              this.message = 'The Student was updated successfully!';
+            })
+            .catch(e => {
+              this.message = e.response.data.message;
+            });
+        // Hide the edit dialog
+        this.editDialog = false;
+        // this.retrieveStudentsforInstructor()
+        window.location.reload(); //change
+        //this.updateStudent(this.editedStudent);
+      },
     // updateStudent(student) {
     // const index = this.studentInfo.findIndex((s) => s.studentId === student.studentId);
     // this.studentInfo.splice(index, 1, student);

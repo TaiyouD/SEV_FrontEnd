@@ -4,9 +4,11 @@
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
       <v-container>
         <v-toolbar>
-          <v-btn icon to="/">
+          <router-link class="routerLink" :to="{ name: 'maintaineventsession', params: { eventId: event.id } }">
+          <v-btn icon>
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
+          </router-link>
           <v-toolbar-title>Create Critique</v-toolbar-title>
         </v-toolbar>
         <br/>
@@ -337,6 +339,7 @@
   import CritiqueServices from "../services/critiqueServices";
   import RoleServices from "../services/roleServices";
   import EventSessionServices from "../services/eventSessionServices";
+  import EventServices from "../services/eventServices";
   import Utils from "@/config/utils.js";
   
   export default {
@@ -381,6 +384,7 @@
             }
         },
         eventSession:{},
+        event:{},
         message: "Fill out the form below to critique the performance. Once completed, click the 'Save' button.",
       };
     },
@@ -412,6 +416,18 @@
         })
         .catch((e) => {
           this.message = e.response.data.message;
+        });
+        this.retrieveThisEvent();
+    },
+    async retrieveThisEvent() {
+        await EventServices.get(this.eventSession.eventId)
+        .then((response) => {
+            this.event = response.data;
+            console.log('event');
+            console.log(this.event);
+        })
+        .catch((e) => {
+            this.message = e.response.data.message;
         });
     },
     async retrieveStudentRole() {
@@ -473,4 +489,8 @@
   width: 96.5%;
 }
 
+.routerLink{
+     text-decoration: none;
+ }
 </style>
+
