@@ -1270,6 +1270,7 @@ for (let i = 0; i < uniqueTimes.length; i++) {
       if (this.availableInstructor[i].id == this.selectedInstrument.privateInstructorId) {
         console.log('Found matching instructor:', this.availableInstructor[i]);
         this.selectedInstructors = this.availableInstructor[i]
+        break
     }
     else{
       console.log('No matching instructor')
