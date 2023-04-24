@@ -868,25 +868,26 @@ export default {
     },
 
     //save changes to availability times
-    async saveAvailability(item) { 
-      console.log("item", item)
+    async saveAvailability(item) {
+      console.log("edited event", this.editedEvent)
+      console.log("item my availabilitie", item)
       //this.listAvailabilities.unshift(this.availability)
       console.log("list of availabilities", this.listAvailabilities)
       //create a new availability if us adding a new one
-        for (let i = 0; i < this.listAvailabilities.length; i++){
-          if(this.listAvailabilities[i].startTime != "" || this.listAvailabilities[i].endTime != ""){
-            var data = {
-              facultyId: this.facultyId,
-              accompanistId: this.accompanistId,
-              eventId: item.id,
-              startTime: this.listAvailabilities[i].startTime,
-              endTime: this.listAvailabilities[i].endTime
-            };
-            await AvailabilityServices.create(data) 
-              .then((response) => {
-                console.log("add " + response.data);
-              })
-              .catch((e) => {
+      for (let i = 0; i < this.listAvailabilities.length; i++) {
+        if (this.listAvailabilities[i].startTime != "" || this.listAvailabilities[i].endTime != "") {
+          var data = {
+            facultyId: this.facultyId,
+            accompanistId: this.accompanistId,
+            eventId: this.editedEvent.id,
+            startTime: this.listAvailabilities[i].startTime,
+            endTime: this.listAvailabilities[i].endTime
+          };
+          await AvailabilityServices.create(data)
+            .then((response) => {
+              console.log("add " + response.data);
+              });
+             .catch((e) => {
                 this.message = e.response.data.message;
               });
         }}
