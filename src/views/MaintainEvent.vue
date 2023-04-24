@@ -841,7 +841,8 @@ export default {
 
     //save changes to availability times
     async saveAvailability(item) {
-      console.log("item", item)
+      console.log("edited event", this.editedEvent)
+      console.log("item my availabilitie", item)
       //this.listAvailabilities.unshift(this.availability)
       console.log("list of availabilities", this.listAvailabilities)
       //create a new availability if us adding a new one
@@ -850,7 +851,7 @@ export default {
           var data = {
             facultyId: this.facultyId,
             accompanistId: this.accompanistId,
-            eventId: item.id,
+            eventId: this.editedEvent.id,
             startTime: this.listAvailabilities[i].startTime,
             endTime: this.listAvailabilities[i].endTime
           };
