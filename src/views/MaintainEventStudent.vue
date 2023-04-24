@@ -432,19 +432,16 @@ export default {
       if (this.selectedDate && this.selectedDate !== "All Dates") {
         if (this.selectedDate === "Current") {
           const now = new Date();
-          const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
-          const today = new Date(now.getTime() - timezoneOffset).toDateString();
-          filteredData = filteredData.filter(event => new Date(event.event.date).toDateString() === today);
+          const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+          filteredData = filteredData.filter(event => new Date(event.date) >= today && new Date(event.date) < new Date(today.getTime() + 24 * 60 * 60 * 1000));
         } else if (this.selectedDate === "Past") {
           const now = new Date();
-          const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
-          const today = new Date(now.getTime() - timezoneOffset).toDateString();
-          filteredData = filteredData.filter(event => new Date(event.event.date) < new Date(today));
+          const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+          filteredData = filteredData.filter(event => new Date(event.date) < today);
         } else if (this.selectedDate === "Upcoming ") {
           const now = new Date();
-          const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
-          const today = new Date(now.getTime() - timezoneOffset).toDateString();
-          filteredData = filteredData.filter(event => new Date(event.event.date) > new Date(today + " 23:59:59")); // Need to include" 23:59:59" to not show the current date
+          const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+          filteredData = filteredData.filter(event => new Date(event.date) >= tomorrow);
         }
       }
       this.filteredEvents = filteredData;
