@@ -571,36 +571,27 @@ export default {
             const now = new Date();
             const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
             const today = new Date(now.getTime() - timezoneOffset).toDateString();
-
-              
-              this.events = response.data;
-              // this.filteredEvents = response.data;
-
-              // filter past events
-              this.pastList = this.events.filter((event) => {
-                const eventDate = new Date(event.date);
-                return eventDate < new Date(today);
-              });
-
-              // filter current events
-              this.currentList = this.events.filter((event) => {
-                const eventDate = new Date(event.date);
-                return (eventDate.toDateString() === today);
-              });
-
-              // filter upcoming events
-              this.upcomingList = this.events.filter((event) => {
-                const eventDate = new Date(event.date);
-                return eventDate > new Date(today + " 23:59:59");
-              });
+            const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+            this.events = response.data;
+            // this.filteredEvents = response.data;
+            // filter past events
+            this.pastList = this.events.filter((event) => {
+              const eventDate = new Date(event.date);
+              return eventDate < new Date(today);
+            });
+            // filter current events
+            this.currentList = this.events.filter((event) => {
+              const eventDate = new Date(event.date);
+              return (eventDate.toDateString() === today);
+            });
+            // filter upcoming events
+            this.upcomingList = this.events.filter((event => new Date(event.date) >= tomorrow));
             this.filteredEvents = this.upcomingList;
             this.isUpcoming = true;
             console.log('filtered events', this.filteredEvents)
-
             console.log('current', this.currentList)
             console.log('past', this.pastList)
             console.log('upcoming', this.upcomingList)
-
             resolve();
           })
           .catch((e) => {
@@ -639,19 +630,16 @@ export default {
       if (this.selectedDate) {
         if (this.selectedDate === "Current") {
           const now = new Date();
-          const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
-          const today = new Date(now.getTime() - timezoneOffset).toDateString();
-          filteredData = filteredData.filter(event => new Date(event.date).toDateString() === today);
+          const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+          filteredData = filteredData.filter(event => new Date(event.date) >= today && new Date(event.date) < new Date(today.getTime() + 24 * 60 * 60 * 1000));
         } else if (this.selectedDate === "Past") {
           const now = new Date();
-          const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
-          const today = new Date(now.getTime() - timezoneOffset).toDateString();
-          filteredData = filteredData.filter(event => new Date(event.date) < new Date(today));
+          const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+          filteredData = filteredData.filter(event => new Date(event.date) < today);
         } else if (this.selectedDate === "Upcoming ") {
           const now = new Date();
-          const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // Convert to milliseconds
-          const today = new Date(now.getTime() - timezoneOffset).toDateString();
-          filteredData = filteredData.filter(event => new Date(event.date) > new Date(today + " 23:59:59")); // Need to include" 23:59:59" to not show the current date
+          const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+          filteredData = filteredData.filter(event => new Date(event.date) >= tomorrow);
         }
       }
       this.filteredEvents = filteredData;
@@ -886,7 +874,7 @@ export default {
           await AvailabilityServices.create(data)
             .then((response) => {
               console.log("add " + response.data);
-              });
+              })
              .catch((e) => {
                 this.message = e.response.data.message;
               });
