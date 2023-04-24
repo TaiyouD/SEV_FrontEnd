@@ -9,30 +9,7 @@
           <v-spacer></v-spacer>
           <v-toolbar-title>{{this.message}}</v-toolbar-title>
       </v-toolbar>
-        <!-- <br /><br /> -->
-      <!-- <div  class="mx-auto">
-      <v-alert
-        v-model="alert"
-        dismissible
-        color="primary"
-        border="top"
-        elevation="8"
-        colored-border
        
-      >
-       Hello!
-       {{this.name}}
-      </v-alert>
-      </div>
-      <div class="text-center">
-        <v-btn
-          v-if="!alert"
-          dark
-          @click="alert = true"
-        >
-          Reset Alert
-        </v-btn>
-      </div> -->
     </v-container>
       <v-sheet
       class="mx-auto"
