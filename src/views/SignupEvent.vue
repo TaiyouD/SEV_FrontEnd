@@ -1,5 +1,5 @@
 <template>
-    <div v-if = "this.role.roleType  == 'Student' || this.role.roleType == 'Incoming Student'">
+    <div v-if = "this.role.roleType  == 'Student' || (this.role.roleType == 'Incoming Student')">
       <v-img src="../assets/music-notes-bg1.jpg" max-height="100" />
         <v-container>
             <v-toolbar>
@@ -147,12 +147,12 @@ Sign Up Process: <br>
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
 <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-    Missing an Accompanist?
+    Missing Accompanist
 </v-btn>
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Piece?
+      Missing Piece
   </v-btn>
   </router-link>
 </div>
@@ -274,14 +274,18 @@ Sign Up Process: <br>
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
 <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-    Missing an Accompanist?
+    Add Accompanist
 </v-btn>
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Piece?
+      Add Piece
   </v-btn>
   </router-link>
+
+  <v-btn :disabled="eventsDisabled" color="success" variant="tonal" style="text-align: center; margin-left: 20px; ">
+      Request Slots
+  </v-btn>
 </div>
 </div>
 
@@ -408,14 +412,17 @@ Sign Up Process: <br>
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
 <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-    Missing an Accompanist?
+    Add Accompanist
 </v-btn>
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Piece?
+      Add Piece
   </v-btn>
   </router-link>
+  <v-btn :disabled="eventsDisabled" color="success" variant="tonal" style="text-align: center; margin-left: 20px; ">
+      Request Slots
+  </v-btn>
 </div>
 </div>
     <!-- ============End of button============== -->
@@ -536,14 +543,17 @@ Sign Up Process: <br>
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
 <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-    Missing an Accompanist?
+    Add Accompanist
 </v-btn>
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Piece?
+      Add Piece
   </v-btn>
   </router-link>
+  <v-btn :disabled="eventsDisabled" color="success" variant="tonal" style="text-align: center; margin-left: 20px; ">
+      Request Slots
+  </v-btn>
 </div>
 </div>
     <!-- ============End of button============== -->
@@ -661,14 +671,17 @@ Sign Up Process: <br>
 </v-btn>
 <router-link to="/addaccompanist" tag="v-btn">
 <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-    Missing an Accompanist?
+    Add Accompanist
 </v-btn>
 </router-link>
 <router-link to="/addsong" tag="v-btn">
   <v-btn color="success" variant="tonal" style="text-align: center; margin-left: 20px;">
-      Missing a Piece?
+      Add Piece
   </v-btn>
   </router-link>
+  <v-btn :disabled="eventsDisabled" color="success" variant="tonal" style="text-align: center; margin-left: 20px; ">
+      Request Slots
+  </v-btn>
 </div>
 </div>
 
@@ -984,7 +997,7 @@ Sign Up Process: <br>
   
   await eventServices.getAll()
     .then((response) => {
-      if (this.role.studentClassification === "Incoming Student"){
+      if (this.role.roleType === "Incoming Student"){
         this.listOfEvents = response.data.filter(event =>  
           event.isReady !== false && 
           event.eventType !== "Scholarship" && 
@@ -1342,6 +1355,15 @@ for (let i = 0; i < uniqueTimes.length; i++) {
 
 
 computed: {
+  eventsDisabled() {
+      
+   if(this.events.every(event=>event.disabled != true)){
+     return true
+   }
+   else {
+    return false
+   }
+  },
   initialTime(){
     if(this.events.length > 0){
       let startTime = this.events[0].start.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false})
