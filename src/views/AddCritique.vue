@@ -144,7 +144,6 @@
             <v-btn block outlined icon @click="showTechniqueTextArea = !showTechniqueTextArea" style="border-radius: 0; height: 22px; margin-top: -22px">
               <v-icon>{{ showTechniqueTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
-          </v-col>
             <v-textarea
               v-if="showTechniqueTextArea"
               v-model="critique.technique"
@@ -153,6 +152,7 @@
               rows="1"
               cols="5"
             ></v-textarea>
+          </v-col>
         </v-row>
         <div class="line"></div>
         <br>
