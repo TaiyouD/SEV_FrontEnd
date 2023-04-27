@@ -64,10 +64,9 @@
               v-if="showDeportmentTextArea"
               v-model="critique.deportment"
               id="deportment"
-              label="Comments"
+              label="Comments (Optional)"
               rows="1"
               cols="5"
-              required
             ></v-textarea>
           </v-col>
         </v-row>
@@ -93,10 +92,9 @@
               v-if="showToneTextArea"
               v-model="critique.tone"
               id="tone"
-              label="Comments"
+              label="Comments (Optional)"
               rows="1"
               cols="5"
-              required
             ></v-textarea>
           </v-col>
         </v-row>
@@ -118,16 +116,15 @@
             <v-btn block outlined icon @click="showAccuracyTextArea = !showAccuracyTextArea" style="border-radius: 0; height: 22px; margin-top: -22px">
               <v-icon>{{ showAccuracyTextArea ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
-          </v-col>
             <v-textarea
               v-if="showAccuracyTextArea"
               v-model="critique.accuracy"
               id="accuracy"
-              label="Comments"
+              label="Comments (Optional)"
               rows="1"
               cols="5"
-              required
             ></v-textarea>
+          </v-col>
         </v-row>
         <div class="line"></div>
         <br>
@@ -152,10 +149,9 @@
               v-if="showTechniqueTextArea"
               v-model="critique.technique"
               id="technique"
-              label="Comments"
+              label="Comments (Optional)"
               rows="1"
               cols="5"
-              required
             ></v-textarea>
         </v-row>
         <div class="line"></div>
@@ -180,10 +176,9 @@
               v-if="showInterpretationTextArea"
               v-model="critique.interpretation"
               id="interpretation"
-              label="Comments"
+              label="Comments (Optional)"
               rows="1"
               cols="5"
-              required
             ></v-textarea>
           </v-col>
         </v-row>
@@ -209,10 +204,9 @@
               v-if="showBalanceTextArea"
               v-model="critique.balance"
               id="balance"
-              label="Comments"
+              label="Comments (Optional)"
               rows="1"
               cols="5"
-              required
             ></v-textarea>
           </v-col>
         </v-row>
@@ -238,10 +232,9 @@
               v-if="showDictionTextArea"
               v-model="critique.diction"
               id="diction"
-              label="Comments"
+              label="Comments (Optional)"
               rows="1"
               cols="5"
-              required
             ></v-textarea>
           </v-col>
         </v-row>
@@ -256,7 +249,6 @@
             label="Comments"
             rows="1"
             cols="5"
-            required
         ></v-textarea>
         <div class="line"></div>
         <br>
