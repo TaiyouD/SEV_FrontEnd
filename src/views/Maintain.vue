@@ -32,22 +32,16 @@
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  padding: 34px;
 }
 
 .card-title {
-  font-size: 24px;
+  font-size: 180%;
   font-weight: normal;
   width: 100%;
 }
 
 .card-icon {
-  font-size: 38px;
-}
-
-.bottom-line {
-  border-top: 1.5px solid black;
-  margin-top: 10px;
+  font-size: 270%;
 }
 </style>
 
